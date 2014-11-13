@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colors_app_theme">#41AF80</color>
+    <color name="colors_app_theme_accent">#41AF80</color>
+    <!--<color name="colors_app_theme_accent">#61CFA0</color>-->
+    <!--<color name="colors_app_theme_dark">#219F60</color>-->
+    <color name="colors_app_theme_dark">#41AF80</color>
+
+    <color name="swipe_color_1">#41AF80</color>
+    <color name="swipe_color_2">#cddc39</color>
+    <color name="swipe_color_3">#03a9f4</color>
+    <color name="swipe_color_4">#ff9800</color>
+</resources>

@@ -1,0 +1,38 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light">
+        <!-- Customize your theme here. -->
+        <!--<item name="android:actionBarStyle">@style/AppActionBarTheme</item>-->
+        <!--<item name="actionBarStyle">@style/AppActionBarTheme</item>-->
+        <item name="windowActionBar">false</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:colorPrimary">@color/colors_app_theme</item>
+        <item name="colorPrimary">@color/colors_app_theme</item>
+        <item name="android:colorPrimaryDark">@color/colors_app_theme_dark</item>
+        <item name="colorPrimaryDark">@color/colors_app_theme_dark</item>
+        <item name="android:colorAccent">@color/colors_app_theme_accent</item>
+        <item name="colorAccent">@color/colors_app_theme_accent</item>
+
+        <item name="android:actionBarStyle">@style/AppActionBarTheme</item>
+        <item name="actionBarStyle">@style/AppActionBarTheme</item>
+
+        <item name="android:actionMenuTextColor">@android:color/white</item>
+        <item name="actionMenuTextColor">@android:color/white</item>
+    </style>
+
+    <style name="AppActionBarTheme" parent="@style/Widget.AppCompat.ActionBar">
+        <item name="android:background">@color/colors_app_theme</item>
+        <item name="background">@color/colors_app_theme</item>
+        <!--<item name="android:height">56dp</item>-->
+        <item name="android:titleTextStyle">@style/AppActionBarTheme.TitleTextStyle</item>
+        <item name="titleTextStyle">@style/AppActionBarTheme.TitleTextStyle</item>
+    </style>
+
+    <style name="AppActionBarTheme.TitleTextStyle" parent="@style/TextAppearance.AppCompat.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+        <!--<item name="textColor">#596758</item>-->
+        <item name="android:textStyle">bold</item>
+        <!--<item name="textStyle">bold</item>-->
+    </style>
+</resources>

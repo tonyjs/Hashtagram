@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.orcpark.hashtagram.ui.widget.SlipLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/layout_translate"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+
+    <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <!--<FrameLayout-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="match_parent">-->
+            <ListView
+                    android:id="@+id/list_view"
+                    android:paddingTop="64dp"
+                    android:paddingLeft="8dp"
+                    android:paddingRight="8dp"
+                    android:paddingBottom="8dp"
+                    android:scrollbarStyle="outsideOverlay"
+                    android:divider="@android:color/transparent"
+                    android:dividerHeight="8dp"
+                    android:clipToPadding="false"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+        <!--</FrameLayout>-->
+    </android.support.v4.widget.SwipeRefreshLayout>
+    <!--<View-->
+    <!--android:layout_gravity="bottom"-->
+    <!--android:id="@+id/target"-->
+    <!--android:background="@color/colors_app_theme"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="56dp"/>-->
+
+</com.orcpark.hashtagram.ui.widget.SlipLayout>
