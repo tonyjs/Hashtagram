@@ -3,12 +3,11 @@ package com.orcpark.hashtagram.ui.widget;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 /**
  * Created by orcpark on 14. 11. 9..
  */
-public class GradientSquareImageView extends ImageView {
+public class GradientSquareImageView extends SquareImageView {
 
     public static final String GRADIENT_COLOR = "#993d3d3d";
 
@@ -22,12 +21,6 @@ public class GradientSquareImageView extends ImageView {
 
     public GradientSquareImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    @Override
-    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        int width = MeasureSpec.getSize(widthMeasureSpec);
-        setMeasuredDimension(width, width);
     }
 
     @Override
