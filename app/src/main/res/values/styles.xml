@@ -6,6 +6,8 @@
         <!--<item name="android:actionBarStyle">@style/AppActionBarTheme</item>-->
         <!--<item name="actionBarStyle">@style/AppActionBarTheme</item>-->
         <item name="windowActionBar">false</item>
+        <item name="android:windowNoTitle">true</item>
+        
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:colorPrimary">@color/colors_app_theme</item>
         <item name="colorPrimary">@color/colors_app_theme</item>

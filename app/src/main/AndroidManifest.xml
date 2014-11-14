@@ -9,7 +9,6 @@
             android:largeHeap="true"
             android:icon="@drawable/icon"
             android:theme="@style/AppTheme" >
-        <!--android:name=".ui.MainRecylcerActivity"-->
         <activity
                 android:name=".ui.MainActivity"
                 android:screenOrientation="portrait"

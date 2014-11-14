@@ -24,15 +24,18 @@ public class DetailActivity extends BaseActivity {
 
     private void initLayout() {
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolBar);
+
         mToolBar.setNavigationIcon(R.drawable.ic_up);
         mToolBar.setTitleTextColor(Color.WHITE);
+
         Intent intent = getIntent();
         InstaItem item = intent != null ? (InstaItem) intent.getSerializableExtra("item") : null;
         String title = item != null ? item.getUser().getFullName() : null;
         if (!TextUtils.isEmpty(title)) {
-            getSupportActionBar().setTitle(title);
+            mToolBar.setTitle(title);
         }
+
+        setSupportActionBar(mToolBar);
         addFragment(DetailFragment.newInstance(item));
     }
 

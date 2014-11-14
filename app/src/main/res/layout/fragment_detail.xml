@@ -5,34 +5,40 @@
              android:layout_width="match_parent"
              android:layout_height="match_parent">
 
-    <ScrollView
-            android:scrollbarStyle="outsideOverlay"
-            android:clipToPadding="true"
+    <com.orcpark.hashtagram.ui.widget.SlipLayout
+            android:id="@+id/slip_layout"
             android:paddingBottom="48dp"
-            android:fillViewport="true"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <LinearLayout
-                android:orientation="vertical"
+        <com.orcpark.hashtagram.ui.widget.SlipScrollView
+                android:scrollbarStyle="outsideOverlay"
+                android:clipToPadding="true"
+                android:fillViewport="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="match_parent">
 
-            <com.orcpark.hashtagram.ui.widget.SquareImageView
-                    android:id="@+id/iv_thumb"
-                    android:scaleType="fitXY"
+            <LinearLayout
+                    android:orientation="vertical"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content">
 
-            <TextView
-                    android:id="@+id/tv_summary"
-                    android:padding="8dp"
-                    android:textSize="15sp"
-                    android:lineSpacingMultiplier="1.3"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </ScrollView>
+                <com.orcpark.hashtagram.ui.widget.SquareImageView
+                        android:id="@+id/iv_thumb"
+                        android:scaleType="fitXY"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+
+                <TextView
+                        android:id="@+id/tv_summary"
+                        android:padding="8dp"
+                        android:textSize="15sp"
+                        android:lineSpacingMultiplier="1.3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </com.orcpark.hashtagram.ui.widget.SlipScrollView>
+    </com.orcpark.hashtagram.ui.widget.SlipLayout>
 
     <com.orcpark.hashtagram.ui.widget.DragLayout
             android:id="@+id/drag_layout"
