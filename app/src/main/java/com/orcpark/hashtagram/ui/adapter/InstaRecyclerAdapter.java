@@ -104,6 +104,8 @@ public class InstaRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
         } else {
             ImageLoader.load(mContext, thumbUrl, ivThumb, true);
         }
+
+        setItemClickListener(holder.itemView, item);
     }
 
     @Override
