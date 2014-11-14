@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.android.volley.VolleyError;
 import com.orcpark.hashtagram.R;
@@ -27,23 +26,23 @@ import java.util.ArrayList;
 /**
  * Created by orcpark on 2014. 9. 7..
  */
-public class InstagramFragment extends BaseFragment
+public class ListFragment extends BaseFragment
                             implements ResponseListener<JSONObject>, SwipeRefreshLayout.OnRefreshListener,
                                         InstaAdapter.RequestMoreListener{
 
     public interface Listener {
-        public void onAttach(InstagramFragment fragment);
+        public void onAttach(ListFragment fragment);
 
-        public void onDetach(InstagramFragment fragment);
+        public void onDetach(ListFragment fragment);
 
-        public void onActivityCreated(InstagramFragment fragment);
+        public void onActivityCreated(ListFragment fragment);
     }
 
     public static final String KEY_HASH_TAG = "hash_tag";
     public static final String KEY_POSITION = "position";
 
-    public static InstagramFragment newInstance(int position, String tag) {
-        InstagramFragment fragment = new InstagramFragment();
+    public static ListFragment newInstance(int position, String tag) {
+        ListFragment fragment = new ListFragment();
         Bundle args = new Bundle();
         args.putString(KEY_HASH_TAG, tag);
         args.putInt(KEY_POSITION, position);
@@ -89,7 +88,7 @@ public class InstagramFragment extends BaseFragment
     private View mFooterView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_instagram, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_list, container, false);
 
         mProgressBar = rootView.findViewById(R.id.progress_bar);
 

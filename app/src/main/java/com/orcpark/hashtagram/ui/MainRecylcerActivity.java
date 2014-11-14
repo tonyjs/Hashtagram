@@ -31,7 +31,7 @@ import java.util.ArrayList;
  */
 public class MainRecylcerActivity extends ActionBarActivity
         implements OnFinishedListener, ViewPager.OnPageChangeListener,
-        InstagramRecyclerFragment.Listener, SearchFragment.OnSearchListener{
+        RecyclerFragment.Listener, SearchFragment.OnSearchListener{
 
     public static final String SIGN_IN_FRAGMENT = "SignInFragment";
 
@@ -207,17 +207,17 @@ public class MainRecylcerActivity extends ActionBarActivity
     }
 
     @Override
-    public void onAttach(InstagramRecyclerFragment fragment) {
+    public void onAttach(RecyclerFragment fragment) {
 
     }
 
     @Override
-    public void onDetach(InstagramRecyclerFragment fragment) {
+    public void onDetach(RecyclerFragment fragment) {
 
     }
 
     @Override
-    public void onActivityCreated(InstagramRecyclerFragment fragment) {
+    public void onActivityCreated(RecyclerFragment fragment) {
         int currentPosition = mViewPager.getCurrentItem();
         int position = fragment.getPosition();
 //        if (currentPosition == position) {

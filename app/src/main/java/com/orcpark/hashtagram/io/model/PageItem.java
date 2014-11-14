@@ -1,22 +1,21 @@
 package com.orcpark.hashtagram.io.model;
 
 import android.support.v4.app.Fragment;
-import android.view.View;
-import com.orcpark.hashtagram.ui.InstagramFragment;
+import com.orcpark.hashtagram.ui.ListFragment;
 
 /**
  * Created by orcpark on 2014. 9. 7..
  */
 public class PageItem {
     private String hashTag;
-    private InstagramFragment fragment;
+    private ListFragment fragment;
 
     public PageItem() {
     }
 
     public PageItem(int position, String hashTag) {
         this.hashTag = hashTag;
-        fragment = InstagramFragment.newInstance(position, hashTag);
+        fragment = ListFragment.newInstance(position, hashTag);
     }
 
     public String getHashTag() {

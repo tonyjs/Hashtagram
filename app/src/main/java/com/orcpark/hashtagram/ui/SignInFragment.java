@@ -1,19 +1,14 @@
 package com.orcpark.hashtagram.ui;
 
-import android.app.Activity;
-import android.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.Toast;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.config.InstaConfig;
 import com.orcpark.hashtagram.io.OnFinishedListener;
@@ -22,7 +17,7 @@ import com.orcpark.hashtagram.ui.view.BasicWebView;
 /**
  * Created by orcpark on 2014. 9. 4..
  */
-public class SignInFragment extends Fragment{
+public class SignInFragment extends Fragment {
 
     private OnFinishedListener mOnFinishedListener;
 

@@ -16,6 +16,7 @@ import com.orcpark.hashtagram.io.JsonParser;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
 import com.orcpark.hashtagram.io.model.insta.Instagram;
 import com.orcpark.hashtagram.io.request.ResponseListener;
+import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.InstaRecyclerAdapter;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.RequestFactory;
@@ -27,23 +28,23 @@ import java.util.ArrayList;
 /**
  * Created by orcpark on 2014. 9. 7..
  */
-public class InstagramRecyclerFragment extends BaseFragment
+public class RecyclerFragment extends BaseFragment
         implements ResponseListener<JSONObject>, SwipeRefreshLayout.OnRefreshListener,
                     InstaRecyclerAdapter.RequestMoreListener{
 
     public interface Listener {
-        public void onAttach(InstagramRecyclerFragment fragment);
+        public void onAttach(RecyclerFragment fragment);
 
-        public void onDetach(InstagramRecyclerFragment fragment);
+        public void onDetach(RecyclerFragment fragment);
 
-        public void onActivityCreated(InstagramRecyclerFragment fragment);
+        public void onActivityCreated(RecyclerFragment fragment);
     }
 
     public static final String KEY_HASH_TAG = "hash_tag";
     public static final String KEY_POSITION = "position";
 
-    public static InstagramRecyclerFragment newInstance(int position, String tag) {
-        InstagramRecyclerFragment fragment = new InstagramRecyclerFragment();
+    public static RecyclerFragment newInstance(int position, String tag) {
+        RecyclerFragment fragment = new RecyclerFragment();
         Bundle args = new Bundle();
         args.putString(KEY_HASH_TAG, tag);
         args.putInt(KEY_POSITION, position);
@@ -89,7 +90,7 @@ public class InstagramRecyclerFragment extends BaseFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_instagram_recycler, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_recycler, container, false);
 
         mProgressBar = rootView.findViewById(R.id.progress_bar);
 
@@ -105,6 +106,9 @@ public class InstagramRecyclerFragment extends BaseFragment
         mLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mListAdapter = new InstaRecyclerAdapter(mActivity.getBaseContext());
+        if(mActivity instanceof BasicRecyclerAdapter.OnItemClickListener) {
+            mListAdapter.setOnItemClickListener((BasicRecyclerAdapter.OnItemClickListener) mActivity);
+        }
         mListAdapter.setRequestMoreListener(this);
 
         mRecyclerView.setAdapter(mListAdapter);
@@ -150,17 +154,14 @@ public class InstagramRecyclerFragment extends BaseFragment
         mInAsync = true;
 
         if (!TextUtils.isEmpty(nextUrl)) {
-//            Toast.makeText(mActivity, nextUrl, Toast.LENGTH_LONG).show();
             RequestFactory.getNextItems(getActivity(), nextUrl, null, mMoreResponseListener);
             return;
         }
 
         if (!mIsHashtag) {
             RequestFactory.getNewsfeed(getActivity(), mProgressBar, this);
-//            RequestUtils.getNewsfeed(getActivity(), mProgressBar, this);
         } else {
             RequestFactory.getHashTag(getActivity(), mHashTag, mProgressBar, this);
-//            RequestUtils.getHashTags(getActivity(), mHashTag, mProgressBar, this);
         }
     }
 
@@ -215,9 +216,9 @@ public class InstagramRecyclerFragment extends BaseFragment
 
     @Override
     public void onDetach() {
-        super.onDetach();
         if (mActivity instanceof Listener) {
             ((Listener) mActivity).onDetach(this);
         }
+        super.onDetach();
     }
 }

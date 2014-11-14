@@ -2,7 +2,6 @@ package com.orcpark.hashtagram.ui;
 
 import android.app.Activity;
 import android.content.Context;
-import android.inputmethodservice.InputMethodService;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;

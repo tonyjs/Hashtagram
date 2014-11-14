@@ -2,6 +2,7 @@ package com.orcpark.hashtagram.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -10,7 +11,9 @@ import java.util.ArrayList;
  */
 public abstract class BasicRecyclerAdapter<T>
                         extends RecyclerView.Adapter<BasicViewHolder> {
-
+    public interface OnItemClickListener {
+        public void onItemClick(Object item);
+    }
     protected Context mContext;
 
     public BasicRecyclerAdapter(Context context) {
@@ -51,9 +54,29 @@ public abstract class BasicRecyclerAdapter<T>
         notifyDataSetChanged();
     }
 
+    private OnItemClickListener mOnItemClickListener;
+
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        mOnItemClickListener = onItemClickListener;
+    }
+
     @Override
     public void onBindViewHolder(BasicViewHolder basicViewHolder, int i) {
-        basicViewHolder.onBindView(getItem(i), i);
+        final T item = getItem(i);
+        basicViewHolder.onBindView(item, i);
+        setItemClickListener(basicViewHolder.itemView, item);
+    }
+
+    public void setItemClickListener(View view, final T item) {
+        if (mOnItemClickListener == null) {
+            return;
+        }
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mOnItemClickListener.onItemClick(item);
+            }
+        });
     }
 
     @Override

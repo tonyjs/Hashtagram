@@ -1,19 +1,18 @@
 package com.orcpark.hashtagram.io.model;
 
 import android.support.v4.app.Fragment;
-import com.orcpark.hashtagram.ui.InstagramFragment;
-import com.orcpark.hashtagram.ui.InstagramRecyclerFragment;
+import com.orcpark.hashtagram.ui.RecyclerFragment;
 
 /**
  * Created by orcpark on 14. 11. 11..
  */
-public class PageRecyclerItem extends PageItem{
+public class PageRecyclerItem extends PageItem {
     private String hashTag;
-    private InstagramRecyclerFragment fragment;
+    private RecyclerFragment fragment;
 
     public PageRecyclerItem(int position, String hashTag) {
         this.hashTag = hashTag;
-        fragment = InstagramRecyclerFragment.newInstance(position, hashTag);
+        fragment = RecyclerFragment.newInstance(position, hashTag);
     }
 
     public String getHashTag() {

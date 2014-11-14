@@ -1,11 +1,11 @@
 package com.orcpark.hashtagram.ui;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -13,22 +13,25 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-import com.orcpark.hashtagram.io.db.HashtagramDatabase;
-import com.orcpark.hashtagram.io.model.PageRecyclerItem;
-import com.orcpark.hashtagram.ui.widget.SlidingTabLayout;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.config.PreferenceConfig;
 import com.orcpark.hashtagram.io.OnFinishedListener;
+import com.orcpark.hashtagram.io.db.HashtagramDatabase;
 import com.orcpark.hashtagram.io.model.PageItem;
+import com.orcpark.hashtagram.io.model.PageRecyclerItem;
+import com.orcpark.hashtagram.io.model.insta.InstaItem;
+import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.MainViewPagerAdapter;
+import com.orcpark.hashtagram.ui.widget.SlidingTabLayout;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.PreferenceUtils;
 
 import java.util.ArrayList;
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends BaseActivity
                             implements OnFinishedListener, ViewPager.OnPageChangeListener,
-                                InstagramRecyclerFragment.Listener, SearchFragment.OnSearchListener{
+                                RecyclerFragment.Listener, SearchFragment.OnSearchListener,
+                                BasicRecyclerAdapter.OnItemClickListener{
 
     public static final String SIGN_IN_FRAGMENT = "SignInFragment";
 
@@ -62,11 +65,10 @@ public class MainActivity extends ActionBarActivity
     private SlidingTabLayout mTabLayout;
 
     private MainViewPagerAdapter mViewPagerAdapter;
-    private Toolbar mToolBar;
     private void initLayout() {
         mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        mToolBar.setTitleTextColor(Color.WHITE);
         setSupportActionBar(mToolBar);
+        mToolBar.setTitleTextColor(Color.WHITE);
 
         mViewPager = (ViewPager) findViewById(R.id.view_pager);
         mViewPager.setOffscreenPageLimit(1);
@@ -166,9 +168,6 @@ public class MainActivity extends ActionBarActivity
         getSupportFragmentManager().popBackStackImmediate();
     }
 
-    public Toolbar getToolBar() {
-        return mToolBar;
-    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -203,17 +202,17 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onAttach(InstagramRecyclerFragment fragment) {
+    public void onAttach(RecyclerFragment fragment) {
 
     }
 
     @Override
-    public void onDetach(InstagramRecyclerFragment fragment) {
+    public void onDetach(RecyclerFragment fragment) {
 
     }
 
     @Override
-    public void onActivityCreated(InstagramRecyclerFragment fragment) {
+    public void onActivityCreated(RecyclerFragment fragment) {
         int currentPosition = mViewPager.getCurrentItem();
         int position = fragment.getPosition();
 //        if (currentPosition == position) {
@@ -226,5 +225,24 @@ public class MainActivity extends ActionBarActivity
     public void onSearch(String search) {
         getSupportFragmentManager().popBackStackImmediate();
         handleQuery(search);
+    }
+
+    @Override
+    public void onItemClick(Object item) {
+        if (item == null) {
+            return;
+        }
+        if (!(item instanceof InstaItem)) {
+            return;
+        }
+
+        Intent intent = new Intent(this, DetailActivity.class);
+        intent.putExtra("item", ((InstaItem) item));
+        startActivity(intent);
+    }
+
+    @Override
+    public int getContainerResId() {
+        return R.id.container;
     }
 }
