@@ -2,7 +2,7 @@
 .idea
 .idea/workspace.xml
 .DS_Store
-.orcp_keystore.jks
+app/keystore/orcp_keystore.jks
 local.properties
 build
 app/keystore/keystore.password

@@ -192,7 +192,6 @@ public class MainActivity extends BaseActivity
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        Toast.makeText(this, "onNewIntent", Toast.LENGTH_SHORT).show();
         getSupportFragmentManager().popBackStackImmediate();
         initItems();
     }
