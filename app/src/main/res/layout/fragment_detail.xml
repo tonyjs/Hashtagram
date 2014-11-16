@@ -11,14 +11,17 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
+        <!--android:fillViewport="true"-->
         <com.orcpark.hashtagram.ui.widget.SlipScrollView
+                android:id="@+id/scroll_view"
+                android:paddingTop="?attr/actionBarSize"
                 android:scrollbarStyle="outsideOverlay"
-                android:clipToPadding="true"
-                android:fillViewport="true"
+                android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
             <LinearLayout
+                    android:id="@+id/layout_contents"
                     android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
@@ -38,6 +41,7 @@
                         android:layout_height="wrap_content"/>
             </LinearLayout>
         </com.orcpark.hashtagram.ui.widget.SlipScrollView>
+
     </com.orcpark.hashtagram.ui.widget.SlipLayout>
 
     <com.orcpark.hashtagram.ui.widget.DragLayout
@@ -47,126 +51,140 @@
             android:layout_height="360dp">
 
         <LinearLayout
-                android:background="@color/colors_app_theme"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="50dp">
+                android:layout_height="58dp">
 
-            <RelativeLayout
-                    android:padding="8dp"
+            <View
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/gradient"
                     android:layout_width="match_parent"
-                    android:layout_height="48dp">
+                    android:layout_height="8dp"/>
 
-                <ImageView
-                        android:id="@+id/iv_author"
-                        android:scaleType="fitXY"
-                        android:layout_centerVertical="true"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"/>
+            <LinearLayout
+                    android:background="@drawable/gradient_app_theme_color_reverse"
+                    android:orientation="horizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp">
 
-                <LinearLayout
-                        android:orientation="vertical"
-                        android:layout_marginLeft="8dp"
-                        android:layout_toRightOf="@+id/iv_author"
-                        android:layout_centerVertical="true"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                <RelativeLayout
+                        android:padding="8dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp">
 
-                    <TextView
-                            android:id="@+id/tv_author"
-                            android:textStyle="bold"
-                            android:textSize="13sp"
-                            android:textColor="#ffffff"
-                            android:shadowDy="1.5"
-                            android:shadowDx="1.5"
-                            android:shadowRadius="1.0"
-                            android:shadowColor="#000000"
+                    <ImageView
+                            android:id="@+id/iv_author"
+                            android:scaleType="fitXY"
+                            android:layout_centerVertical="true"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"/>
+
+                    <LinearLayout
+                            android:orientation="vertical"
+                            android:layout_marginLeft="8dp"
+                            android:layout_toRightOf="@+id/iv_author"
+                            android:layout_centerVertical="true"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content">
 
-                    <TextView
-                            android:id="@+id/tv_create_time"
-                            android:textSize="12sp"
-                            android:textColor="#ffffff"
-                            android:shadowDy="1.5"
-                            android:shadowDx="1.5"
-                            android:shadowRadius="1.0"
-                            android:shadowColor="#000000"
+                        <TextView
+                                android:id="@+id/tv_author"
+                                android:textStyle="bold"
+                                android:textSize="13sp"
+                                android:textColor="#ffffff"
+                                android:shadowDy="1.5"
+                                android:shadowDx="1.5"
+                                android:shadowRadius="1.0"
+                                android:shadowColor="#000000"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                        <TextView
+                                android:id="@+id/tv_created_time"
+                                android:textSize="12sp"
+                                android:textColor="#ffffff"
+                                android:shadowDy="1.5"
+                                android:shadowDx="1.5"
+                                android:shadowRadius="1.0"
+                                android:shadowColor="#000000"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+
+                    </LinearLayout>
+
+                    <!--<Button-->
+                    <!--android:id="@+id/btn_recommend"-->
+                    <!--android:layout_marginRight="8dp"-->
+                    <!--android:layout_width="wrap_content"-->
+                    <!--android:layout_height="wrap_content"-->
+                    <!--android:textColor="@android:color/white"-->
+                    <!--android:layout_centerVertical="true"-->
+                    <!--android:layout_toLeftOf="@+id/layout_comments"/>-->
+
+                    <LinearLayout
+                            android:id="@+id/layout_comments"
+                            android:layout_marginRight="8dp"
+                            android:layout_centerVertical="true"
+                            android:layout_toLeftOf="@+id/v_metaphor"
+                            android:orientation="horizontal"
                             android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
+                            android:layout_height="wrap_content">
 
-                </LinearLayout>
+                        <TextView
+                                android:id="@+id/tv_comment_count"
+                                android:layout_gravity="bottom"
+                                android:textStyle="bold"
+                                android:textSize="15sp"
+                                android:textColor="#ffffff"
+                                android:shadowDy="1.5"
+                                android:shadowDx="1.5"
+                                android:shadowRadius="1.0"
+                                android:shadowColor="#000000"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
 
-                <Button
-                        android:id="@+id/btn_recommend"
-                        android:layout_marginRight="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@android:color/white"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/layout_comments"/>
+                        <TextView
+                                android:layout_marginLeft="2dp"
+                                android:text="Comments"
+                                android:layout_gravity="bottom"
+                                android:textSize="12sp"
+                                android:textColor="#ffffff"
+                                android:shadowDy="1.5"
+                                android:shadowDx="1.5"
+                                android:shadowRadius="1.0"
+                                android:shadowColor="#000000"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"/>
+                    </LinearLayout>
 
-                <LinearLayout
-                        android:id="@+id/layout_comments"
-                        android:layout_marginRight="8dp"
-                        android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/v_metaphor"
-                        android:orientation="horizontal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content">
+                    <View
+                            android:id="@+id/v_metaphor"
+                            android:background="@drawable/selector_arrow"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_height="32dp"
+                            android:layout_width="32dp">
+                    </View>
 
-                    <TextView
-                            android:id="@+id/tv_comment_count"
-                            android:layout_gravity="bottom"
-                            android:textStyle="bold"
-                            android:textSize="15sp"
-                            android:textColor="#ffffff"
-                            android:shadowDy="1.5"
-                            android:shadowDx="1.5"
-                            android:shadowRadius="1.0"
-                            android:shadowColor="#000000"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-
-                    <TextView
-                            android:layout_marginLeft="2dp"
-                            android:text="Comments"
-                            android:layout_gravity="bottom"
-                            android:textSize="12sp"
-                            android:textColor="#ffffff"
-                            android:shadowDy="1.5"
-                            android:shadowDx="1.5"
-                            android:shadowRadius="1.0"
-                            android:shadowColor="#000000"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"/>
-                </LinearLayout>
+                </RelativeLayout>
 
                 <View
-                        android:id="@+id/v_metaphor"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_height="32dp"
-                        android:layout_width="32dp">
-                </View>
-
-            </RelativeLayout>
-
-            <View
-                    android:layout_marginLeft="16dp"
-                    android:layout_marginRight="16dp"
-                    android:background="#e0e0e0"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
-            <View
-                    android:layout_marginLeft="17dp"
-                    android:layout_marginRight="17dp"
-                    android:background="#dedede"
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"/>
+                        android:layout_marginLeft="16dp"
+                        android:layout_marginRight="16dp"
+                        android:background="#b2e0e0e0"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+                <View
+                        android:layout_marginLeft="17dp"
+                        android:layout_marginRight="17dp"
+                        android:background="#b2d2d2d2"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"/>
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
+                android:background="@drawable/gradient_app_theme_color"
                 android:orientation="vertical"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
@@ -199,60 +217,18 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
 
-                <!--<com.orcp.library.ui.widget.PullCatchListView-->
-                        <!--android:id="@+id/list_view"-->
-                        <!--android:scrollbarStyle="outsideOverlay"-->
-                        <!--android:paddingLeft="8dp"-->
-                        <!--android:paddingRight="8dp"-->
-                        <!--android:listSelector="@null"-->
-                        <!--android:divider="@android:color/transparent"-->
-                        <!--android:dividerHeight="4dp"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="match_parent"/>-->
+                <com.orcpark.hashtagram.ui.widget.PullCatchListView
+                        android:id="@+id/list_view"
+                        android:scrollbarStyle="outsideOverlay"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:listSelector="@android:color/transparent"
+                        android:divider="@android:color/transparent"
+                        android:dividerHeight="4dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"/>
 
             </FrameLayout>
-
-            <!--<View-->
-            <!--android:layout_marginLeft="16dp"-->
-            <!--android:layout_marginRight="16dp"-->
-            <!--android:background="#c2c2c2"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"/>-->
-            <!--<View-->
-            <!--android:layout_marginLeft="18dp"-->
-            <!--android:layout_marginRight="18dp"-->
-            <!--android:background="@color/swipe_color_scheme_1"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="1dp"/>-->
-
-            <LinearLayout
-                    android:padding="4dp"
-                    android:orientation="horizontal"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                <EditText
-                        android:id="@+id/et_comment"
-                        android:layout_gravity="center"
-                        android:layout_weight="1"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"/>
-
-                        <!--android:background="@drawable/selector_btn_recommend"-->
-                <TextView
-                        android:id="@+id/btn_comment"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="4dp"
-                        android:textColor="#ffffff"
-                        android:textSize="15sp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingBottom="6dp"
-                        android:paddingTop="6dp"
-                        android:text="전송"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-            </LinearLayout>
         </LinearLayout>
     </com.orcpark.hashtagram.ui.widget.DragLayout>
 </FrameLayout>

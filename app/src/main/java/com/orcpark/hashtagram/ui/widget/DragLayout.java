@@ -57,7 +57,6 @@ public class DragLayout extends ViewGroup {
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         if (isClickableChildren(mDragTargetView)) {
-            Log.e("jsp", "isClickableChildren");
             return false;
         }
 

@@ -1,13 +1,27 @@
 package com.orcpark.hashtagram.ui;
 
+import android.graphics.Color;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import com.orcpark.hashtagram.R;
 
 /**
  * Created by orcpark on 14. 11. 13..
  */
 public abstract class BaseActivity extends ActionBarActivity {
+
+    protected Toolbar mToolBar;
+    protected Toolbar getToolBar() {
+        if (mToolBar == null) {
+            mToolBar = (Toolbar) findViewById(R.id.toolbar);
+            mToolBar.setTitleTextColor(Color.WHITE);
+//            if (mToolBar != null) {
+//                setSupportActionBar(mToolBar);
+//            }
+        }
+        return mToolBar;
+    }
 
     public abstract int getContainerResId();
 
@@ -44,8 +58,4 @@ public abstract class BaseActivity extends ActionBarActivity {
         getSupportFragmentManager().popBackStackImmediate();
     }
 
-    protected Toolbar mToolBar;
-    public Toolbar getToolBar() {
-        return mToolBar;
-    }
 }

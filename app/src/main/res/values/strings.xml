@@ -4,5 +4,11 @@
     <string name="app_name">Hashtagram</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="loading">Loading... Please Wait...</string>
+    <string name="edit_hashtags">Edit Hashtags</string>
+    <string name="log_out">Log out</string>
+    <string name="authorize_success">Authorize Success. Welcome !</string>
+    <string name="authorize_fail">Authorize fail...</string>
+    <string name="apply">Apply</string>
+    <string name="no_hashtag">No Hashtags</string>
 </resources>

@@ -15,12 +15,12 @@ import com.orcpark.hashtagram.util.TimeUtils;
 /**
  * Created by orcpark on 14. 11. 9..
  */
-public class InstaAdapter extends BasicAdapter<InstaItem> {
+public class TimeLineAdapter extends BasicAdapter<InstaItem> {
     public interface RequestMoreListener {
         public void onRequestMore();
     }
 
-    public InstaAdapter(Context context) {
+    public TimeLineAdapter(Context context) {
         super(context);
     }
 

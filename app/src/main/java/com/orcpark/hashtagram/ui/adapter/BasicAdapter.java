@@ -18,7 +18,7 @@ public abstract class BasicAdapter<T> extends BaseAdapter {
         mInflater = LayoutInflater.from(mContext);
     }
 
-    private ArrayList<T> mItems;
+    protected ArrayList<T> mItems;
     public void setItems(ArrayList<T> items){
         mItems = items;
         notifyDataSetChanged();
@@ -50,6 +50,10 @@ public abstract class BasicAdapter<T> extends BaseAdapter {
         }
         mItems.add(item);
         notifyDataSetChanged();
+    }
+
+    public ArrayList<T> getItems() {
+        return mItems;
     }
 
     @Override

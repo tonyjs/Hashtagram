@@ -17,7 +17,7 @@ import com.orcpark.hashtagram.io.model.insta.InstaItem;
 import com.orcpark.hashtagram.io.model.insta.Instagram;
 import com.orcpark.hashtagram.io.request.ResponseListener;
 import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
-import com.orcpark.hashtagram.ui.adapter.InstaRecyclerAdapter;
+import com.orcpark.hashtagram.ui.adapter.TimeLineRecyclerAdapter;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.RequestFactory;
 import com.orcpark.hashtagram.util.UiUtils;
@@ -30,7 +30,7 @@ import java.util.ArrayList;
  */
 public class RecyclerFragment extends BaseFragment
         implements ResponseListener<JSONObject>, SwipeRefreshLayout.OnRefreshListener,
-                    InstaRecyclerAdapter.RequestMoreListener{
+                    TimeLineRecyclerAdapter.RequestMoreListener{
 
     public interface Listener {
         public void onAttach(RecyclerFragment fragment);
@@ -86,7 +86,7 @@ public class RecyclerFragment extends BaseFragment
 
     private RecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private InstaRecyclerAdapter mListAdapter;
+    private TimeLineRecyclerAdapter mListAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -105,7 +105,7 @@ public class RecyclerFragment extends BaseFragment
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mListAdapter = new InstaRecyclerAdapter(mActivity.getBaseContext());
+        mListAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext());
         if(mActivity instanceof BasicRecyclerAdapter.OnItemClickListener) {
             mListAdapter.setOnItemClickListener((BasicRecyclerAdapter.OnItemClickListener) mActivity);
         }

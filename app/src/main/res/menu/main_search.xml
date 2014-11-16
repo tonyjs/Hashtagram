@@ -7,4 +7,13 @@
             android:icon="@drawable/ic_action_search"
             android:orderInCategory="0"
             hashtagram:showAsAction="always"/>
+
+    <item
+        android:id="@+id/action_edit"
+        android:title="@string/edit_hashtags"/>
+
+    <item
+        android:id="@+id/action_log_out"
+        android:title="@string/log_out"/>
+
 </menu>

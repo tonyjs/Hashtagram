@@ -72,6 +72,12 @@ public class HashtagramDatabase extends SQLiteOpenHelper {
         return items;
     }
 
+    public void deleteAll() {
+        SQLiteDatabase db = getWritableDatabase();
+        db.delete(TABLE_NAME_HASH_TAG, null, null);
+        db.close();
+    }
+
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 

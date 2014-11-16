@@ -11,15 +11,15 @@ import java.util.Set;
 /**
  * Created by orcpark on 2014. 9. 7..
  */
-public class PreferenceUtils {
+public class PrefUtils {
 
     public static boolean hasInstalled(Context context) {
         return getPreferences(context).getBoolean(PreferenceConfig.HAS_INSTALLED, false);
     }
 
-    public static void setHasInstalled(Context context) {
+    public static void setHasInstalled(Context context, boolean installed) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
-        editor.putBoolean(PreferenceConfig.HAS_INSTALLED, true);
+        editor.putBoolean(PreferenceConfig.HAS_INSTALLED, installed);
         editor.commit();
     }
 
@@ -33,14 +33,10 @@ public class PreferenceUtils {
         editor.commit();
     }
 
-    public static void setHashSet(Context context, Set hashSet) {
+    public static void removeAccessToken(Context context) {
         SharedPreferences.Editor editor = getPreferences(context).edit();
-        editor.putStringSet(PreferenceConfig.HASH_SET, hashSet);
+        editor.remove(PreferenceConfig.ACCESS_TOKEN);
         editor.commit();
-    }
-
-    public static Set<String> getHashSet(Context context) {
-        return getPreferences(context).getStringSet(PreferenceConfig.HASH_SET, null);
     }
 
     public static SharedPreferences getPreferences(Context context) {

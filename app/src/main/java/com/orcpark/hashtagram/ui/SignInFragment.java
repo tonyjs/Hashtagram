@@ -7,6 +7,8 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.orcpark.hashtagram.R;
@@ -31,6 +33,13 @@ public class SignInFragment extends Fragment {
         return fragment;
     }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        CookieSyncManager.createInstance(getActivity());
+        CookieManager.getInstance().removeAllCookie();
+    }
+
     private ViewGroup mRootView;
     private BasicWebView mWebView;
 
@@ -40,16 +49,18 @@ public class SignInFragment extends Fragment {
 
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
         progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-        progressDialog.setMessage("로딩중입니다. 잠시만 기다려주세요.");
+        progressDialog.setMessage(getActivity().getResources().getString(
+                R.string.loading
+        ));
 
 //        BasicWebView webView = (BasicWebView) rootView.findViewById(R.id.web_view);
         mWebView = new BasicWebView(getActivity());
+        mWebView.clearCache(true);
         mWebView.setWebViewClient(new InstaWebViewClient(progressDialog, mOnFinishedListener));
 
         mRootView.addView(mWebView);
 
         mWebView.loadUrl(InstaConfig.INSTA_AUTHORIZATION_URL);
-//        webView.loadUrl("http://m.naver.com");
 
         return mRootView;
     }
@@ -57,6 +68,8 @@ public class SignInFragment extends Fragment {
     @Override
     public void onDestroyView() {
         if (mWebView != null) {
+            mWebView.clearCache(true);
+            mWebView.clearHistory();
             mWebView.removeAllViews();
         }
         if (mRootView != null) {

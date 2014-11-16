@@ -11,6 +11,9 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+import butterknife.OnEditorAction;
 import com.orcpark.hashtagram.R;
 
 /**
@@ -31,11 +34,12 @@ public class SearchFragment extends BaseFragment implements TextView.OnEditorAct
         }
     }
 
-    private EditText mEtSearch;
+    @InjectView(R.id.et_search) EditText mEtSearch;
     private InputMethodManager mInputMethodManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_search, container, false);
+        ButterKnife.inject(this, rootView);
         mInputMethodManager = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         rootView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,9 +47,6 @@ public class SearchFragment extends BaseFragment implements TextView.OnEditorAct
                 getFragmentManager().popBackStackImmediate();
             }
         });
-
-        mEtSearch = (EditText) rootView.findViewById(R.id.et_search);
-        mEtSearch.setOnEditorActionListener(this);
 
         return rootView;
     }
@@ -65,7 +66,7 @@ public class SearchFragment extends BaseFragment implements TextView.OnEditorAct
         mInputMethodManager = null;
         super.onDetach();
     }
-
+    @OnEditorAction(R.id.et_search)
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {

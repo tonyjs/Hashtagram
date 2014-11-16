@@ -24,7 +24,7 @@ import java.util.Set;
 public class RequestFactory {
 
     public static void getNewsfeed(Context context, View progressBar, ResponseListener listener) {
-        String accessToken = PreferenceUtils.getAccessToken(context);
+        String accessToken = PrefUtils.getAccessToken(context);
         if (TextUtils.isEmpty(accessToken)) {
             Log.e("jsp", "has not access_token");
             return;
@@ -36,7 +36,7 @@ public class RequestFactory {
     }
 
     public static void getNextItems(Context context, String url, View progressBar, ResponseListener listener) {
-        String accessToken = PreferenceUtils.getAccessToken(context);
+        String accessToken = PrefUtils.getAccessToken(context);
         if (TextUtils.isEmpty(accessToken)) {
             Log.e("jsp", "has not access_token");
             return;
@@ -47,7 +47,7 @@ public class RequestFactory {
 
     public static void getHashTag(Context context, String hashTag,
                                         View progressBar, ResponseListener listener) {
-        String accessToken = PreferenceUtils.getAccessToken(context);
+        String accessToken = PrefUtils.getAccessToken(context);
         if (TextUtils.isEmpty(accessToken)) {
             Log.e("jsp", "has not access_token");
             return;
@@ -57,6 +57,21 @@ public class RequestFactory {
                 "/media/recent" + getEncodedParams(ParamFactory.getAccessTokenParams(accessToken));
 
         request(context, Request.Method.GET, url, null, progressBar, listener);
+    }
+
+    public static void postComment(
+            Context context, String mediaId, String comment, View progressBar, ResponseListener listener) {
+        String accessToken = PrefUtils.getAccessToken(context);
+        if (TextUtils.isEmpty(accessToken)) {
+            Log.e("jsp", "has not access_token");
+            return;
+        }
+
+        String url = "https://api.instagram.com/v1/media/"+ mediaId + "/comments";
+
+        HashMap<String, String> params = ParamFactory.getPostCommentParams(accessToken, comment);
+
+        request(context, Request.Method.POST, url, params, progressBar, listener);
     }
 
     protected static void request(Context context, int method, String url, HashMap<String, String> params,
@@ -130,6 +145,13 @@ public class RequestFactory {
         public static HashMap<String, String> getAccessTokenParams(String accessToken) {
             return getParams(
                     new BasicNameValuePair("access_token", accessToken));
+        }
+
+        public static HashMap<String, String> getPostCommentParams(String accessToken, String comment){
+            return getParams(
+                    new BasicNameValuePair("access_token", accessToken),
+                    new BasicNameValuePair("text", comment)
+                    );
         }
 
         public static HashMap<String, String> getParams(BasicNameValuePair... pairs) {

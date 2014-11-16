@@ -13,6 +13,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.config.PreferenceConfig;
 import com.orcpark.hashtagram.io.OnFinishedListener;
@@ -24,7 +26,7 @@ import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.MainViewPagerAdapter;
 import com.orcpark.hashtagram.ui.widget.SlidingTabLayout;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
-import com.orcpark.hashtagram.util.PreferenceUtils;
+import com.orcpark.hashtagram.util.PrefUtils;
 
 import java.util.ArrayList;
 
@@ -34,6 +36,7 @@ public class MainActivity extends BaseActivity
                                 BasicRecyclerAdapter.OnItemClickListener{
 
     public static final String SIGN_IN_FRAGMENT = "SignInFragment";
+    public static final String NEWSFEED = "Newsfeed";
 
     private boolean mHasAccessToken = false;
     @Override
@@ -44,7 +47,11 @@ public class MainActivity extends BaseActivity
         initPreferences();
         initLayout();
 
-        String accessToken = PreferenceUtils.getAccessToken(this);
+        showSignInFragmentIfNeed();
+    }
+
+    private void showSignInFragmentIfNeed() {
+        String accessToken = PrefUtils.getAccessToken(this);
         mHasAccessToken = !TextUtils.isEmpty(accessToken);
         if (mHasAccessToken) {
             initItems();
@@ -54,28 +61,27 @@ public class MainActivity extends BaseActivity
     }
 
     private void initPreferences() {
-        boolean hasInstalled = PreferenceUtils.hasInstalled(this);
+        boolean hasInstalled = PrefUtils.hasInstalled(this);
         if (!hasInstalled) {
-            HashtagramDatabase.getInstance(this).insert("Newsfeed");
-            PreferenceUtils.setHasInstalled(this);
+            HashtagramDatabase.getInstance(this).insert(NEWSFEED);
+            PrefUtils.setHasInstalled(this, true);
         }
     }
 
-    private ViewPager mViewPager;
-    private SlidingTabLayout mTabLayout;
+    @InjectView(R.id.view_pager) ViewPager mViewPager;
+    @InjectView(R.id.sliding_tab_layout) SlidingTabLayout mTabLayout;
 
     private MainViewPagerAdapter mViewPagerAdapter;
     private void initLayout() {
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(mToolBar);
-        mToolBar.setTitleTextColor(Color.WHITE);
+        ButterKnife.inject(this);
 
-        mViewPager = (ViewPager) findViewById(R.id.view_pager);
+        Toolbar toolbar = getToolBar();
+        setSupportActionBar(toolbar);
+
         mViewPager.setOffscreenPageLimit(1);
         mViewPager.setAdapter(mViewPagerAdapter =
                 new MainViewPagerAdapter(getSupportFragmentManager(), this));
 
-        mTabLayout = (SlidingTabLayout) findViewById(R.id.sliding_tab_layout);
         mTabLayout.setOnPageChangeListener(this);
     }
 
@@ -129,12 +135,13 @@ public class MainActivity extends BaseActivity
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_search) {
-            getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
-                                            android.R.anim.fade_in, android.R.anim.fade_out)
-                    .add(android.R.id.content, new SearchFragment(), "SEARCH_FRAGMENT")
-                    .addToBackStack(null)
-                    .commitAllowingStateLoss();
+            showSearchFragment();
+            return true;
+        } else if (id == R.id.action_log_out) {
+            logOut();
+            return true;
+        } else if (id == R.id.action_edit) {
+            showEditHashtagFragment();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -144,7 +151,7 @@ public class MainActivity extends BaseActivity
     public void onFinished(String accessToken) {
         if (TextUtils.isEmpty(accessToken)) {
             Toast.makeText(this,
-                    "인증에 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                    getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
         } else {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -154,9 +161,9 @@ public class MainActivity extends BaseActivity
             editor.commit();
 
             Toast.makeText(this,
-                    "인증에 성공하였습니다. 환영합니다.", Toast.LENGTH_SHORT).show();
+                    getString(R.string.authorize_success), Toast.LENGTH_SHORT).show();
 
-            PreferenceUtils.setAccessToken(this, accessToken);
+            PrefUtils.setAccessToken(this, accessToken);
 
             mHasAccessToken = true;
 
@@ -168,6 +175,40 @@ public class MainActivity extends BaseActivity
         getSupportFragmentManager().popBackStackImmediate();
     }
 
+    private void showEditHashtagFragment() {
+        ArrayList<String> items = HashtagramDatabase.getInstance(this).getAllHashTag();
+        if (items == null || items.size() < 2) {
+            Toast.makeText(this, getString(R.string.no_hashtag), Toast.LENGTH_LONG).show();
+            return;
+        }
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                        android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(android.R.id.content, new EditHashtagFragment(), "EDIT_HASHTAG_FRAGMENT")
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        Toast.makeText(this, "onNewIntent", Toast.LENGTH_SHORT).show();
+        getSupportFragmentManager().popBackStackImmediate();
+        initItems();
+    }
+
+    private void logOut() {
+        PrefUtils.removeAccessToken(this);
+        PrefUtils.setHasInstalled(this, false);
+        HashtagramDatabase.getInstance(this).deleteAll();
+        mViewPagerAdapter.setItems(null);
+        mTabLayout.setViewPager(mViewPager);
+
+        supportInvalidateOptionsMenu();
+
+        initPreferences();
+        showSignInFragmentIfNeed();
+    }
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -176,12 +217,9 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onPageSelected(int position) {
-//        Log.e("jsp", "onPageSelected");
         if (mViewPagerAdapter == null) {
             return;
         }
-//        InstagramFragment fragment = (InstagramFragment) mViewPagerAdapter.getItem(position);
-//        fragment.setTargetView(mTabLayout);
         showTargetViewForcibly();
     }
 
@@ -213,12 +251,17 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onActivityCreated(RecyclerFragment fragment) {
-        int currentPosition = mViewPager.getCurrentItem();
-        int position = fragment.getPosition();
-//        if (currentPosition == position) {
-            SlipLayout slipLayout = fragment.getSlipLayout();
-            slipLayout.setTargetView(getTartgetView());
-//        }
+        SlipLayout slipLayout = fragment.getSlipLayout();
+        slipLayout.setTargetView(getTartgetView());
+    }
+
+    private void showSearchFragment() {
+        getSupportFragmentManager().beginTransaction()
+                .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out,
+                        android.R.anim.fade_in, android.R.anim.fade_out)
+                .add(android.R.id.content, new SearchFragment(), "SEARCH_FRAGMENT")
+                .addToBackStack(null)
+                .commitAllowingStateLoss();
     }
 
     @Override
@@ -238,6 +281,8 @@ public class MainActivity extends BaseActivity
 
         Intent intent = new Intent(this, DetailActivity.class);
         intent.putExtra("item", ((InstaItem) item));
+        intent.putExtra("hashtag",
+                mViewPagerAdapter.getPageTitle(mViewPager.getCurrentItem()));
         startActivity(intent);
     }
 

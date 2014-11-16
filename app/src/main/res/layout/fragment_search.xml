@@ -15,6 +15,7 @@
         <EditText
                 android:id="@+id/et_search"
                 android:hint="Search Hashtag..."
+                android:textColorHint="#bbbbbb"
                 android:imeOptions="actionSearch"
                 android:inputType="text"
                 android:layout_gravity="center"

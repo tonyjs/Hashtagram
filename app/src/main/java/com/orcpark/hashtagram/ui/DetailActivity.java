@@ -8,11 +8,12 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
+import com.orcpark.hashtagram.ui.widget.SlipLayout;
 
 /**
  * Created by orcpark on 14. 11. 13..
  */
-public class DetailActivity extends BaseActivity {
+public class DetailActivity extends BaseActivity implements BaseFragment.OnSlipLayoutCreatedListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,19 +24,19 @@ public class DetailActivity extends BaseActivity {
     }
 
     private void initLayout() {
-        mToolBar = (Toolbar) findViewById(R.id.toolbar);
-
-        mToolBar.setNavigationIcon(R.drawable.ic_up);
-        mToolBar.setTitleTextColor(Color.WHITE);
+        Toolbar toolbar = getToolBar();
 
         Intent intent = getIntent();
-        InstaItem item = intent != null ? (InstaItem) intent.getSerializableExtra("item") : null;
-        String title = item != null ? item.getUser().getFullName() : null;
+
+        String title = intent != null ? intent.getStringExtra("hashtag") : null;
         if (!TextUtils.isEmpty(title)) {
-            mToolBar.setTitle(title);
+            toolbar.setTitle("#" + title);
         }
 
-        setSupportActionBar(mToolBar);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_up);
+
+        InstaItem item = intent != null ? (InstaItem) intent.getSerializableExtra("item") : null;
         addFragment(DetailFragment.newInstance(item));
     }
 
@@ -51,5 +52,10 @@ public class DetailActivity extends BaseActivity {
     @Override
     public int getContainerResId() {
         return R.id.container;
+    }
+
+    @Override
+    public void onSlipLayoutCreated(SlipLayout slipLayout) {
+        slipLayout.setTargetView(mToolBar);
     }
 }

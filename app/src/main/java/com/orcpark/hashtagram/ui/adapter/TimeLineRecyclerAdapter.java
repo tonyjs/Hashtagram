@@ -21,7 +21,7 @@ import java.util.ArrayList;
 /**
  * Created by orcpark on 14. 11. 9..
  */
-public class InstaRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
+public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
     public interface RequestMoreListener {
         public void onRequestMore();
     }
@@ -36,7 +36,7 @@ public class InstaRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
         FOOTER, ITEM
     }
 
-    public InstaRecyclerAdapter(Context context) {
+    public TimeLineRecyclerAdapter(Context context) {
         super(context);
     }
 
@@ -53,8 +53,7 @@ public class InstaRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
     @Override
     public void onBindViewHolder(BasicViewHolder basicViewHolder, int position) {
         int max = getItemCount();
-
-        if (max > 4 && position == max - 4) {
+        if (max >= 20 && max > 4 && position == max - 4) {
             if (mRequestMoreListener != null) {
                 mRequestMoreListener.onRequestMore();
             }
@@ -70,11 +69,13 @@ public class InstaRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
         InstaViewHolder holder = (InstaViewHolder) basicViewHolder;
         Item item = getItem(position);
 
-        holder.tvCreatedTime.setText(TimeUtils.getTimeUntilMinuteWithHyphen(item.getCreateTime()));
+        holder.tvCreatedTime.setText(TimeUtils.getRelativeTime(item.getCreateTime()));
+
         String summary = item.getCaption() != null ? item.getCaption().getTitle() : null;
         if (!TextUtils.isEmpty(summary)) {
             holder.tvSummary.setText(summary);
         }
+
         InstaImageInfo info = item.getImageInfo();
         InstaImageSpec spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="loading">로딩중입니다... 잠시만 기다려주세요...</string>
+    <string name="edit_hashtags">해쉬태그 편집</string>
+    <string name="log_out">로그아웃</string>
+    <string name="authorize_success">인증에 성공하였습니다. 환영합니다.</string>
+    <string name="authorize_fail">인증에 실패하였습니다.</string>
+    <string name="apply">적용</string>
+    <string name="no_hashtag">편집할 해쉬태그가 없습니다</string>
+</resources>

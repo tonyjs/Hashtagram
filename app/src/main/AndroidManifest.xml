@@ -21,6 +21,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.DetailActivity"
+                  android:windowSoftInputMode="stateHidden"
                   android:screenOrientation="portrait"/>
     </application>
 
