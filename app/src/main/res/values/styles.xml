@@ -10,6 +10,7 @@
         <item name="homeAsUpIndicator">@drawable/ic_up</item>
         <item name="android:homeAsUpIndicator">@drawable/ic_up</item>
 
+        <item name="actionOverflowButtonStyle">@style/AppActionBarTheme.Overflow</item>
         <item name="android:actionOverflowButtonStyle">@style/AppActionBarTheme.Overflow</item>
         <!--<item name="android:textColorPrimary">@android:color/black</item>-->
 
