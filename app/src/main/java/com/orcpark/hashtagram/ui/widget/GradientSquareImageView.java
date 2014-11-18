@@ -27,7 +27,7 @@ public class GradientSquareImageView extends SquareImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 //        Log.i("jsp", "onDraw - " + mShowingNull);
-        if (mShowingNull) {
+        if (getDrawable() != null) {
             Shader shader = new LinearGradient(0, 0, 0, getHeight(),
                     Color.TRANSPARENT, Color.parseColor(GRADIENT_COLOR),
                     Shader.TileMode.CLAMP);
@@ -41,10 +41,4 @@ public class GradientSquareImageView extends SquareImageView {
         }
     }
 
-    private boolean mShowingNull = false;
-    @Override
-    public void setImageBitmap(Bitmap bm) {
-        mShowingNull = bm != null;
-        super.setImageBitmap(bm);
-    }
 }
