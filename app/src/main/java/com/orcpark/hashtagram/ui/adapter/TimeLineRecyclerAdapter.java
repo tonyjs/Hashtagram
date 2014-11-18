@@ -53,7 +53,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
     @Override
     public void onBindViewHolder(BasicViewHolder basicViewHolder, int position) {
         int max = getItemCount();
-        if (max >= 20 && max > 4 && position == max - 4) {
+        if (max >= 10 && max > 4 && position == max - 4) {
             if (mRequestMoreListener != null) {
                 mRequestMoreListener.onRequestMore();
             }

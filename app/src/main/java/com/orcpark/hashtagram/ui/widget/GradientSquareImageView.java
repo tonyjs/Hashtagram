@@ -9,7 +9,7 @@ import android.util.AttributeSet;
  */
 public class GradientSquareImageView extends SquareImageView {
 
-    public static final String GRADIENT_COLOR = "#993d3d3d";
+    public static final String GRADIENT_COLOR = "#991d1d1d";
 
     public GradientSquareImageView(Context context) {
         super(context);
