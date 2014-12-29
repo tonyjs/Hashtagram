@@ -2,82 +2,71 @@ package com.orcpark.hashtagram.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.view.View;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by tony.park on 14. 11. 5..
  */
-public abstract class BasicRecyclerAdapter<T>
-                        extends RecyclerView.Adapter<BasicViewHolder> {
-    public interface OnItemClickListener {
-        public void onItemClick(Object item);
-    }
-    protected Context mContext;
+public abstract class BasicRecyclerAdapter<T> extends RecyclerView.Adapter {
 
+    private Context mContext;
+    private LayoutInflater mInflater;
     public BasicRecyclerAdapter(Context context) {
         mContext = context;
+        mInflater = LayoutInflater.from(mContext);
     }
 
-    private ArrayList<T> mItems;
-    public void setItems(ArrayList<T> items){
+    public BasicRecyclerAdapter(Context context, List<T> items) {
+        mContext = context;
+        mInflater = LayoutInflater.from(mContext);
+        setItems(items);
+    }
+
+    private List<T> mItems = new ArrayList<>();
+    public void setItems(List<T> items){
         mItems = items;
         notifyDataSetChanged();
     }
 
-    public void addItems(ArrayList<T> items) {
-        if (mItems == null) {
-            setItems(items);
-            return;
-        }
-
+    public void addItems(List<T> items) {
         mItems.addAll(items);
         notifyDataSetChanged();
     }
 
-    public void addItemsOnTop(ArrayList<T> items) {
-        if (mItems == null) {
-            setItems(items);
-            return;
-        }
-
+    public void addItemsOnTop(List<T> items) {
         mItems.addAll(0, items);
         notifyDataSetChanged();
     }
 
     public void addItem(T item) {
-        if (mItems == null) {
-            mItems = new ArrayList<T>();
-        }
         mItems.add(item);
-        notifyDataSetChanged();
+        notifyItemInserted(mItems.size() - 1);
     }
 
-    private OnItemClickListener mOnItemClickListener;
-
-    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
-        mOnItemClickListener = onItemClickListener;
+    public void removeItem(int position) {
+        if (getItemCount() > position) {
+            mItems.remove(position);
+            notifyItemRemoved(position);
+        }
     }
 
     @Override
-    public void onBindViewHolder(BasicViewHolder basicViewHolder, int i) {
-        final T item = getItem(i);
-        basicViewHolder.onBindView(item, i);
-        setItemClickListener(basicViewHolder.itemView, item);
+    public BasicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        return getViewHolder(parent, viewType);
     }
 
-    public void setItemClickListener(View view, final T item) {
-        if (mOnItemClickListener == null) {
-            return;
-        }
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mOnItemClickListener.onItemClick(item);
-            }
-        });
+    public abstract BasicViewHolder getViewHolder(ViewGroup parent, int viewType);
+
+    @Override
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        onBindViewHolder((BasicViewHolder) holder, position);
     }
+
+    public abstract void onBindViewHolder(BasicViewHolder viewHolder, int position);
 
     @Override
     public int getItemCount() {
@@ -85,7 +74,20 @@ public abstract class BasicRecyclerAdapter<T>
     }
 
     public T getItem(int position) {
-        return getItemCount() > 0 ? mItems.get(position) : null;
+        int max = mItems.size();
+        return max > position ? mItems.get(position) : null;
+    }
+
+    public Context getContext() {
+        return mContext;
+    }
+
+    public LayoutInflater getLayoutInflater() {
+        return mInflater;
+    }
+
+    public List<T> getItems() {
+        return mItems;
     }
 
 }

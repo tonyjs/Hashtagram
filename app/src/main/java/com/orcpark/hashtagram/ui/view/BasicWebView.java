@@ -71,7 +71,6 @@ public class BasicWebView extends WebView {
     private class GeekWebViewClient extends WebViewClient {
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            Log.d("jsp", "url = " + url);
             if (url.startsWith("http")) {
                 view.loadUrl(url);
                 return true;

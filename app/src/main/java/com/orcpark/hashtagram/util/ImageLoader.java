@@ -16,18 +16,22 @@ public class ImageLoader {
         load(context, url, imageView, false, NONE, NONE);
     }
 
-    public static void load(Context context, String url, ImageView imageView, boolean centerCrop) {
-        load(context, url, imageView, centerCrop, NONE, NONE);
+    public static void load(Context context, String url, ImageView imageView, boolean animate) {
+        load(context, url, imageView, animate, NONE, NONE);
     }
 
-    public static void load(Context context, String url, ImageView imageView, boolean centerCrop, int waitingImageResId) {
-        load(context, url, imageView, centerCrop, waitingImageResId, NONE);
+    public static void load(Context context, String url, ImageView imageView,
+                            boolean animate, int waitingImageResId) {
+        load(context, url, imageView, animate, waitingImageResId, NONE);
     }
 
-    public static void load(Context context, String url, ImageView imageView, boolean centerCrop, int waitingImageResId, int errorImageResId) {
+    public static void load(Context context, String url, ImageView imageView,
+                            boolean animate, int waitingImageResId, int errorImageResId) {
         DrawableTypeRequest<String> request = getRequest(context, url);
-        if (centerCrop) {
-            request.centerCrop();
+
+        request.dontTransform();
+        if (!animate) {
+            request.dontAnimate();
         }
 
         if (waitingImageResId != NONE) {

@@ -24,6 +24,7 @@ import com.orcpark.hashtagram.io.model.PageRecyclerItem;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
 import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.MainViewPagerAdapter;
+import com.orcpark.hashtagram.ui.widget.BasicRecyclerView;
 import com.orcpark.hashtagram.ui.widget.SlidingTabLayout;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.PrefUtils;
@@ -32,8 +33,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity
                             implements OnFinishedListener, ViewPager.OnPageChangeListener,
-                                RecyclerFragment.Listener, SearchFragment.OnSearchListener,
-                                BasicRecyclerAdapter.OnItemClickListener{
+                                RecyclerFragment.Listener, SearchFragment.OnSearchListener{
 
     public static final String SIGN_IN_FRAGMENT = "SignInFragment";
     public static final String NEWSFEED = "Newsfeed";
@@ -269,24 +269,25 @@ public class MainActivity extends BaseActivity
         handleQuery(search);
     }
 
-    @Override
-    public void onItemClick(Object item) {
-        if (item == null) {
-            return;
-        }
-        if (!(item instanceof InstaItem)) {
-            return;
-        }
-
-        Intent intent = new Intent(this, DetailActivity.class);
-        intent.putExtra("item", ((InstaItem) item));
-        intent.putExtra("hashtag",
-                mViewPagerAdapter.getPageTitle(mViewPager.getCurrentItem()));
-        startActivity(intent);
-    }
+//    @Override
+//    public void onItemClick(Object item) {
+//        if (item == null) {
+//            return;
+//        }
+//        if (!(item instanceof InstaItem)) {
+//            return;
+//        }
+//
+//        Intent intent = new Intent(this, DetailActivity.class);
+//        intent.putExtra("item", ((InstaItem) item));
+//        intent.putExtra("hashtag",
+//                mViewPagerAdapter.getPageTitle(mViewPager.getCurrentItem()));
+//        startActivity(intent);
+//    }
 
     @Override
     public int getContainerResId() {
         return R.id.container;
     }
+
 }

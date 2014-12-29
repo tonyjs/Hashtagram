@@ -8,12 +8,18 @@ import android.view.View;
  * Created by tony.park on 14. 11. 6..
  */
 public abstract class BasicViewHolder<T> extends RecyclerView.ViewHolder {
-
-    protected Context mContext;
+    private Context mContext;
     public BasicViewHolder(Context context, View itemView) {
         super(itemView);
         mContext = context;
     }
 
-    public void onBindView(T item, int position){};
+    public Context getContext() {
+        return mContext;
+    }
+
+    public void onBindView(){};
+    public void onBindView(final int position){};
+    public void onBindView(final T item){};
+    public void onBindView(final T item, int position){};
 }

@@ -1,6 +1,7 @@
 package com.orcpark.hashtagram.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +19,7 @@ import com.orcpark.hashtagram.io.model.insta.Instagram;
 import com.orcpark.hashtagram.io.request.ResponseListener;
 import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.TimeLineRecyclerAdapter;
+import com.orcpark.hashtagram.ui.widget.BasicRecyclerView;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.RequestFactory;
 import com.orcpark.hashtagram.util.UiUtils;
@@ -29,8 +31,10 @@ import java.util.ArrayList;
  * Created by orcpark on 2014. 9. 7..
  */
 public class RecyclerFragment extends BaseFragment
-        implements ResponseListener<JSONObject>, SwipeRefreshLayout.OnRefreshListener,
-                    TimeLineRecyclerAdapter.RequestMoreListener{
+        implements ResponseListener<JSONObject>,
+                    SwipeRefreshLayout.OnRefreshListener,
+                    TimeLineRecyclerAdapter.RequestMoreListener,
+                    BasicRecyclerView.OnItemClickListener{
 
     public interface Listener {
         public void onAttach(RecyclerFragment fragment);
@@ -84,9 +88,9 @@ public class RecyclerFragment extends BaseFragment
 
     private SwipeRefreshLayout mSwipeLayout;
 
-    private RecyclerView mRecyclerView;
+    private BasicRecyclerView mRecyclerView;
     private RecyclerView.LayoutManager mLayoutManager;
-    private TimeLineRecyclerAdapter mListAdapter;
+    private TimeLineRecyclerAdapter mAdapter;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -102,16 +106,17 @@ public class RecyclerFragment extends BaseFragment
         mSwipeLayout.setProgressViewOffset(false, paddingTop, paddingTop * 2);
         mSwipeLayout.setOnRefreshListener(this);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.recycler_view);
+        mRecyclerView = (BasicRecyclerView) rootView.findViewById(R.id.recycler_view);
         mLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mListAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext());
-        if(mActivity instanceof BasicRecyclerAdapter.OnItemClickListener) {
-            mListAdapter.setOnItemClickListener((BasicRecyclerAdapter.OnItemClickListener) mActivity);
-        }
-        mListAdapter.setRequestMoreListener(this);
+        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext());
+        mRecyclerView.setOnItemClickListener(this);
+//        if(mActivity instanceof BasicRecyclerAdapter.OnItemClickListener) {
+//            mAdapter.setOnItemClickListener((BasicRecyclerAdapter.OnItemClickListener) mActivity);
+//        }
+        mAdapter.setRequestMoreListener(this);
 
-        mRecyclerView.setAdapter(mListAdapter);
+        mRecyclerView.setAdapter(mAdapter);
 
         mSlipLayout = (SlipLayout) rootView.findViewById(R.id.layout_translate);
         mSlipLayout.setRecyclerView(mRecyclerView);
@@ -172,7 +177,7 @@ public class RecyclerFragment extends BaseFragment
             Instagram instagram = JsonParser.getInstagram(jsonObject);
             ArrayList<InstaItem> items = instagram.getInstaItems();
             mNextUrl = items != null && items.size() >= 0 ? instagram.getNextUrl() : null;
-            mListAdapter.setItems(items);
+            mAdapter.setItems(items);
         }
     }
 
@@ -204,7 +209,7 @@ public class RecyclerFragment extends BaseFragment
                         Instagram instagram = JsonParser.getInstagram(jsonObject);
                         ArrayList<InstaItem> items = instagram.getInstaItems();
                         mNextUrl = items != null && items.size() >= 0 ? instagram.getNextUrl() : null;
-                        mListAdapter.addItems(items);
+                        mAdapter.addItems(items);
                     }
                 }
 
@@ -220,5 +225,14 @@ public class RecyclerFragment extends BaseFragment
             ((Listener) mActivity).onDetach(this);
         }
         super.onDetach();
+    }
+
+    @Override
+    public void onItemClick(BasicRecyclerView parent, View child, int position, long id) {
+        InstaItem item = mAdapter.getItem(position);
+        Intent intent = new Intent(mActivity, DetailActivity.class);
+        intent.putExtra("item", item);
+        intent.putExtra("hashtag", mHashTag);
+        startActivity(intent);
     }
 }

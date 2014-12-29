@@ -6,6 +6,8 @@ import com.orcpark.hashtagram.io.model.BaseObject;
  * Created by JunSeon Park on 2014-04-04.
  */
 public class InstaItem extends BaseObject {
+
+    private boolean animated = false;
     private String id;
     private String attribution;
     private String type;
@@ -16,6 +18,15 @@ public class InstaItem extends BaseObject {
     private InstaComment comments;
     private boolean userHasLiked;
     private long createTime;
+
+
+    public boolean isAnimated() {
+        return animated;
+    }
+
+    public void setAnimated(boolean animated) {
+        this.animated = animated;
+    }
 
     public long getCreateTime() {
         return createTime;
