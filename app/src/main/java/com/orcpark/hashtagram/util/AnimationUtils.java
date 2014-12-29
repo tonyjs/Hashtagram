@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.view.View;
+import android.view.animation.DecelerateInterpolator;
 
 /**
  * Created by JunSeon Park on 14. 3. 14.
@@ -79,6 +80,8 @@ public class AnimationUtils {
                     public void onAnimationEnd(Animator animation) {
                         view.animate()
                                 .translationY(0)
+                                .setStartDelay(duration)
+                                .setInterpolator(new DecelerateInterpolator())
                                 .setDuration(duration)
                                 .setListener(null);
                     }

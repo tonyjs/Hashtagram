@@ -135,10 +135,10 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
             tvComments.setText(commentCount);
 
             ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
-            if (!item.isAnimated()) {
-                AnimationUtils.startSoftlySlideUp(itemView, 500);
-                item.setAnimated(true);
-            }
+//            if (!item.isAnimated()) {
+//                AnimationUtils.startSoftlySlideUp(itemView, 250);
+//                item.setAnimated(true);
+//            }
 //            ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
         }
     }
