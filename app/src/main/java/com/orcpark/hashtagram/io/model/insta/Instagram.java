@@ -24,4 +24,11 @@ public class Instagram {
     public void setNextUrl(String nextUrl) {
         this.nextUrl = nextUrl;
     }
+
+    @Override
+    public String toString() {
+        return "Instagram{" +
+                ", nextUrl='" + nextUrl + '\'' +
+                '}';
+    }
 }

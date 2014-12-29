@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -57,7 +58,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
     public void onBindViewHolder(BasicViewHolder basicViewHolder, int position) {
         basicViewHolder.onBindView(getItem(position));
 
-        int max = getItemCount();
+        int max = getItems().size();
         if (max > 4 && position == max - 1) {
             if (mRequestMoreListener != null) {
                 mRequestMoreListener.onRequestMore();
@@ -65,8 +66,18 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
         }
     }
 
+    private boolean mCanShowingProgress = true;
+
+    public void removeProgress() {
+        mCanShowingProgress = false;
+        notifyDataSetChanged();
+    }
+
     @Override
     public int getItemCount() {
+        if (!mCanShowingProgress) {
+            return super.getItemCount();
+        }
         int itemCount = super.getItemCount() + 1;
         if (itemCount < 2) {
             itemCount = 0;
@@ -76,6 +87,9 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
 
     @Override
     public int getItemViewType(int position) {
+        if (!mCanShowingProgress) {
+            return Type.ITEM.ordinal();
+        }
         int size = getItems().size();
         return position == size ? Type.FOOTER.ordinal() : Type.ITEM.ordinal();
     }
@@ -120,13 +134,12 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
                     Integer.toString(comment.getCount()) : Integer.toString(0);
             tvComments.setText(commentCount);
 
-//            if (!item.isAnimated()) {
-//                ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
-//                item.setAnimated(true);
-//            } else {
-//                ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
-//            }
             ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
+            if (!item.isAnimated()) {
+                AnimationUtils.startSoftlySlideUp(itemView, 500);
+                item.setAnimated(true);
+            }
+//            ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
         }
     }
 

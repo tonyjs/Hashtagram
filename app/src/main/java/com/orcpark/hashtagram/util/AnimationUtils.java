@@ -2,6 +2,7 @@ package com.orcpark.hashtagram.util;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
+import android.content.Context;
 import android.view.View;
 
 /**
@@ -65,6 +66,23 @@ public class AnimationUtils {
                     }
                 })
                 .start();
+    }
+
+    public static void startSoftlySlideUp(final View view, final int duration) {
+        Context context = view.getContext();
+        final int translateY = context.getResources().getDisplayMetrics().heightPixels;
+        view.animate()
+                .translationY(translateY)
+                .setDuration(0)
+                .setListener(new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        view.animate()
+                                .translationY(0)
+                                .setDuration(duration)
+                                .setListener(null);
+                    }
+                });
     }
 
 }

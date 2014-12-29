@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -156,6 +157,11 @@ public class RecyclerFragment extends BaseFragment
             return;
         }
 
+        if (!mCanRequestMore) {
+            mSwipeLayout.setRefreshing(false);
+            return;
+        }
+
         mInAsync = true;
 
         if (!TextUtils.isEmpty(nextUrl)) {
@@ -175,15 +181,23 @@ public class RecyclerFragment extends BaseFragment
     public void onResponse(JSONObject jsonObject) {
         if(validateAndHandleRefresh(jsonObject)){
             Instagram instagram = JsonParser.getInstagram(jsonObject);
+
             ArrayList<InstaItem> items = instagram.getInstaItems();
-            mNextUrl = items != null && items.size() >= 0 ? instagram.getNextUrl() : null;
+            mNextUrl = instagram.getNextUrl();
+            mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
             mAdapter.setItems(items);
+            if (!mCanRequestMore) {
+                mAdapter.removeProgress();
+            }
         }
     }
 
     @Override
     public void onError(VolleyError error) {
         mSwipeLayout.setRefreshing(false);
+        mCanRequestMore = false;
+        mInAsync = false;
+        mAdapter.removeProgress();
     }
 
     private boolean validateAndHandleRefresh(JSONObject jsonObject) {
@@ -200,7 +214,7 @@ public class RecyclerFragment extends BaseFragment
 
         return true;
     }
-
+    private boolean mCanRequestMore = true;
     ResponseListener<JSONObject> mMoreResponseListener =
             new ResponseListener<JSONObject>() {
                 @Override
@@ -208,14 +222,21 @@ public class RecyclerFragment extends BaseFragment
                     if(validateAndHandleRefresh(jsonObject)){
                         Instagram instagram = JsonParser.getInstagram(jsonObject);
                         ArrayList<InstaItem> items = instagram.getInstaItems();
-                        mNextUrl = items != null && items.size() >= 0 ? instagram.getNextUrl() : null;
+                        mNextUrl = instagram.getNextUrl();
                         mAdapter.addItems(items);
+                        mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
+                        if (!mCanRequestMore) {
+                            mAdapter.removeProgress();
+                        }
                     }
                 }
 
                 @Override
                 public void onError(VolleyError error) {
                     mSwipeLayout.setRefreshing(false);
+                    mCanRequestMore = false;
+                    mInAsync = false;
+                    mAdapter.removeProgress();
                 }
             };
 
