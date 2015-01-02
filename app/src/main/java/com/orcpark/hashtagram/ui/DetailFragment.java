@@ -1,16 +1,17 @@
 package com.orcpark.hashtagram.ui;
 
 import android.os.Bundle;
-import android.support.v4.text.TextUtilsCompat;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import butterknife.OnClick;
+
 import com.android.volley.VolleyError;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.*;
@@ -23,7 +24,7 @@ import com.orcpark.hashtagram.ui.widget.SlipScrollView;
 import com.orcpark.hashtagram.util.ImageLoader;
 import com.orcpark.hashtagram.util.RequestFactory;
 import com.orcpark.hashtagram.util.TimeUtils;
-import com.orcpark.hashtagram.util.UiUtils;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -45,9 +46,34 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.inject(this, rootView);
-        initLayout();
+        setHasOptionsMenu(true);
         return rootView;
     }
+
+    private MenuItem mMenuFavorite;
+    private MenuItem mMenuFavoriteCount;
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.detail, menu);
+
+        mMenuFavorite = menu.findItem(R.id.action_favorite);
+        mMenuFavoriteCount = menu.findItem(R.id.favorite_count);
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        initLayout();
+    }
+
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        if (item.getItemId() == R.id.action_favorite) {
+//            return true;
+//        }
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @InjectView(R.id.iv_thumb) ImageView mIvThumb;
     @InjectView(R.id.tv_summary) TextView mTvSummary;
@@ -86,7 +112,7 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
         String commentCount = comment != null ? Integer.toString(comment.getCount()) : Integer.toString(0);
         mTvCommentCount.setText(commentCount);
 
-        setBtnLike(item);
+        setLikeViews(item);
 
         ArrayList<InstaCommentItem> comments = comment.getItems();
         mCommentAdapter.setItems(comments);
@@ -129,20 +155,35 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
                 }
             };
 
-    private void setBtnLike(final InstaItem item) {
+    private void setLikeViews(final InstaItem item) {
         final boolean userHasLiked = item.userHasLiked();
+        mMenuFavorite.setEnabled(userHasLiked);
         mBtnLike.setSelected(userHasLiked);
+
         final InstaLikes likes = item.getLikes();
         String likesCount = likes != null ?
                 Integer.toString(likes.getCount()) : Integer.toString(0);
+
         mTvLikesCount.setText(likesCount);
+        mMenuFavoriteCount.setTitle(likesCount);
+
         mBtnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleFeedback(item, userHasLiked);
                 item.setUserHasLiked(!userHasLiked);
                 likes.setCount(likes.getCount() + (userHasLiked ? -1 : +1));
-                setBtnLike(item);
+                setLikeViews(item);
+            }
+        });
+        mMenuFavorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                handleFeedback(item, userHasLiked);
+                item.setUserHasLiked(!userHasLiked);
+                likes.setCount(likes.getCount() + (userHasLiked ? -1 : +1));
+                setLikeViews(item);
+                return true;
             }
         });
     }

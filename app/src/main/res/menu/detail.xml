@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hashtagram="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_favorite"
+        android:title="Favorite"
+        android:icon="@drawable/selector_favorite_48"
+        android:orderInCategory="0"
+        hashtagram:showAsAction="always"/>
+    <item
+        android:id="@+id/favorite_count"
+        android:title=""
+        android:orderInCategory="1"
+        hashtagram:showAsAction="always"/>
+</menu>
