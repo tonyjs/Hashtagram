@@ -10,6 +10,10 @@ public interface InstaConfig {
 
     String INSTA_REDIRECT_URI = "http://hashtagram.com";
 
-    String INSTA_AUTHORIZATION_URL = "https://instagram.com/oauth/authorize/?client_id=" + INSTA_CLIENT_ID
-            + "&redirect_uri=" + INSTA_REDIRECT_URI + "&response_type=token&scope=likes+comments";
+    String INSTA_AUTHORIZATION_URL =
+            "https://instagram.com/oauth/authorize/?"
+                    + "client_id=" + INSTA_CLIENT_ID
+                    + "&redirect_uri=" + INSTA_REDIRECT_URI
+                    + "&response_type=token"
+                    + "&scope=likes+comments";
 }
