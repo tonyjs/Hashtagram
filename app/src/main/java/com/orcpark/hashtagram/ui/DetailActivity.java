@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.MenuItem;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
@@ -36,8 +37,20 @@ public class DetailActivity extends BaseActivity implements BaseFragment.OnSlipL
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_up);
 
-        InstaItem item = intent != null ? (InstaItem) intent.getSerializableExtra("item") : null;
+        InstaItem item = getItem();
         addFragment(DetailFragment.newInstance(item));
+    }
+
+    private InstaItem getItem() {
+        return getIntent() != null ? (InstaItem) getIntent().getSerializableExtra("item") : null;
+    }
+
+    @Override
+    public void finish() {
+        Intent intent = new Intent();
+        intent.putExtra("item", getItem());
+        setResult(RESULT_OK, intent);
+        super.finish();
     }
 
     @Override

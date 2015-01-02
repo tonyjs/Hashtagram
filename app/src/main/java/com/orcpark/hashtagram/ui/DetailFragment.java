@@ -3,6 +3,7 @@ package com.orcpark.hashtagram.ui;
 import android.os.Bundle;
 import android.support.v4.text.TextUtilsCompat;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -58,8 +59,9 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
     @InjectView(R.id.slip_layout) SlipLayout mSlipLayout;
     @InjectView(R.id.drag_layout) DragLayout mDragLayout;
     @InjectView(R.id.v_metaphor) View mMetaphor;
-
     @InjectView(R.id.list_view) PullCatchListView mPullCatchListView;
+    @InjectView(R.id.btn_like) View mBtnLike;
+    @InjectView(R.id.tv_likes_count) TextView mTvLikesCount;
     private CommentAdapter mCommentAdapter;
     private void initLayout() {
         mDragLayout.setMetaphor(mMetaphor);
@@ -83,6 +85,8 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
         InstaComment comment = item.getComments();
         String commentCount = comment != null ? Integer.toString(comment.getCount()) : Integer.toString(0);
         mTvCommentCount.setText(commentCount);
+
+        setBtnLike(item);
 
         ArrayList<InstaCommentItem> comments = comment.getItems();
         mCommentAdapter.setItems(comments);
@@ -110,6 +114,52 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
     private InstaItem getItem() {
         Bundle args = getArguments();
         return (InstaItem) args.getSerializable(KEY_ITEM);
+    }
+
+    private ResponseListener<JSONObject> mFeedbackCallback =
+            new ResponseListener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    Log.e("jsp", "success - " + response.toString());
+                }
+
+                @Override
+                public void onError(VolleyError error) {
+                    Log.e("jsp", "error - " + error.getMessage());
+                }
+            };
+
+    private void setBtnLike(final InstaItem item) {
+        final boolean userHasLiked = item.userHasLiked();
+        mBtnLike.setSelected(userHasLiked);
+        final InstaLikes likes = item.getLikes();
+        String likesCount = likes != null ?
+                Integer.toString(likes.getCount()) : Integer.toString(0);
+        mTvLikesCount.setText(likesCount);
+        mBtnLike.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                handleFeedback(item, userHasLiked);
+                item.setUserHasLiked(!userHasLiked);
+                likes.setCount(likes.getCount() + (userHasLiked ? -1 : +1));
+                setBtnLike(item);
+            }
+        });
+    }
+
+    private void handleFeedback(InstaItem item, boolean userHasLiked) {
+        String messageFormat = null;
+        if (userHasLiked) {
+            messageFormat  = "%s 님의 게시물의 좋아요를 취소합니다.";
+            RequestFactory.postUnLike(getActivity(), item.getId(), null, mFeedbackCallback);
+        } else {
+            messageFormat  = "%s 님의 게시물을 좋아합니다.";
+            RequestFactory.postLike(getActivity(), item.getId(), null, mFeedbackCallback);
+        }
+
+        Toast.makeText(getActivity(),
+                String.format(messageFormat, item.getUser().getName()),
+                Toast.LENGTH_SHORT).show();
     }
 
     @Override

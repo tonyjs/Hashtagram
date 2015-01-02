@@ -84,7 +84,7 @@ public class InstaItem extends BaseObject {
         this.caption = caption;
     }
 
-    public boolean isUserHasLiked() {
+    public boolean userHasLiked() {
         return userHasLiked;
     }
 

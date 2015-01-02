@@ -76,6 +76,35 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
             </LinearLayout>
+
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <View
+                    android:id="@+id/btn_like"
+                    android:background="@drawable/selector_favorite_36"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"/>
+
+                <TextView
+                    android:id="@+id/tv_likes_count"
+                    android:text="0"
+                    android:layout_gravity="center"
+                    android:textSize="15sp"
+                    android:textColor="#ffffff"
+                    android:shadowDy="1.5"
+                    android:shadowDx="1.5"
+                    android:shadowRadius="1.0"
+                    android:shadowColor="#000000"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
         </RelativeLayout>
     </LinearLayout>
     <LinearLayout

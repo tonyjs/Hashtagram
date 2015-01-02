@@ -74,16 +74,47 @@ public class RequestFactory {
         request(context, Request.Method.POST, url, params, progressBar, listener);
     }
 
+    public static void postLike(Context context, String mediaId,
+                                View progressBar, ResponseListener listener){
+        String accessToken = PrefUtils.getAccessToken(context);
+        if (TextUtils.isEmpty(accessToken)) {
+            Log.e("jsp", "has not access_token");
+            return;
+        }
+
+        String url = "https://api.instagram.com/v1/media/"+ mediaId + "/likes";
+
+        HashMap<String, String> params = ParamFactory.getAccessTokenParams(accessToken);
+
+        request(context, Request.Method.POST, url, params, progressBar, listener);
+    }
+
+    public static void postUnLike(Context context, String mediaId,
+                                View progressBar, ResponseListener listener){
+        String accessToken = PrefUtils.getAccessToken(context);
+        if (TextUtils.isEmpty(accessToken)) {
+            Log.e("jsp", "has not access_token");
+            return;
+        }
+
+        String url = "https://api.instagram.com/v1/media/"+ mediaId + "/likes";
+
+        HashMap<String, String> params = ParamFactory.getAccessTokenParams(accessToken);
+
+        request(context, Request.Method.DELETE, url, params, progressBar, listener);
+    }
+
     protected static void request(Context context, int method, String url, HashMap<String, String> params,
                                   View progressBar, ResponseListener listener) {
 
-        boolean get = method == Request.Method.GET;
-        if (get) {
+        boolean useUrlParameter =
+                (method == Request.Method.GET) || (method == Request.Method.DELETE);
+        if (useUrlParameter) {
             url += getEncodedParams(params);
         }
 
         JsonObjectRequester requester = new JsonObjectRequester(method, url, listener);
-        if (!get && params != null && params.size() >= 0) {
+        if (!useUrlParameter && params != null && params.size() >= 0) {
             requester.setParams(params);
         }
 

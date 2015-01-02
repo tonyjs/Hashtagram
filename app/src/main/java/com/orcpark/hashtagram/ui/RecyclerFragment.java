@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.android.volley.VolleyError;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.config.HashtagConfig;
@@ -36,6 +38,8 @@ public class RecyclerFragment extends BaseFragment
                     SwipeRefreshLayout.OnRefreshListener,
                     TimeLineRecyclerAdapter.RequestMoreListener,
                     BasicRecyclerView.OnItemClickListener{
+
+    public static final int REQUEST_CODE_MANAGE_ITEM = 1;
 
     public interface Listener {
         public void onAttach(RecyclerFragment fragment);
@@ -254,6 +258,28 @@ public class RecyclerFragment extends BaseFragment
         Intent intent = new Intent(mActivity, DetailActivity.class);
         intent.putExtra("item", item);
         intent.putExtra("hashtag", mHashTag);
-        startActivity(intent);
+        startActivityForResult(intent, REQUEST_CODE_MANAGE_ITEM);
+//        startActivity(intent);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CODE_MANAGE_ITEM
+                && resultCode == Activity.RESULT_OK
+                && data != null) {
+            InstaItem item = (InstaItem) data.getSerializableExtra("item");
+            int max = mAdapter.getItems().size();
+            for (int i = 0; i < max; i++) {
+                InstaItem t = mAdapter.getItem(i);
+                if (t.getId().equals(item.getId())) {
+                    t.setUserHasLiked(item.userHasLiked());
+                    t.setLikes(item.getLikes());
+                    t.setComments(item.getComments());
+                    mAdapter.notifyItemChanged(i);
+                    break;
+                }
+            }
+        }
     }
 }
