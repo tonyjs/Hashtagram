@@ -14,7 +14,8 @@
     <!--<com.orcp.library.ui.widget.ScaleNetworkImageView-->
     <!--<com.android.volley.toolbox.NetworkImageView-->
             <!--android:scaleType="centerCrop"-->
-    <com.orcpark.hashtagram.ui.widget.GradientSquareImageView
+    <!--<com.orcpark.hashtagram.ui.widget.GradientSquareImageView-->
+    <com.orcpark.hashtagram.ui.widget.GradientNetworkImageView
             android:id="@+id/iv_thumb"
             android:scaleType="fitXY"
             android:layout_width="match_parent"

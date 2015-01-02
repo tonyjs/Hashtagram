@@ -6,6 +6,7 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content">
 
+    <!--<com.orcpark.hashtagram.ui.widget.GradientNetworkImageView-->
     <com.orcpark.hashtagram.ui.widget.GradientSquareImageView
             android:id="@+id/iv_thumb"
             android:scaleType="fitXY"

@@ -5,7 +5,7 @@
     <item
         android:id="@+id/action_favorite"
         android:title="Favorite"
-        android:icon="@drawable/selector_favorite_48"
+        android:icon="@drawable/ic_favorite_outline_white_48dp"
         android:orderInCategory="0"
         hashtagram:showAsAction="always"/>
     <item

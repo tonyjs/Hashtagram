@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.*;
+import com.orcpark.hashtagram.ui.widget.GradientNetworkImageView;
 import com.orcpark.hashtagram.ui.widget.GradientSquareImageView;
 import com.orcpark.hashtagram.util.ImageLoader;
 import com.orcpark.hashtagram.util.TimeUtils;
@@ -36,7 +37,7 @@ public class TimeLineAdapter extends BasicAdapter<InstaItem> {
             convertView = mInflater.inflate(R.layout.list_item_insta, parent, false);
         }
 
-        GradientSquareImageView ivThumb = SparseViewHolder.get(convertView, R.id.iv_thumb);
+        GradientNetworkImageView ivThumb = SparseViewHolder.get(convertView, R.id.iv_thumb);
         TextView tvSummary = SparseViewHolder.get(convertView, R.id.tv_summary);
         ImageView ivAuthor = SparseViewHolder.get(convertView, R.id.iv_author);
         TextView tvAuthor = SparseViewHolder.get(convertView, R.id.tv_author);

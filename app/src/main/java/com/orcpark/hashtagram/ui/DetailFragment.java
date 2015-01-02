@@ -86,8 +86,6 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
     @InjectView(R.id.drag_layout) DragLayout mDragLayout;
     @InjectView(R.id.v_metaphor) View mMetaphor;
     @InjectView(R.id.list_view) PullCatchListView mPullCatchListView;
-    @InjectView(R.id.btn_like) View mBtnLike;
-    @InjectView(R.id.tv_likes_count) TextView mTvLikesCount;
     private CommentAdapter mCommentAdapter;
     private void initLayout() {
         mDragLayout.setMetaphor(mMetaphor);
@@ -157,25 +155,15 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
 
     private void setLikeViews(final InstaItem item) {
         final boolean userHasLiked = item.userHasLiked();
-        mMenuFavorite.setEnabled(userHasLiked);
-        mBtnLike.setSelected(userHasLiked);
+        mMenuFavorite.setIcon(userHasLiked ?
+                R.drawable.ic_favorite_white_48dp : R.drawable.ic_favorite_outline_white_48dp);
 
         final InstaLikes likes = item.getLikes();
         String likesCount = likes != null ?
                 Integer.toString(likes.getCount()) : Integer.toString(0);
 
-        mTvLikesCount.setText(likesCount);
         mMenuFavoriteCount.setTitle(likesCount);
 
-        mBtnLike.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                handleFeedback(item, userHasLiked);
-                item.setUserHasLiked(!userHasLiked);
-                likes.setCount(likes.getCount() + (userHasLiked ? -1 : +1));
-                setLikeViews(item);
-            }
-        });
         mMenuFavorite.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -188,6 +176,7 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
         });
     }
 
+    private Toast mToast;
     private void handleFeedback(InstaItem item, boolean userHasLiked) {
         String messageFormat = null;
         if (userHasLiked) {
@@ -198,9 +187,16 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
             RequestFactory.postLike(getActivity(), item.getId(), null, mFeedbackCallback);
         }
 
-        Toast.makeText(getActivity(),
-                String.format(messageFormat, item.getUser().getName()),
-                Toast.LENGTH_SHORT).show();
+        if (mToast == null) {
+            mToast = Toast.makeText(
+                    getActivity(), String.format(messageFormat, item.getUser().getName()), Toast.LENGTH_SHORT);
+        } else {
+            mToast.cancel();
+            mToast = Toast.makeText(
+                    getActivity(), String.format(messageFormat, item.getUser().getName()), Toast.LENGTH_SHORT);
+        }
+
+        mToast.show();
     }
 
     @Override
