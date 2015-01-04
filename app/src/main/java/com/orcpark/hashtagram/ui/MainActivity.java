@@ -32,7 +32,8 @@ public class MainActivity extends BaseActivity
         implements NavigationFragment.LifecycleCallback, NavigationFragment.NavigationCallback,
                     OnFinishedListener, RecyclerFragment.Listener, SearchFragment.OnSearchListener{
 
-    public static final String SIGN_IN_FRAGMENT = "SignInFragment";
+    public static final String FRAGMENT_SIGN_IN = "SignInFragment";
+    public static final String RECYCLER_FRAGMENT = "RecyclerFragment";
     public static final String NEWSFEED = "Newsfeed";
 
     private boolean mHasAccessToken = false;
@@ -85,7 +86,7 @@ public class MainActivity extends BaseActivity
     private void showSignInFragment() {
         SignInFragment signInFragment = SignInFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, signInFragment, SIGN_IN_FRAGMENT)
+                .add(android.R.id.content, signInFragment, FRAGMENT_SIGN_IN)
 //                .addToBackStack(null)
                 .commit();
     }
@@ -186,7 +187,15 @@ public class MainActivity extends BaseActivity
 
     private void detachSignInFragment() {
         FragmentManager fm = getSupportFragmentManager();
-        Fragment fragment = fm.findFragmentByTag(SIGN_IN_FRAGMENT);
+        Fragment fragment = fm.findFragmentByTag(FRAGMENT_SIGN_IN);
+        if (fragment != null) {
+            fm.beginTransaction().detach(fragment).commitAllowingStateLoss();
+        }
+    }
+
+    private void detachRecyclerFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(RECYCLER_FRAGMENT);
         if (fragment != null) {
             fm.beginTransaction().detach(fragment).commitAllowingStateLoss();
         }
@@ -218,26 +227,23 @@ public class MainActivity extends BaseActivity
         PrefUtils.setHasInstalled(this, false);
         HashtagramDatabase.getInstance(this).deleteAll();
 
+        detachRecyclerFragment();
+
         supportInvalidateOptionsMenu();
 
         initPreferences();
         showSignInFragmentIfNeed();
     }
 
-    private void showTargetViewForcibly() {
-        mToolBar.animate()
-                .translationY(0)
-                .setDuration(150);
-    }
-
-    public View getTartgetView() {
+    public View getTargetView() {
         return findViewById(R.id.layout_toolbar);
     }
 
     @Override
     public void onActivityCreated(RecyclerFragment fragment) {
         SlipLayout slipLayout = fragment.getSlipLayout();
-        slipLayout.setTargetView(getTartgetView());
+        slipLayout.setTargetView(getTargetView());
+        slipLayout.showTargetViewForcibly();
     }
 
     private void showSearchFragment() {
@@ -255,22 +261,6 @@ public class MainActivity extends BaseActivity
         handleQuery(search);
     }
 
-//    @Override
-//    public void onItemClick(Object item) {
-//        if (item == null) {
-//            return;
-//        }
-//        if (!(item instanceof InstaItem)) {
-//            return;
-//        }
-//
-//        Intent intent = new Intent(this, DetailActivity.class);
-//        intent.putExtra("item", ((InstaItem) item));
-//        intent.putExtra("hashtag",
-//                mViewPagerAdapter.getPageTitle(mViewPager.getCurrentItem()));
-//        startActivity(intent);
-//    }
-
     @Override
     public int getContainerResId() {
         return R.id.fragment_container;
@@ -286,8 +276,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onItemSelected(PageItem item) {
         Fragment fragment = item.getFragment();
-        replaceFragment(fragment);
-        showTargetViewForcibly();
+        replaceFragment(fragment, RECYCLER_FRAGMENT);
         mDrawer.closeDrawer(Gravity.START);
     }
 }

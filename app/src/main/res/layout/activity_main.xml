@@ -15,20 +15,21 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
-        <LinearLayout
+        <FrameLayout
             android:id="@+id/layout_toolbar"
-            android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <include
                 layout="@layout/toolbar"/>
 
-            <View
-                android:background="@drawable/gradient_reverse"
-                android:layout_width="match_parent"
-                android:layout_height="8dp"/>
-        </LinearLayout>
+        </FrameLayout>
+
+        <View
+            android:layout_below="@id/layout_toolbar"
+            android:background="@drawable/gradient_reverse"
+            android:layout_width="match_parent"
+            android:layout_height="8dp"/>
 
     </RelativeLayout>
 
