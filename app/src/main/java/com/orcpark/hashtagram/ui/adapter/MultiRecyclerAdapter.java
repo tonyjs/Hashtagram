@@ -82,7 +82,7 @@ public abstract class MultiRecyclerAdapter extends RecyclerView.Adapter<BasicVie
 
     @Override
     public void onBindViewHolder(BasicViewHolder holder, int position) {
-        holder.onBindView(getItem(position), position);
+        holder.onBindView(getItem(position));
     }
 
     public Object getItem(int position) {

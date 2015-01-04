@@ -42,6 +42,14 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .commitAllowingStateLoss();
     }
 
+    public void replaceFragment(Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(getContainerResId(), fragment,
+                        ((Object)fragment).getClass().getSimpleName())
+                .commitAllowingStateLoss();
+    }
+
     public void popAllBackStack() {
         int max = getSupportFragmentManager().getBackStackEntryCount();
         if (max <= 0) {

@@ -1,12 +1,9 @@
 package com.orcpark.hashtagram.ui;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.util.Log;
-import android.view.Menu;
 import android.view.MenuItem;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
@@ -65,7 +62,7 @@ public class DetailActivity extends BaseActivity implements BaseFragment.OnSlipL
 
     @Override
     public int getContainerResId() {
-        return R.id.container;
+        return R.id.fragment_container;
     }
 
     @Override

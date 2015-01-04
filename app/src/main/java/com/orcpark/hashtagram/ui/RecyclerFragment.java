@@ -42,10 +42,6 @@ public class RecyclerFragment extends BaseFragment
     public static final int REQUEST_CODE_MANAGE_ITEM = 1;
 
     public interface Listener {
-        public void onAttach(RecyclerFragment fragment);
-
-        public void onDetach(RecyclerFragment fragment);
-
         public void onActivityCreated(RecyclerFragment fragment);
     }
 
@@ -77,14 +73,6 @@ public class RecyclerFragment extends BaseFragment
 
     public int getPosition() {
         return mPosition;
-    }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (activity instanceof Listener) {
-            ((Listener) activity).onAttach(this);
-        }
     }
 
     private View mProgressBar;
@@ -243,14 +231,6 @@ public class RecyclerFragment extends BaseFragment
                     mAdapter.removeProgress();
                 }
             };
-
-    @Override
-    public void onDetach() {
-        if (mActivity instanceof Listener) {
-            ((Listener) mActivity).onDetach(this);
-        }
-        super.onDetach();
-    }
 
     @Override
     public void onItemClick(BasicRecyclerView parent, View child, int position, long id) {

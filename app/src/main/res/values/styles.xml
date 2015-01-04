@@ -18,10 +18,10 @@
 
         <item name="android:colorPrimary">@color/colors_app_theme</item>
         <item name="colorPrimary">@color/colors_app_theme</item>
-        <item name="android:colorPrimaryDark">@color/colors_app_theme_dark</item>
-        <item name="colorPrimaryDark">@color/colors_app_theme_dark</item>
-        <item name="android:colorAccent">@color/colors_app_theme_accent</item>
-        <item name="colorAccent">@color/colors_app_theme_accent</item>
+        <item name="android:colorPrimaryDark">@color/colors_app_theme</item>
+        <item name="colorPrimaryDark">@color/colors_app_theme</item>
+        <item name="android:colorAccent">@color/colors_app_theme</item>
+        <item name="colorAccent">@color/colors_app_theme</item>
 
         <item name="android:actionBarStyle">@style/AppActionBarTheme</item>
         <item name="actionBarStyle">@style/AppActionBarTheme</item>

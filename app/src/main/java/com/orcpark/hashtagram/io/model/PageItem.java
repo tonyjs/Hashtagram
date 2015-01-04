@@ -7,6 +7,7 @@ import com.orcpark.hashtagram.ui.ListFragment;
  * Created by orcpark on 2014. 9. 7..
  */
 public class PageItem {
+    private boolean selected = false;
     private String hashTag;
     private ListFragment fragment;
 
@@ -26,4 +27,11 @@ public class PageItem {
         return fragment;
     }
 
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
+    }
 }
