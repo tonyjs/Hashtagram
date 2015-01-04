@@ -1,10 +1,12 @@
 package com.orcpark.hashtagram.util;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import com.android.volley.Request;
+import com.orcpark.hashtagram.config.InstaConfig;
 import com.orcpark.hashtagram.io.request.JsonObjectRequester;
 import com.orcpark.hashtagram.io.request.RequestQueueManager;
 import com.orcpark.hashtagram.io.request.Requester;
@@ -57,6 +59,19 @@ public class RequestFactory {
                 "/media/recent" + getEncodedParams(ParamFactory.getAccessTokenParams(accessToken));
 
         request(context, Request.Method.GET, url, null, progressBar, listener);
+    }
+
+    public static void getUser(Context context, String code,
+                               Dialog dialog, ResponseListener listener) {
+        if(TextUtils.isEmpty(code)){
+            return;
+        }
+        String url = "https://api.instagram.com/oauth/access_token";
+
+        HashMap<String, String> params = ParamFactory.getUserParams(code);
+
+        request(context, Request.Method.POST, url, params, dialog, listener);
+
     }
 
     public static void postComment(
@@ -123,6 +138,25 @@ public class RequestFactory {
         RequestQueueManager.getInstance(context).getRequestQueue().add(requester);
     }
 
+    protected static void request(Context context, int method, String url, HashMap<String, String> params,
+                                  Dialog dialog, ResponseListener listener) {
+
+        boolean useUrlParameter =
+                (method == Request.Method.GET) || (method == Request.Method.DELETE);
+        if (useUrlParameter) {
+            url += getEncodedParams(params);
+        }
+
+        JsonObjectRequester requester = new JsonObjectRequester(method, url, listener);
+        if (!useUrlParameter && params != null && params.size() >= 0) {
+            requester.setParams(params);
+        }
+
+        requester.setProgressDialog(dialog);
+
+        RequestQueueManager.getInstance(context).getRequestQueue().add(requester);
+    }
+
     /**
      * Get 방식 연동시 BasicNameValuePair 를 이용해 만들어진 HashMap 을
      * Url 파라미터로 만들어 줌(ex. ?access_token=123456&device=Galaxy)
@@ -176,6 +210,16 @@ public class RequestFactory {
         public static HashMap<String, String> getAccessTokenParams(String accessToken) {
             return getParams(
                     new BasicNameValuePair("access_token", accessToken));
+        }
+
+        public static HashMap<String, String> getUserParams(String code) {
+            return getParams(
+                    new BasicNameValuePair("code", code),
+                    new BasicNameValuePair("client_id", InstaConfig.INSTA_CLIENT_ID),
+                    new BasicNameValuePair("client_secret", InstaConfig.INSTA_CLIENT_SECRET),
+                    new BasicNameValuePair("grant_type", "authorization_code"),
+                    new BasicNameValuePair("redirect_uri", InstaConfig.INSTA_REDIRECT_URI)
+                    );
         }
 
         public static HashMap<String, String> getPostCommentParams(String accessToken, String comment){

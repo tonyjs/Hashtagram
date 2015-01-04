@@ -5,9 +5,9 @@
               android:layout_width="match_parent"
               android:layout_height="wrap_content">
 
+    <!--<com.orcpark.hashtagram.ui.widget.CircleImageView-->
     <ImageView
             android:id="@+id/iv_thumb"
-            android:scaleType="fitXY"
             android:layout_width="32dp"
             android:layout_height="32dp"/>
 

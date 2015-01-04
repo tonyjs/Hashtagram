@@ -20,9 +20,6 @@ import com.orcpark.hashtagram.util.TimeUtils;
 
 import org.json.JSONObject;
 
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  * Created by orcpark on 14. 11. 9..
  */
@@ -100,6 +97,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
     private class InstaViewHolder extends BasicViewHolder<InstaItem>{
         public GradientSquareImageView ivThumb;
         public TextView tvSummary;
+//        public CircleImageView ivAuthor;
         public ImageView ivAuthor;
         public TextView tvAuthor;
         public TextView tvCreatedTime;
@@ -132,7 +130,38 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
             InstaUser user = item.getUser();
             if (user != null) {
                 String authorUrl = user.getProfilePictureUrl();
-                ImageLoader.load(getContext(), authorUrl, ivAuthor, true);
+//                ImageLoader.load(getContext(), authorUrl, ivAuthor, true);
+                ImageLoader.loadCircleDrawable(getContext(), authorUrl, ivAuthor);
+//                ivAuthor.setImageUrl(authorUrl);
+//                ImageLoader.loadWithCallback(getContext(), authorUrl,
+//                        new SimpleTarget<Bitmap>(160,160){
+//
+//                            @Override
+//                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//
+//                                final Bitmap output = Bitmap.createBitmap(
+//                                        resource.getWidth(), resource.getHeight(), Bitmap.Config.ARGB_8888);
+//                                final Canvas canvas = new Canvas(output);
+//
+//                                final int color = Color.TRANSPARENT;
+//                                final Paint paint = new Paint();
+//                                final Rect rect = new Rect(0, 0, resource.getWidth(), resource.getHeight());
+//                                final RectF rectF = new RectF(rect);
+//
+//                                paint.setAntiAlias(true);
+//                                canvas.drawARGB(0, 0, 0, 0);
+//                                paint.setColor(color);
+//                                canvas.drawOval(rectF, paint);
+//
+//                                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+//                                canvas.drawBitmap(resource, rect, rect, paint);
+//
+////                                resource.recycle();
+//
+////                                ivAuthor.setImageBitmap(output);
+//                                ivAuthor.setImageBitmap(resource);
+//                            }
+//                        });
                 tvAuthor.setText(user.getName());
             }
 

@@ -82,6 +82,7 @@ public class JsonParser {
                             user.setFullName(objFrom.optString("full_name"));
                             user.setProfilePictureUrl(objFrom.optString("profile_picture"));
                             user.setId(objFrom.optString("id"));
+                            user.setBio(objFrom.optString("bio"));
                             item.setUser(user);
                         }
 
@@ -136,6 +137,7 @@ public class JsonParser {
             user.setFullName(objUser.optString("full_name"));
             user.setProfilePictureUrl(objUser.optString("profile_picture"));
             user.setId(objUser.optString("id"));
+            user.setBio(objUser.optString("bio"));
             return user;
         }
         return null;
@@ -177,4 +179,13 @@ public class JsonParser {
         return null;
     }
 
+    public static UserInfo getUserInfo(JSONObject objUser) {
+        if (objUser != null) {
+            UserInfo userInfo = new UserInfo();
+            userInfo.setAccessToken(objUser.optString("access_token"));
+            userInfo.setUser(getInstaUserFromInnerObject(objUser.optJSONObject("user")));
+            return userInfo;
+        }
+        return null;
+    }
 }

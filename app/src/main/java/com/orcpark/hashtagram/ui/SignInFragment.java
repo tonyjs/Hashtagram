@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,15 +28,17 @@ public class SignInFragment extends Fragment {
         mOnFinishedListener = onFinishedListener;
     }
 
-    public static SignInFragment newInstance(OnFinishedListener onFinishedListener) {
+    public static SignInFragment newInstance() {
         SignInFragment fragment = new SignInFragment();
-        fragment.setOnFinishedListener(onFinishedListener);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (getActivity() instanceof OnFinishedListener) {
+            setOnFinishedListener((OnFinishedListener) getActivity());
+        }
         CookieSyncManager.createInstance(getActivity());
         CookieManager.getInstance().removeAllCookie();
     }
@@ -108,10 +111,17 @@ public class SignInFragment extends Fragment {
 
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
+//                Log.e("jsp", url);
                 if (url.startsWith(InstaConfig.INSTA_REDIRECT_URI)) {
-                    String[] pair = url.split("access_token=");
+                    if (mProgressDialog.isShowing()) {
+                        mProgressDialog.dismiss();
+                    }
+//                    String[] pair = url.split("access_token=");
+                    String[] pair = url.split("code=");
                     String accessToken = pair[1];
-                    mOnFinishedListener.onFinished(accessToken);
+                    if (mOnFinishedListener != null) {
+                        mOnFinishedListener.onFinished(accessToken);
+                    }
                     return true;
                 }
                 return super.shouldOverrideUrlLoading(view, url);

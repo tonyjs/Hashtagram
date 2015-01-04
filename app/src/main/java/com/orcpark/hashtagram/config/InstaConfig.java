@@ -14,6 +14,7 @@ public interface InstaConfig {
             "https://instagram.com/oauth/authorize/?"
                     + "client_id=" + INSTA_CLIENT_ID
                     + "&redirect_uri=" + INSTA_REDIRECT_URI
-                    + "&response_type=token"
+//                    + "&response_type=token"
+                    + "&response_type=code"
                     + "&scope=likes+comments";
 }

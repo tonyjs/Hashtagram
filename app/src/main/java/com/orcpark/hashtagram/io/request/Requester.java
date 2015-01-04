@@ -1,5 +1,7 @@
 package com.orcpark.hashtagram.io.request;
 
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.view.View;
 import com.android.volley.*;
 
@@ -25,6 +27,12 @@ public abstract class Requester<T> extends Request<T> {
 
     public void setProgressView(View view) {
         mProgressView = view;
+    }
+
+    private Dialog mDialog;
+
+    public void setProgressDialog(Dialog dialog) {
+        mDialog = dialog;
     }
 
     private HashMap<String, String> mParams;
@@ -57,16 +65,23 @@ public abstract class Requester<T> extends Request<T> {
         if (mProgressView != null) {
             mProgressView.setVisibility(View.VISIBLE);
         }
+        if (mDialog != null) {
+            mDialog.show();
+        }
     }
 
     @Override
     protected void deliverResponse(T response) {
+        if (mListener != null) {
+            mListener.onResponse(response);
+        }
+
         if (mProgressView != null) {
             mProgressView.setVisibility(View.GONE);
         }
 
-        if (mListener != null) {
-            mListener.onResponse(response);
+        if (mDialog != null) {
+            mDialog.cancel();
         }
     }
 
@@ -74,6 +89,10 @@ public abstract class Requester<T> extends Request<T> {
     public void deliverError(VolleyError error) {
         if (mProgressView != null) {
             mProgressView.setVisibility(View.GONE);
+        }
+
+        if (mDialog != null) {
+            mDialog.cancel();
         }
 
         if (mListener != null) {

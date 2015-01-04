@@ -1,39 +1,47 @@
 package com.orcpark.hashtagram.ui;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
+import android.view.*;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import com.android.volley.VolleyError;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.config.PreferenceConfig;
+import com.orcpark.hashtagram.io.JsonParser;
 import com.orcpark.hashtagram.io.OnFinishedListener;
 import com.orcpark.hashtagram.io.db.HashtagramDatabase;
 import com.orcpark.hashtagram.io.model.PageItem;
 import com.orcpark.hashtagram.io.model.PageRecyclerItem;
 import com.orcpark.hashtagram.io.model.insta.InstaItem;
+import com.orcpark.hashtagram.io.model.insta.UserInfo;
+import com.orcpark.hashtagram.io.request.ResponseListener;
 import com.orcpark.hashtagram.ui.adapter.BasicRecyclerAdapter;
 import com.orcpark.hashtagram.ui.adapter.MainViewPagerAdapter;
 import com.orcpark.hashtagram.ui.widget.BasicRecyclerView;
 import com.orcpark.hashtagram.ui.widget.SlidingTabLayout;
 import com.orcpark.hashtagram.ui.widget.SlipLayout;
 import com.orcpark.hashtagram.util.PrefUtils;
+import com.orcpark.hashtagram.util.RequestFactory;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity
                             implements OnFinishedListener, ViewPager.OnPageChangeListener,
-                                RecyclerFragment.Listener, SearchFragment.OnSearchListener{
+                                        RecyclerFragment.Listener, SearchFragment.OnSearchListener{
 
     public static final String SIGN_IN_FRAGMENT = "SignInFragment";
     public static final String NEWSFEED = "Newsfeed";
@@ -70,7 +78,6 @@ public class MainActivity extends BaseActivity
 
     @InjectView(R.id.view_pager) ViewPager mViewPager;
     @InjectView(R.id.sliding_tab_layout) SlidingTabLayout mTabLayout;
-
     private MainViewPagerAdapter mViewPagerAdapter;
     private void initLayout() {
         ButterKnife.inject(this);
@@ -91,7 +98,7 @@ public class MainActivity extends BaseActivity
             return;
         }
 
-        ArrayList<PageItem> pageItems = new ArrayList<PageItem>();
+        ArrayList<PageItem> pageItems = new ArrayList<>();
         int i = 0;
         for (String hashTag : items) {
             pageItems.add(new PageRecyclerItem(i, hashTag));
@@ -104,10 +111,10 @@ public class MainActivity extends BaseActivity
     }
 
     private void showSignInFragment() {
-        SignInFragment signInFragment = SignInFragment.newInstance(this);
+        SignInFragment signInFragment = SignInFragment.newInstance();
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.container, signInFragment, SIGN_IN_FRAGMENT)
-                .addToBackStack(null)
+//                .addToBackStack(null)
                 .commit();
     }
 
@@ -119,6 +126,18 @@ public class MainActivity extends BaseActivity
             getMenuInflater().inflate(R.menu.main, menu);
         }
         return true;
+    }
+
+    @Override
+    protected void onPostCreate(Bundle savedInstanceState) {
+        super.onPostCreate(savedInstanceState);
+//        mToolBar.setNavigationIcon(R.drawable.ic_menu_white_24dp);
+//        mToolBar.setNavigationOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                mDrawer.openDrawer(Gravity.START);
+//            }
+//        });
     }
 
     private void handleQuery(String hashTag) {
@@ -148,31 +167,58 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFinished(String accessToken) {
-        if (TextUtils.isEmpty(accessToken)) {
+    public void onFinished(String code) {
+        if (TextUtils.isEmpty(code)) {
             Toast.makeText(this,
                     getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
         } else {
-            SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+            detachSignInFragment();
 
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putString(PreferenceConfig.ACCESS_TOKEN, accessToken);
-            editor.apply();
-            editor.commit();
+            ProgressDialog dialog = new ProgressDialog(this);
+            dialog.setCancelable(false);
+            dialog.setMessage("인증 중입니다...");
+            RequestFactory.getUser(this, code, dialog,
+                new ResponseListener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        UserInfo userInfo = JsonParser.getUserInfo(response);
+                        if (userInfo != null) {
+                            Log.e("jsp", userInfo.toString());
 
-            Toast.makeText(this,
-                    getString(R.string.authorize_success), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.authorize_success), Toast.LENGTH_SHORT).show();
 
-            PrefUtils.setAccessToken(this, accessToken);
+                            PrefUtils.setUserInfo(getApplicationContext(), userInfo);
 
-            mHasAccessToken = true;
+                            mHasAccessToken = true;
 
-            supportInvalidateOptionsMenu();
+                            supportInvalidateOptionsMenu();
 
-            initItems();
+                            initItems();
+
+                        } else {
+                            Toast.makeText(getApplicationContext(),
+                                    getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(VolleyError error) {
+                        Toast.makeText(getApplicationContext(),
+                                getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
+                    }
+                });
         }
 
-        getSupportFragmentManager().popBackStackImmediate();
+//        getSupportFragmentManager().popBackStackImmediate();
+    }
+
+    private void detachSignInFragment() {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(SIGN_IN_FRAGMENT);
+        if (fragment != null) {
+            fm.beginTransaction().detach(fragment).commitAllowingStateLoss();
+        }
     }
 
     private void showEditHashtagFragment() {
@@ -289,5 +335,4 @@ public class MainActivity extends BaseActivity
     public int getContainerResId() {
         return R.id.container;
     }
-
 }

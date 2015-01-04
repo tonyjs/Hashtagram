@@ -39,9 +39,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
+            <!--<ImageView-->
+            <!--<com.orcpark.hashtagram.ui.widget.CircleImageView-->
             <ImageView
                     android:id="@+id/iv_author"
-                    android:scaleType="fitXY"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
 

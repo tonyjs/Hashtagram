@@ -11,6 +11,7 @@ public class InstaUser extends BaseObject {
     private String profilePictureUrl;
     private String fullName;
     private String id;
+    private String bio;
 
     public String getName() {
         return name;
@@ -42,5 +43,13 @@ public class InstaUser extends BaseObject {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    public String getBio() {
+        return bio;
+    }
+
+    public void setBio(String bio) {
+        this.bio = bio;
     }
 }

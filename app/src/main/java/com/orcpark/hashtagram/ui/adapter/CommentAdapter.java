@@ -1,7 +1,6 @@
 package com.orcpark.hashtagram.ui.adapter;
 
 import android.content.Context;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -34,7 +33,15 @@ public class CommentAdapter extends BasicAdapter<InstaCommentItem> {
 
         InstaUser user = item.getFrom();
         String profileUrl = user != null ? user.getProfilePictureUrl() : null;
-        ImageLoader.load(mContext, profileUrl, ivProfile);
+        ImageLoader.loadCircleDrawable(mContext, profileUrl, ivProfile);
+//        ImageLoader.loadWithCallback(mContext, profileUrl,
+//                new SimpleTarget<Bitmap>(ivProfile.getWidth(), ivProfile.getWidth()){
+//
+//                    @Override
+//                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+//                        ivProfile.setImageDrawable(new RoundedDrawable(resource));
+//                    }
+//                });
 
         String name = user != null ? user.getFullName() : null;
         tvName.setText(name);

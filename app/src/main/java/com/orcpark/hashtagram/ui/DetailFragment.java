@@ -1,5 +1,6 @@
 package com.orcpark.hashtagram.ui;
 
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,14 +14,13 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 import com.android.volley.VolleyError;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.orcpark.hashtagram.R;
 import com.orcpark.hashtagram.io.model.insta.*;
 import com.orcpark.hashtagram.io.request.ResponseListener;
 import com.orcpark.hashtagram.ui.adapter.CommentAdapter;
-import com.orcpark.hashtagram.ui.widget.DragLayout;
-import com.orcpark.hashtagram.ui.widget.PullCatchListView;
-import com.orcpark.hashtagram.ui.widget.SlipLayout;
-import com.orcpark.hashtagram.ui.widget.SlipScrollView;
+import com.orcpark.hashtagram.ui.widget.*;
 import com.orcpark.hashtagram.util.ImageLoader;
 import com.orcpark.hashtagram.util.RequestFactory;
 import com.orcpark.hashtagram.util.TimeUtils;
@@ -102,7 +102,7 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
         InstaUser user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfilePictureUrl();
-            ImageLoader.load(mActivity, authorUrl, mIvAuthor, true);
+            ImageLoader.loadCircleDrawable(mActivity, authorUrl, mIvAuthor);
             mTvAuthor.setText(user.getName());
         }
 
@@ -115,24 +115,14 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
         ArrayList<InstaCommentItem> comments = comment.getItems();
         mCommentAdapter.setItems(comments);
 
-        mScrollView.post(mSetSlipLayoutRunnable);
-    }
-
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
-        InstaItem item = getItem();
-        if (item == null) {
-            return;
-        }
-
         InstaImageInfo info = item.getImageInfo();
         InstaImageSpec spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
-        ImageLoader.load(mActivity, thumbUrl, mIvThumb);
-
+        ImageLoader.load(mActivity, thumbUrl, mIvThumb, true);
         String summary = item.getCaption() != null ? item.getCaption().getTitle() : null;
         mTvSummary.setText(summary);
+
+        mScrollView.post(mSetSlipLayoutRunnable);
     }
 
     private InstaItem getItem() {
@@ -156,7 +146,7 @@ public class DetailFragment extends BaseFragment implements PullCatchListView.On
     private void setLikeViews(final InstaItem item) {
         final boolean userHasLiked = item.userHasLiked();
         mMenuFavorite.setIcon(userHasLiked ?
-                R.drawable.ic_favorite_white_48dp : R.drawable.ic_favorite_outline_white_48dp);
+                R.drawable.ic_favorite_white_24dp : R.drawable.ic_favorite_outline_white_24dp);
 
         final InstaLikes likes = item.getLikes();
         String likesCount = likes != null ?
