@@ -15,7 +15,7 @@
     <!--<com.android.volley.toolbox.NetworkImageView-->
             <!--android:scaleType="centerCrop"-->
     <!--<com.orcpark.hashtagram.ui.widget.GradientSquareImageView-->
-    <com.orcpark.hashtagram.ui.widget.GradientNetworkImageView
+    <com.tonyjs.hashtagram.ui.widget.GradientNetworkImageView
             android:id="@+id/iv_thumb"
             android:scaleType="fitXY"
             android:layout_width="match_parent"
@@ -92,7 +92,7 @@
                         android:layout_height="wrap_content"/>
             </LinearLayout>
 
-            <com.orcpark.hashtagram.ui.widget.RecommendButton
+            <com.tonyjs.hashtagram.ui.widget.RecommendButton
                     android:id="@+id/btn_recommend"
                     android:layout_centerVertical="true"
                     android:layout_alignParentRight="true"

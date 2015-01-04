@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.orcpark.hashtagram.ui.widget.SlipLayout
+    <com.tonyjs.hashtagram.ui.widget.SlipLayout
         android:id="@+id/slip_layout"
         android:paddingBottom="48dp"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
         <!--android:fillViewport="true"-->
-        <com.orcpark.hashtagram.ui.widget.SlipScrollView
+        <com.tonyjs.hashtagram.ui.widget.SlipScrollView
             android:id="@+id/scroll_view"
             android:paddingTop="?attr/actionBarSize"
             android:scrollbarStyle="outsideOverlay"
@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.orcpark.hashtagram.ui.widget.SquareImageView
+                <com.tonyjs.hashtagram.ui.widget.SquareImageView
                     android:id="@+id/iv_thumb"
                     android:scaleType="fitXY"
                     android:layout_width="match_parent"
@@ -40,11 +40,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"/>
             </LinearLayout>
-        </com.orcpark.hashtagram.ui.widget.SlipScrollView>
+        </com.tonyjs.hashtagram.ui.widget.SlipScrollView>
 
-    </com.orcpark.hashtagram.ui.widget.SlipLayout>
+    </com.tonyjs.hashtagram.ui.widget.SlipLayout>
 
-    <com.orcpark.hashtagram.ui.widget.DragLayout
+    <com.tonyjs.hashtagram.ui.widget.DragLayout
         android:id="@+id/drag_layout"
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
@@ -210,7 +210,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
-                <com.orcpark.hashtagram.ui.widget.PullCatchListView
+                <com.tonyjs.hashtagram.ui.widget.PullCatchListView
                     android:id="@+id/list_view"
                     android:scrollbarStyle="outsideOverlay"
                     android:paddingLeft="8dp"
@@ -223,5 +223,5 @@
 
             </FrameLayout>
         </LinearLayout>
-    </com.orcpark.hashtagram.ui.widget.DragLayout>
+    </com.tonyjs.hashtagram.ui.widget.DragLayout>
 </FrameLayout>

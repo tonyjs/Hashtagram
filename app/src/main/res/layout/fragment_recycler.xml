@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<com.orcpark.hashtagram.ui.widget.SlipLayout
+<com.tonyjs.hashtagram.ui.widget.SlipLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/layout_translate"
         android:orientation="vertical"
@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-        <com.orcpark.hashtagram.ui.widget.BasicRecyclerView
+        <com.tonyjs.hashtagram.ui.widget.BasicRecyclerView
                 android:id="@+id/recycler_view"
                 android:scrollbarStyle="outsideOverlay"
                 android:paddingTop="64dp"
@@ -32,4 +32,4 @@
 
     </android.support.v4.widget.SwipeRefreshLayout>
 
-</com.orcpark.hashtagram.ui.widget.SlipLayout>
+</com.tonyjs.hashtagram.ui.widget.SlipLayout>

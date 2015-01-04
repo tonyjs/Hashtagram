@@ -35,7 +35,7 @@
 
     <fragment
         android:id="@+id/navigation_fragment"
-        android:name="com.orcpark.hashtagram.ui.NavigationFragment"
+        android:name="com.tonyjs.hashtagram.ui.NavigationFragment"
         android:layout_gravity="start"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>

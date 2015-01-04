@@ -5,9 +5,11 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+        <!--android:background="@color/colors_app_theme"-->
     <RelativeLayout
+        android:clickable="true"
         android:padding="16dp"
-        android:background="@color/colors_app_theme"
+        android:background="#cc41AF80"
         android:layout_width="match_parent"
         android:layout_height="112dp">
 
@@ -55,7 +57,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.orcpark.hashtagram.ui.widget.BasicRecyclerView
+        <com.tonyjs.hashtagram.ui.widget.BasicRecyclerView
             android:id="@+id/recycler_view"
             android:clipToPadding="false"
             android:layout_width="match_parent"

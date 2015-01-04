@@ -5,7 +5,7 @@ android {
     buildToolsVersion '21.0.2'
 
     defaultConfig {
-        applicationId "com.orcpark.hashtagram"
+        applicationId "com.tonyjs.hashtagram"
         minSdkVersion 14
         targetSdkVersion 21
         versionCode 3
@@ -54,15 +54,15 @@ android {
 
     productFlavors {
         debugs {
-            applicationId "com.orcpark.hashtagram.debug"
+            applicationId "com.tonyjs.hashtagram.debug"
             versionCode 1
             versionName "0.1.0"
         }
 
         releases {
-            applicationId "com.orcpark.hashtagram"
-            versionCode 5
-            versionName "1.0.2"
+            applicationId "com.tonyjs.hashtagram"
+            versionCode 1
+            versionName "1.0.0"
         }
     }
 }

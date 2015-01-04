@@ -9,12 +9,11 @@
         android:id="@+id/tv_title"
         android:padding="16dp"
         android:textSize="16sp"
-        android:textStyle="bold"
         android:textColor="@color/colors_app_theme_dark"
         android:shadowDy="1.5"
         android:shadowDx="1.5"
         android:shadowRadius="1.0"
-        android:shadowColor="#ffffff"
+        android:shadowColor="#666666"
         android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"/>
