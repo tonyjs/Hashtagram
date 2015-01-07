@@ -1,4 +1,4 @@
-package com.tonyjs.hashtagram.util;
+package com.tonyjs.hashtagram.io.request.volley;
 
 import android.app.Dialog;
 import android.content.Context;
@@ -7,10 +7,12 @@ import android.util.Log;
 import android.view.View;
 import com.android.volley.Request;
 import com.tonyjs.hashtagram.config.InstaConfig;
-import com.tonyjs.hashtagram.io.request.JsonObjectRequester;
-import com.tonyjs.hashtagram.io.request.RequestQueueManager;
-import com.tonyjs.hashtagram.io.request.Requester;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.volley.JsonObjectRequester;
+import com.tonyjs.hashtagram.io.request.volley.RequestQueueManager;
+import com.tonyjs.hashtagram.io.request.volley.Requester;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
+import com.tonyjs.hashtagram.util.PrefUtils;
+
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 

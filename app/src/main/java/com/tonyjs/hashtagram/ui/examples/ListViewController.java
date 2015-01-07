@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.io.model.insta.InstaItem;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.adapter.BasicAdapter;
 import org.json.JSONArray;
 import org.json.JSONObject;

@@ -1,33 +1,33 @@
-package com.tonyjs.hashtagram.io.request;
+package com.tonyjs.hashtagram.io.request.volley;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.ParseError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.HttpHeaderParser;
-import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 
 /**
  * Created by tony.park on 14. 11. 4..
  *
- * Response 가 JSONArray 일 때 쓰는 class
+ * Response 가 JSONObject 일 때 쓰는 class
  */
-public class JsonArrayRequester extends Requester<JSONArray> {
+public class JsonObjectRequester extends Requester<JSONObject> {
 
-    public JsonArrayRequester(int method, String url, ResponseListener listener) {
+    public JsonObjectRequester(int method, String url, ResponseListener listener) {
         super(method, url, listener);
     }
 
     @Override
-    protected Response<JSONArray> parseNetworkResponse(NetworkResponse response) {
+    protected Response<JSONObject> parseNetworkResponse(NetworkResponse response) {
         String stringData = null;
-        JSONArray result = null;
+        JSONObject result = null;
         try {
             stringData = new String(response.data, CHARSET);
-            result = new JSONArray(stringData);
+            result = new JSONObject(stringData);
         } catch (UnsupportedEncodingException e) {
             deliverError(new ParseError(e));
             return null;
@@ -39,7 +39,7 @@ public class JsonArrayRequester extends Requester<JSONArray> {
     }
 
     @Override
-    public int compareTo(Request<JSONArray> another) {
+    public int compareTo(Request<JSONObject> another) {
         return super.compareTo(another);
     }
 }

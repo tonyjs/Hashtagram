@@ -13,6 +13,13 @@ import android.view.*;
 import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
+import retrofit.Callback;
+import retrofit.Profiler;
+import retrofit.RequestInterceptor;
+import retrofit.RestAdapter;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
+
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.JsonParser;
@@ -20,13 +27,18 @@ import com.tonyjs.hashtagram.io.OnFinishedListener;
 import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
 import com.tonyjs.hashtagram.io.model.PageItem;
 import com.tonyjs.hashtagram.io.model.insta.UserInfo;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.retrofit.NewsFeedResponse;
+import com.tonyjs.hashtagram.io.request.retrofit.Requester;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.widget.SlipLayout;
 import com.tonyjs.hashtagram.util.PrefUtils;
-import com.tonyjs.hashtagram.util.RequestFactory;
+import com.tonyjs.hashtagram.io.request.volley.RequestFactory;
+import com.tonyjs.hashtagram.util.ToastUtils;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executor;
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.LifecycleCallback,
@@ -286,5 +298,47 @@ public class MainActivity extends BaseActivity
         Fragment fragment = item.getFragment();
         replaceFragment(fragment, RECYCLER_FRAGMENT);
         mDrawer.closeDrawer(Gravity.START);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        Executor startExecutor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                Log.e("jsp", "start");
+                command.run();
+            }
+        };
+        Executor endExecutor = new Executor() {
+            @Override
+            public void execute(Runnable command) {
+                Log.e("jsp", "end");
+                command.run();
+            }
+        };
+
+        RestAdapter restAdapter = new RestAdapter.Builder()
+                .setLogLevel(RestAdapter.LogLevel.FULL)
+                .setEndpoint(Requester.END_POINT)
+                        .setRequestInterceptor(RequestInterceptor.NONE)
+//                .setExecutors(startExecutor, endExecutor)
+                .build();
+
+        Requester requester = restAdapter.create(Requester.class);
+
+        requester.getNewsFeed(PrefUtils.getAccessToken(this)
+                , new Callback<NewsFeedResponse>() {
+            @Override
+            public void success(NewsFeedResponse newsFeedResponse, Response response) {
+                ToastUtils.toast(getApplicationContext(), newsFeedResponse);
+            }
+
+            @Override
+            public void failure(RetrofitError error) {
+                ToastUtils.toast(getApplicationContext(), error);
+            }
+        });
     }
 }

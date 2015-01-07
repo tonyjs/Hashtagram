@@ -1,7 +1,11 @@
 package com.tonyjs.hashtagram.ui.widget;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v7.widget.RecyclerView;
@@ -69,8 +73,25 @@ public class BasicRecyclerView extends RecyclerView {
             public void onChanged() {
                 super.onChanged();
                 updateEmptyView();
+                notifyForScrollIndicator();
             }
         });
+    }
+
+    private Handler mScrollIndicatorHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            updateScrollIndicator();
+        }
+    };
+
+    public void notifyForScrollIndicator(){
+        updateScrollIndicator(200);
+    }
+
+    private void updateScrollIndicator(int offset) {
+        mScrollIndicatorHandler.removeMessages(0);
+        mScrollIndicatorHandler.sendEmptyMessageDelayed(0, offset);
     }
 
     private void updateEmptyView() {
@@ -119,6 +140,9 @@ public class BasicRecyclerView extends RecyclerView {
 
     public void setScrollIndicator(View view, final int position, final boolean smoothScroll) {
         mScrollIndicator = view;
+
+        if (mScrollIndicator == null) return;
+
         mScrollIndicator.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -128,7 +152,7 @@ public class BasicRecyclerView extends RecyclerView {
                 } else {
                     BasicRecyclerView.this.scrollToPosition(position);
                 }
-                v.setVisibility(View.GONE);
+                setIndicatorVisibility(false);
             }
         });
         updateScrollIndicator();
@@ -139,16 +163,65 @@ public class BasicRecyclerView extends RecyclerView {
             return;
         }
 
+        if (!isAttachedToWindow() || getContext() == null) {
+            return;
+        }
+
         boolean visibleIndicator = false;
         if (getChildCount() > 0) {
             View firstView = getChildAt(0);
             LayoutManager layoutManager = getLayoutManager();
-            int position = layoutManager.getPosition(firstView);
-            visibleIndicator = position != 0 || firstView.getTop() < getPaddingTop();
+            int firstPosition = layoutManager.getPosition(firstView);
+            visibleIndicator =
+                    firstPosition != 0
+                            || firstView.getTop() < getPaddingTop();
         }
 
-        mScrollIndicator.setVisibility(visibleIndicator ? View.VISIBLE : View.GONE);
+        boolean visibility = mScrollIndicator.getVisibility() == VISIBLE;
+        if (visibility == visibleIndicator) {
+            return;
+        }
+
+        setIndicatorVisibility(visibleIndicator);
+
         setScrollMode(SCROLL_MODE_AUTO);
+    }
+
+    private void setIndicatorVisibility(boolean visibility) {
+        if (mScrollIndicator == null) {
+            return;
+        }
+        if (visibility) {
+            if (mScrollIndicator.getVisibility() == View.VISIBLE) return;
+
+            mScrollIndicator.animate()
+                    .alpha(1f)
+                    .setDuration(150)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationStart(Animator animation) {
+                            if (mScrollIndicator == null) {
+                                return;
+                            }
+                            mScrollIndicator.setVisibility(View.VISIBLE);
+                        }
+                    });
+        }
+
+        else {
+            mScrollIndicator.animate()
+                    .alpha(0f)
+                    .setDuration(150)
+                    .setListener(new AnimatorListenerAdapter() {
+                        @Override
+                        public void onAnimationEnd(Animator animation) {
+                            if (mScrollIndicator == null) {
+                                return;
+                            }
+                            mScrollIndicator.setVisibility(View.GONE);
+                        }
+                    });
+        }
     }
 
     private OnItemClickListener mOnItemClickListener;

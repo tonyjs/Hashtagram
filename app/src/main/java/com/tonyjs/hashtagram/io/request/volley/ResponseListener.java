@@ -1,4 +1,4 @@
-package com.tonyjs.hashtagram.io.request;
+package com.tonyjs.hashtagram.io.request.volley;
 
 import com.android.volley.VolleyError;
 

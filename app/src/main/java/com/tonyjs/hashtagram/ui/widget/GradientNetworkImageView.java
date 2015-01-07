@@ -6,7 +6,7 @@ import android.text.TextUtils;
 import android.util.AttributeSet;
 import com.android.volley.toolbox.NetworkImageView;
 import com.tonyjs.hashtagram.io.model.insta.InstaImageSpec;
-import com.tonyjs.hashtagram.io.request.RequestQueueManager;
+import com.tonyjs.hashtagram.io.request.volley.RequestQueueManager;
 import com.tonyjs.hashtagram.util.UiUtils;
 
 /**

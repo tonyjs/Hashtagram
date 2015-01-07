@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Created by tony.park on 14. 11. 5..
  */
-public abstract class BasicRecyclerAdapter<T> extends RecyclerView.Adapter {
+public abstract class BasicRecyclerAdapter<T> extends RecyclerView.Adapter<BasicViewHolder> {
 
     private Context mContext;
     private LayoutInflater mInflater;
@@ -62,11 +62,9 @@ public abstract class BasicRecyclerAdapter<T> extends RecyclerView.Adapter {
     public abstract BasicViewHolder getViewHolder(ViewGroup parent, int viewType);
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-        onBindViewHolder((BasicViewHolder) holder, position);
+    public void onBindViewHolder(BasicViewHolder holder, int position) {
+        holder.onBindView(getItem(position));
     }
-
-    public abstract void onBindViewHolder(BasicViewHolder viewHolder, int position);
 
     @Override
     public int getItemCount() {

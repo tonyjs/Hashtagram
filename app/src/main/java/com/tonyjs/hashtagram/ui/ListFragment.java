@@ -16,10 +16,10 @@ import com.tonyjs.hashtagram.config.HashtagConfig;
 import com.tonyjs.hashtagram.io.JsonParser;
 import com.tonyjs.hashtagram.io.model.insta.InstaItem;
 import com.tonyjs.hashtagram.io.model.insta.Instagram;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.adapter.TimeLineAdapter;
 import com.tonyjs.hashtagram.ui.widget.SlipLayout;
-import com.tonyjs.hashtagram.util.RequestFactory;
+import com.tonyjs.hashtagram.io.request.volley.RequestFactory;
 import com.tonyjs.hashtagram.util.UiUtils;
 import org.json.JSONObject;
 

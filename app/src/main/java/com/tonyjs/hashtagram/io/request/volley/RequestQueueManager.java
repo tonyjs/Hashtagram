@@ -1,4 +1,4 @@
-package com.tonyjs.hashtagram.io.request;
+package com.tonyjs.hashtagram.io.request.volley;
 
 import android.content.Context;
 import android.graphics.Bitmap;

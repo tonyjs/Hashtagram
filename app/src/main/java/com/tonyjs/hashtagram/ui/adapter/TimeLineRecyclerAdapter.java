@@ -12,10 +12,10 @@ import android.widget.Toast;
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.model.insta.*;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
-import com.tonyjs.hashtagram.util.RequestFactory;
+import com.tonyjs.hashtagram.io.request.volley.RequestFactory;
 import com.tonyjs.hashtagram.util.TimeUtils;
 
 import org.json.JSONObject;
@@ -56,7 +56,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
 
     @Override
     public void onBindViewHolder(BasicViewHolder basicViewHolder, int position) {
-        basicViewHolder.onBindView(getItem(position));
+        super.onBindViewHolder(basicViewHolder, position);
 
         int max = getItems().size();
         if (max > 4 && position == max - 1) {
@@ -130,38 +130,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<InstaItem> {
             InstaUser user = item.getUser();
             if (user != null) {
                 String authorUrl = user.getProfilePictureUrl();
-//                ImageLoader.load(getContext(), authorUrl, ivAuthor, true);
                 ImageLoader.loadCircleDrawable(getContext(), authorUrl, ivAuthor);
-//                ivAuthor.setImageUrl(authorUrl);
-//                ImageLoader.loadWithCallback(getContext(), authorUrl,
-//                        new SimpleTarget<Bitmap>(160,160){
-//
-//                            @Override
-//                            public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-//
-//                                final Bitmap output = Bitmap.createBitmap(
-//                                        resource.getWidth(), resource.getHeight(), Bitmap.Config.ARGB_8888);
-//                                final Canvas canvas = new Canvas(output);
-//
-//                                final int color = Color.TRANSPARENT;
-//                                final Paint paint = new Paint();
-//                                final Rect rect = new Rect(0, 0, resource.getWidth(), resource.getHeight());
-//                                final RectF rectF = new RectF(rect);
-//
-//                                paint.setAntiAlias(true);
-//                                canvas.drawARGB(0, 0, 0, 0);
-//                                paint.setColor(color);
-//                                canvas.drawOval(rectF, paint);
-//
-//                                paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-//                                canvas.drawBitmap(resource, rect, rect, paint);
-//
-////                                resource.recycle();
-//
-////                                ivAuthor.setImageBitmap(output);
-//                                ivAuthor.setImageBitmap(resource);
-//                            }
-//                        });
                 tvAuthor.setText(user.getName());
             }
 

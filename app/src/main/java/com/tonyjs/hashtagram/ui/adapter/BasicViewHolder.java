@@ -7,7 +7,7 @@ import android.view.View;
 /**
  * Created by tony.park on 14. 11. 6..
  */
-public abstract class BasicViewHolder<T> extends RecyclerView.ViewHolder {
+public abstract class BasicViewHolder<T> extends RecyclerView.ViewHolder{
     private Context mContext;
     public BasicViewHolder(Context context, View itemView) {
         super(itemView);
@@ -18,5 +18,5 @@ public abstract class BasicViewHolder<T> extends RecyclerView.ViewHolder {
         return mContext;
     }
 
-    public void onBindView(final T item){};
+    public void onBindView(final T item){}
 }

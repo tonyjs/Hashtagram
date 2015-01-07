@@ -15,11 +15,11 @@ import butterknife.InjectView;
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.model.insta.*;
-import com.tonyjs.hashtagram.io.request.ResponseListener;
+import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.adapter.CommentAdapter;
 import com.tonyjs.hashtagram.ui.widget.*;
 import com.tonyjs.hashtagram.util.ImageLoader;
-import com.tonyjs.hashtagram.util.RequestFactory;
+import com.tonyjs.hashtagram.io.request.volley.RequestFactory;
 import com.tonyjs.hashtagram.util.TimeUtils;
 
 import org.json.JSONObject;
