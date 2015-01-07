@@ -10,9 +10,8 @@ import java.util.ArrayList;
 /**
  * Created by tonyjs on 15. 1. 7..
  */
-public class NewsFeedResponse {
+public class NewsFeedResponse extends Response{
     @SerializedName("pagination") private Pagination pagination;
-    @SerializedName("meta") private Meta meta;
     @SerializedName("data") private ArrayList<Feed> data;
 
     public Pagination getPagination() {
@@ -21,14 +20,6 @@ public class NewsFeedResponse {
 
     public void setPagination(Pagination pagination) {
         this.pagination = pagination;
-    }
-
-    public Meta getMeta() {
-        return meta;
-    }
-
-    public void setMeta(Meta meta) {
-        this.meta = meta;
     }
 
     public ArrayList<Feed> getData() {
@@ -43,7 +34,7 @@ public class NewsFeedResponse {
     public String toString() {
         return "NewsFeedResponse{" +
                 "pagination=" + pagination +
-                ", meta=" + meta +
+                ", meta=" + getMeta() +
                 ", data=" + data +
                 '}';
     }

@@ -19,6 +19,7 @@ import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
 import retrofit.client.Response;
+import retrofit.http.Query;
 
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
@@ -322,8 +323,6 @@ public class MainActivity extends BaseActivity
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
                 .setEndpoint(Requester.END_POINT)
-                        .setRequestInterceptor(RequestInterceptor.NONE)
-//                .setExecutors(startExecutor, endExecutor)
                 .build();
 
         Requester requester = restAdapter.create(Requester.class);
@@ -340,5 +339,14 @@ public class MainActivity extends BaseActivity
                 ToastUtils.toast(getApplicationContext(), error);
             }
         });
+    }
+
+    class MyRequester implements Requester {
+
+        @Override
+        public void getNewsFeed(@Query("access_token") String accessToken,
+                                Callback<NewsFeedResponse> callback) {
+
+        }
     }
 }
