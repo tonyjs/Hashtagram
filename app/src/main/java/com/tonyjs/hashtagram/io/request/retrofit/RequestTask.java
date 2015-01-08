@@ -16,8 +16,8 @@ import retrofit.http.Query;
 /**
  * Created by tonyjs on 15. 1. 8..
  */
-public class RequestTask extends AsyncTask<RequestTask.Type, Void, Response>
-                implements ErrorHandler{
+public class RequestTask
+        extends AsyncTask<RequestTask.Type, Void, Response> implements ErrorHandler{
 
     public enum Type {
         GET_NEWS_FEED

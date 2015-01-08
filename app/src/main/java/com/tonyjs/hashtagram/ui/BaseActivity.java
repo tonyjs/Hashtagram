@@ -25,6 +25,21 @@ public abstract class BaseActivity extends ActionBarActivity {
 
     public abstract int getContainerResId();
 
+    public void addFragment(int containerResId, Fragment fragment) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(containerResId, fragment,
+                        ((Object)fragment).getClass().getSimpleName())
+                .commitAllowingStateLoss();
+    }
+
+    public void addFragment(int containerResId, Fragment fragment, String tag) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .add(containerResId, fragment, tag)
+                .commitAllowingStateLoss();
+    }
+
     public void addFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()

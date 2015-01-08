@@ -55,7 +55,6 @@ public class MainActivity extends BaseActivity
     public static final String RECYCLER_FRAGMENT = "RecyclerFragment";
     public static final String NEWSFEED = "Newsfeed";
 
-    private boolean mHasAccessToken = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,9 +67,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void showSignInFragmentIfNeed() {
-        String accessToken = PrefUtils.getAccessToken(this);
-        mHasAccessToken = !TextUtils.isEmpty(accessToken);
-        if (mHasAccessToken) {
+        if (!TextUtils.isEmpty(PrefUtils.getAccessToken(this))) {
             setNavigation();
             initNavigationUi();
         } else {
@@ -80,11 +77,11 @@ public class MainActivity extends BaseActivity
     }
 
     private void initPreferences() {
-        boolean hasInstalled = PrefUtils.hasInstalled(this);
-        if (!hasInstalled) {
-            HashtagramDatabase.getInstance(this).insert(NEWSFEED);
-            PrefUtils.setHasInstalled(this, true);
+        if (PrefUtils.hasInstalled(this)) {
+            return;
         }
+        HashtagramDatabase.getInstance(this).insert(NEWSFEED);
+        PrefUtils.setHasInstalled(this, true);
     }
 
     @InjectView(R.id.drawer_layout) DrawerLayout mDrawer;
@@ -93,7 +90,6 @@ public class MainActivity extends BaseActivity
 
         Toolbar toolbar = getToolBar();
         setSupportActionBar(toolbar);
-
     }
 
     private void initNavigationUi() {
@@ -104,15 +100,12 @@ public class MainActivity extends BaseActivity
 
     private void showSignInFragment() {
         SignInFragment signInFragment = SignInFragment.newInstance();
-        getSupportFragmentManager().beginTransaction()
-                .add(android.R.id.content, signInFragment, FRAGMENT_SIGN_IN)
-//                .addToBackStack(null)
-                .commit();
+        addFragment(android.R.id.content, signInFragment, FRAGMENT_SIGN_IN);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if (mHasAccessToken) {
+        if (!TextUtils.isEmpty(PrefUtils.getAccessToken(this))) {
             getMenuInflater().inflate(R.menu.main_search, menu);
         } else {
             getMenuInflater().inflate(R.menu.main, menu);
@@ -170,27 +163,7 @@ public class MainActivity extends BaseActivity
                         @Override
                         public void onResponse(JSONObject response) {
                             UserInfo userInfo = JsonParser.getUserInfo(response);
-                            if (userInfo != null) {
-                                Log.e("jsp", userInfo.toString());
-
-                                Toast.makeText(getApplicationContext(),
-                                        getString(R.string.authorize_success), Toast.LENGTH_SHORT).show();
-
-                                PrefUtils.setUserInfo(getApplicationContext(), userInfo);
-
-                                mHasAccessToken = true;
-
-                                supportInvalidateOptionsMenu();
-
-                                mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
-                                initNavigationUi();
-
-                                setNavigation();
-                            } else {
-                                Toast.makeText(getApplicationContext(),
-                                        getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
-                            }
+                            handleResponse(userInfo);
                         }
 
                         @Override
@@ -200,8 +173,6 @@ public class MainActivity extends BaseActivity
                         }
                     });
         }
-
-//        getSupportFragmentManager().popBackStackImmediate();
     }
 
     private void detachSignInFragment() {
@@ -210,6 +181,27 @@ public class MainActivity extends BaseActivity
         if (fragment != null) {
             fm.beginTransaction().detach(fragment).commitAllowingStateLoss();
         }
+    }
+
+    private void handleResponse(UserInfo userInfo) {
+        if (userInfo == null) {
+            ToastUtils.toast(this, getString(R.string.authorize_fail));
+            return;
+        }
+
+        Log.e("jsp", userInfo.toString());
+
+        ToastUtils.toast(this, getString(R.string.authorize_success));
+
+        PrefUtils.setUserInfo(getApplicationContext(), userInfo);
+
+        supportInvalidateOptionsMenu();
+
+        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
+
+        initNavigationUi();
+
+        setNavigation();
     }
 
     private void detachRecyclerFragment() {
@@ -302,55 +294,6 @@ public class MainActivity extends BaseActivity
         Fragment fragment = item.getFragment();
         replaceFragment(fragment, RECYCLER_FRAGMENT);
         mDrawer.closeDrawer(Gravity.START);
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-        new RequestTask(this).setCallback(
-                new RequestTask.Callback<NewsFeedResponse>() {
-
-                    @Override
-                    public void callback(NewsFeedResponse response) {
-                        ToastUtils.toast(getApplicationContext(), response.toString());
-                    }
-                }
-        ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, RequestTask.Type.GET_NEWS_FEED);
-//        Executor startExecutor = new Executor() {
-//            @Override
-//            public void execute(Runnable command) {
-//                Log.e("jsp", "start");
-//                command.run();
-//            }
-//        };
-//        Executor endExecutor = new Executor() {
-//            @Override
-//            public void execute(Runnable command) {
-//                Log.e("jsp", "end");
-//                command.run();
-//            }
-//        };
-//
-//        RestAdapter restAdapter = new RestAdapter.Builder()
-//                .setLogLevel(RestAdapter.LogLevel.FULL)
-//                .setEndpoint(Requester.END_POINT)
-//                .build();
-//
-//        Requester requester = restAdapter.create(Requester.class);
-//
-//        requester.getNewsFeed(PrefUtils.getAccessToken(this)
-//                , new Callback<NewsFeedResponse>() {
-//            @Override
-//            public void success(NewsFeedResponse newsFeedResponse, Response response) {
-//                ToastUtils.toast(getApplicationContext(), newsFeedResponse);
-//            }
-//
-//            @Override
-//            public void failure(RetrofitError error) {
-//                ToastUtils.toast(getApplicationContext(), error);
-//            }
-//        });
     }
 
 }
