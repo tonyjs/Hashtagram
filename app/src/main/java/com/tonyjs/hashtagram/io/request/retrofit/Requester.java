@@ -14,4 +14,7 @@ public interface Requester {
     public void getNewsFeed(
             @Query("access_token") String accessToken, Callback<NewsFeedResponse> callback);
 
+    @GET("/users/self/feed")
+    public NewsFeedResponse getNewsFeed(@Query("access_token") String accessToken);
+
 }

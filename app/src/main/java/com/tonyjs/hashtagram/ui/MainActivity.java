@@ -2,6 +2,7 @@ package com.tonyjs.hashtagram.ui;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import retrofit.Callback;
+import retrofit.ErrorHandler;
 import retrofit.Profiler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -29,6 +31,7 @@ import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
 import com.tonyjs.hashtagram.io.model.PageItem;
 import com.tonyjs.hashtagram.io.model.insta.UserInfo;
 import com.tonyjs.hashtagram.io.request.retrofit.NewsFeedResponse;
+import com.tonyjs.hashtagram.io.request.retrofit.RequestTask;
 import com.tonyjs.hashtagram.io.request.retrofit.Requester;
 import com.tonyjs.hashtagram.io.request.volley.ResponseListener;
 import com.tonyjs.hashtagram.ui.widget.SlipLayout;
@@ -305,48 +308,49 @@ public class MainActivity extends BaseActivity
     protected void onResume() {
         super.onResume();
 
-        Executor startExecutor = new Executor() {
-            @Override
-            public void execute(Runnable command) {
-                Log.e("jsp", "start");
-                command.run();
-            }
-        };
-        Executor endExecutor = new Executor() {
-            @Override
-            public void execute(Runnable command) {
-                Log.e("jsp", "end");
-                command.run();
-            }
-        };
+        new RequestTask(this).setCallback(
+                new RequestTask.Callback<NewsFeedResponse>() {
 
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(Requester.END_POINT)
-                .build();
-
-        Requester requester = restAdapter.create(Requester.class);
-
-        requester.getNewsFeed(PrefUtils.getAccessToken(this)
-                , new Callback<NewsFeedResponse>() {
-            @Override
-            public void success(NewsFeedResponse newsFeedResponse, Response response) {
-                ToastUtils.toast(getApplicationContext(), newsFeedResponse);
-            }
-
-            @Override
-            public void failure(RetrofitError error) {
-                ToastUtils.toast(getApplicationContext(), error);
-            }
-        });
+                    @Override
+                    public void callback(NewsFeedResponse response) {
+                        ToastUtils.toast(getApplicationContext(), response.toString());
+                    }
+                }
+        ).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, RequestTask.Type.GET_NEWS_FEED);
+//        Executor startExecutor = new Executor() {
+//            @Override
+//            public void execute(Runnable command) {
+//                Log.e("jsp", "start");
+//                command.run();
+//            }
+//        };
+//        Executor endExecutor = new Executor() {
+//            @Override
+//            public void execute(Runnable command) {
+//                Log.e("jsp", "end");
+//                command.run();
+//            }
+//        };
+//
+//        RestAdapter restAdapter = new RestAdapter.Builder()
+//                .setLogLevel(RestAdapter.LogLevel.FULL)
+//                .setEndpoint(Requester.END_POINT)
+//                .build();
+//
+//        Requester requester = restAdapter.create(Requester.class);
+//
+//        requester.getNewsFeed(PrefUtils.getAccessToken(this)
+//                , new Callback<NewsFeedResponse>() {
+//            @Override
+//            public void success(NewsFeedResponse newsFeedResponse, Response response) {
+//                ToastUtils.toast(getApplicationContext(), newsFeedResponse);
+//            }
+//
+//            @Override
+//            public void failure(RetrofitError error) {
+//                ToastUtils.toast(getApplicationContext(), error);
+//            }
+//        });
     }
 
-    class MyRequester implements Requester {
-
-        @Override
-        public void getNewsFeed(@Query("access_token") String accessToken,
-                                Callback<NewsFeedResponse> callback) {
-
-        }
-    }
 }
