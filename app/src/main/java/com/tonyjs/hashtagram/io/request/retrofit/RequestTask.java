@@ -1,5 +1,6 @@
 package com.tonyjs.hashtagram.io.request.retrofit;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -7,11 +8,9 @@ import android.view.View;
 
 import com.tonyjs.hashtagram.util.PrefUtils;
 
-import retrofit.Callback;
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
-import retrofit.http.Query;
 
 /**
  * Created by tonyjs on 15. 1. 8..
@@ -20,7 +19,7 @@ public class RequestTask
         extends AsyncTask<RequestTask.Type, Void, Response> implements ErrorHandler{
 
     public enum Type {
-        GET_NEWS_FEED
+        GET_NEWS_FEED, GET_HOST_INFO
     }
 
     public interface Callback<T extends Response>{
@@ -28,15 +27,15 @@ public class RequestTask
     }
 
     private Context mContext;
-    private Requester mRequester;
+    private RequestInterface mRequester;
     public RequestTask(Context context) {
         mContext = context;
         RestAdapter restAdapter = new RestAdapter.Builder()
                 .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(Requester.END_POINT)
+                .setEndpoint(RequestInterface.END_POINT)
                 .setErrorHandler(this)
                 .build();
-        mRequester = restAdapter.create(Requester.class);
+        mRequester = restAdapter.create(RequestInterface.class);
     }
 
     private Callback mCallback;
@@ -53,11 +52,32 @@ public class RequestTask
         return this;
     }
 
+    private Dialog mDialog;
+    public RequestTask setDialog(Dialog dialog) {
+        mDialog = dialog;
+        return this;
+    }
+
+    public RequestTask run(Type type) {
+        executeOnExecutor(THREAD_POOL_EXECUTOR, type);
+        return this;
+    }
+
+    public RequestTask run(Type type, Callback callback) {
+        setCallback(callback);
+        executeOnExecutor(THREAD_POOL_EXECUTOR, type);
+        return this;
+    }
+
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
         if (mProgress != null) {
             mProgress.setVisibility(View.VISIBLE);
+        }
+
+        if (mDialog != null) {
+            mDialog.show();
         }
     }
 
@@ -72,12 +92,6 @@ public class RequestTask
             return null;
         }
 
-        String accessToken = PrefUtils.getAccessToken(mContext);
-        if (TextUtils.isEmpty(accessToken)) {
-            mErrorMessage = "AccessToken is null";
-            return null;
-        }
-
         Type type = types[0];
         if (type == null) {
             mErrorMessage = "Type has not set";
@@ -86,6 +100,11 @@ public class RequestTask
 
         switch (type) {
             case GET_NEWS_FEED:
+                String accessToken = PrefUtils.getAccessToken(mContext);
+                if (TextUtils.isEmpty(accessToken)) {
+                    mErrorMessage = "AccessToken is null";
+                    return null;
+                }
                 return mRequester.getNewsFeed(accessToken);
             default:
                 mErrorMessage = "known";
@@ -99,6 +118,10 @@ public class RequestTask
             mCallback.callback(t);
         }
 
+        if (mDialog != null) {
+            mDialog.dismiss();
+        }
+
         if (mProgress != null) {
             mProgress.setVisibility(View.GONE);
         }
@@ -108,8 +131,14 @@ public class RequestTask
         return mErrorMessage;
     }
 
+    private RetrofitError mError;
+
+    public RetrofitError getError() {
+        return mError;
+    }
+
     @Override
     public Throwable handleError(RetrofitError cause) {
-        return cause;
+        return mError = cause;
     }
 }

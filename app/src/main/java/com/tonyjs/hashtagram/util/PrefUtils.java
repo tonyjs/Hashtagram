@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 import com.tonyjs.hashtagram.config.PreferenceConfig;
+import com.tonyjs.hashtagram.io.model.HostInfo;
+import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.io.model.insta.InstaUser;
 import com.tonyjs.hashtagram.io.model.insta.UserInfo;
 
@@ -61,6 +63,22 @@ public class PrefUtils {
         editor.putString(PreferenceConfig.USER_PROFILE_PICTURE, user.getProfilePictureUrl());
         editor.putString(PreferenceConfig.USER_BIO, user.getBio());
         editor.putString(PreferenceConfig.ACCESS_TOKEN, userInfo.getAccessToken());
+        editor.commit();
+    }
+
+
+    public static void setHostInfo(Context context, HostInfo hostInfo) {
+        if (hostInfo == null) {
+            return;
+        }
+        SharedPreferences.Editor editor = getPreferences(context).edit();
+        User user = hostInfo.getUser();
+        editor.putString(PreferenceConfig.USER_ID, user.getId());
+        editor.putString(PreferenceConfig.USER_NAME, user.getName());
+        editor.putString(PreferenceConfig.USER_FULL_NAME, user.getFullName());
+        editor.putString(PreferenceConfig.USER_PROFILE_PICTURE, user.getProfileImageUrl());
+        editor.putString(PreferenceConfig.USER_BIO, user.getBio());
+        editor.putString(PreferenceConfig.ACCESS_TOKEN, hostInfo.getAccessToken());
         editor.commit();
     }
 

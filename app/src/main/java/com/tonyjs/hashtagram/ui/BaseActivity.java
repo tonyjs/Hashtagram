@@ -2,6 +2,7 @@ package com.tonyjs.hashtagram.ui;
 
 import android.graphics.Color;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import com.tonyjs.hashtagram.R;
@@ -16,9 +17,6 @@ public abstract class BaseActivity extends ActionBarActivity {
         if (mToolBar == null) {
             mToolBar = (Toolbar) findViewById(R.id.toolbar);
             mToolBar.setTitleTextColor(Color.WHITE);
-//            if (mToolBar != null) {
-//                setSupportActionBar(mToolBar);
-//            }
         }
         return mToolBar;
     }
@@ -57,6 +55,16 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .commitAllowingStateLoss();
     }
 
+    public void addFragment(int containerResId, Fragment fragment, String tag, String stackName,
+                            int enterAnim, int exitEnim, int popEnterAnim, int popExitAnim) {
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setCustomAnimations(enterAnim, exitEnim, popEnterAnim, popExitAnim)
+                .add(containerResId, fragment, tag)
+                .addToBackStack(stackName)
+                .commitAllowingStateLoss();
+    }
+
     public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager()
                 .beginTransaction()
@@ -70,6 +78,14 @@ public abstract class BaseActivity extends ActionBarActivity {
                 .beginTransaction()
                 .replace(getContainerResId(), fragment, tag)
                 .commitAllowingStateLoss();
+    }
+
+    public void detachFragment(String tag) {
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment fragment = fm.findFragmentByTag(tag);
+        if (fragment != null) {
+            fm.beginTransaction().detach(fragment).commitAllowingStateLoss();
+        }
     }
 
     public void popAllBackStack() {
