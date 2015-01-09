@@ -2,75 +2,43 @@ package com.tonyjs.hashtagram.ui.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.MotionEvent;
 import android.widget.ScrollView;
 
 /**
  * Created by tony.park on 14. 11. 12..
  */
 public class SlipScrollView extends ScrollView {
-    public interface OnScrollListener {
+    public interface OnScrollCallback {
         public void onScroll(int amountOfScroll);
     }
 
     public SlipScrollView(Context context) {
         super(context);
-        init();
+        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     public SlipScrollView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        init();
+        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
     public SlipScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        init();
+        setOverScrollMode(OVER_SCROLL_NEVER);
     }
 
-    int mSpare;
-    private void init() {
-        mSpare = (int) (10 * getContext().getResources().getDisplayMetrics().density);
+    private OnScrollCallback mOnScrollCallback;
+
+    public void setOnScrollCallback(OnScrollCallback onScrollListener) {
+        mOnScrollCallback = onScrollListener;
     }
 
-    private OnScrollListener mOnScrollListener;
-
-    public void setOnScrollListener(OnScrollListener onScrollListener) {
-        mOnScrollListener = onScrollListener;
-    }
-
-    float mLastX;
-    float mLastY;
     @Override
-    public boolean onTouchEvent(MotionEvent ev) {
-        int action = ev.getAction();
-        switch (action) {
-            case MotionEvent.ACTION_DOWN:
-                mLastX = ev.getX();
-                mLastY = ev.getY();
-                break;
-
-            case MotionEvent.ACTION_MOVE:
-                float x = ev.getX();
-                float y = ev.getY();
-//                float distanceX = Math.abs(x - mLastX);
-                float distanceY = y - mLastY;
-//                float absDistanceY = Math.abs(distanceY);
-//                Log.e(((Object) this).getClass().getSimpleName(), "distanceY =" + distanceY);
-                if (mOnScrollListener != null) {
-                    mOnScrollListener.onScroll((int) distanceY);
-                }
-                mLastX = x;
-                mLastY = y;
-                break;
-
-            case MotionEvent.ACTION_UP:
-            case MotionEvent.ACTION_CANCEL:
-                mLastX = 0;
-                mLastY = 0;
-                break;
+    protected void onScrollChanged(int l, int t, int oldl, int oldt) {
+        super.onScrollChanged(l, t, oldl, oldt);
+        int amountScroll = t - oldt;
+        if (mOnScrollCallback != null) {
+            mOnScrollCallback.onScroll(-amountScroll);
         }
-        return super.onTouchEvent(ev);
     }
-
 }

@@ -13,18 +13,14 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.config.InstaConfig;
-import com.tonyjs.hashtagram.io.OnFinishedListener;
 import com.tonyjs.hashtagram.ui.view.BasicWebView;
 
 /**
  * Created by orcpark on 2014. 9. 4..
  */
 public class SignInFragment extends Fragment {
-
-    private OnFinishedListener mOnFinishedListener;
-
-    public void setOnFinishedListener(OnFinishedListener onFinishedListener) {
-        mOnFinishedListener = onFinishedListener;
+    public interface SignInCallback{
+        public void onSignIn(String code);
     }
 
     public static SignInFragment newInstance() {
@@ -35,9 +31,6 @@ public class SignInFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getActivity() instanceof OnFinishedListener) {
-            setOnFinishedListener((OnFinishedListener) getActivity());
-        }
         CookieSyncManager.createInstance(getActivity());
         CookieManager.getInstance().removeAllCookie();
     }
@@ -46,7 +39,8 @@ public class SignInFragment extends Fragment {
     private BasicWebView mWebView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         mRootView = (ViewGroup) inflater.inflate(R.layout.fragment_sign_in, container, false);
 
         ProgressDialog progressDialog = new ProgressDialog(getActivity());
@@ -58,10 +52,11 @@ public class SignInFragment extends Fragment {
 //        BasicWebView webView = (BasicWebView) rootView.findViewById(R.id.web_view);
         mWebView = new BasicWebView(getActivity());
         mWebView.clearCache(true);
-        mWebView.setWebViewClient(new InstaWebViewClient(progressDialog, mOnFinishedListener));
-
+        SignInCallback callback =
+                getActivity() instanceof SignInCallback ?
+                        (SignInCallback) getActivity() : null;
+        mWebView.setWebViewClient(new SignInWebViewClient(progressDialog, callback));
         mRootView.addView(mWebView);
-
         mWebView.loadUrl(InstaConfig.INSTA_AUTHORIZATION_URL);
 
         return mRootView;
@@ -80,16 +75,16 @@ public class SignInFragment extends Fragment {
         super.onDestroyView();
     }
 
-    private static class InstaWebViewClient extends WebViewClient{
+    private static class SignInWebViewClient extends WebViewClient{
 
         private ProgressDialog mProgressDialog;
-        private OnFinishedListener mOnFinishedListener;
+        private SignInCallback mCallback;
 
-        public InstaWebViewClient(ProgressDialog progressDialog,
-                                  OnFinishedListener onFinishedListener) {
+        public SignInWebViewClient(ProgressDialog progressDialog,
+                                   SignInCallback signInCallback) {
 
             mProgressDialog = progressDialog;
-            mOnFinishedListener  = onFinishedListener;
+            mCallback  = signInCallback;
         }
 
         @Override
@@ -115,11 +110,10 @@ public class SignInFragment extends Fragment {
                     if (mProgressDialog.isShowing()) {
                         mProgressDialog.dismiss();
                     }
-//                    String[] pair = url.split("access_token=");
                     String[] pair = url.split("code=");
                     String accessToken = pair[1];
-                    if (mOnFinishedListener != null) {
-                        mOnFinishedListener.onFinished(accessToken);
+                    if (mCallback != null) {
+                        mCallback.onSignIn(accessToken);
                     }
                     return true;
                 }

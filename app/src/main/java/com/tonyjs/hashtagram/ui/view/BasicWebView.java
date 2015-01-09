@@ -32,7 +32,6 @@ public class BasicWebView extends WebView {
 
     private void init(){
         if(!isInEditMode()){
-            Log.e("jsp", "!!!!!!!!!!!!!!!!!!! init !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             setVerticalScrollbarOverlay(true);
             getSettings().setDefaultTextEncodingName("UTF-8");
             getSettings().setJavaScriptEnabled(true);

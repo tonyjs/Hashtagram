@@ -5,8 +5,8 @@ import android.graphics.*;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import com.android.volley.toolbox.NetworkImageView;
-import com.tonyjs.hashtagram.io.model.insta.InstaImageSpec;
-import com.tonyjs.hashtagram.io.request.volley.RequestQueueManager;
+import com.tonyjs.hashtagram.io.model.ImageResolution;
+import com.tonyjs.hashtagram.io.request.volley.RequestManager;
 import com.tonyjs.hashtagram.util.UiUtils;
 
 /**
@@ -32,23 +32,13 @@ public class GradientNetworkImageView extends NetworkImageView {
     }
 
     private int mWidth;
-//    private boolean mIsMeasured = false;
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-////        Log.e("jsp", "onMeasure");
-//        mWidth = MeasureSpec.getSize(widthMeasureSpec);
-//        if (mSpec != null) {
-////        if (mSpec != null && !mIsMeasured) {
-//            setSize(mWidth, mSpec);
-////            mIsMeasured = true;
-//        } else {
-//            super.onMeasure(widthMeasureSpec, heightMeasureSpec);
-//        }
         int width = MeasureSpec.getSize(widthMeasureSpec);
         setMeasuredDimension(width, width);
     }
 
-    private void setSize(int width, InstaImageSpec spec) {
+    private void setSize(int width, ImageResolution spec) {
 //        Log.d("jsp", "spec Height = " + spec.getHeight());
         int height = getResizeHeight(width, spec);
         if (height > mMaxHeight) {
@@ -58,7 +48,7 @@ public class GradientNetworkImageView extends NetworkImageView {
         setMeasuredDimension(width, height);
     }
 
-    protected int getResizeHeight(int width, InstaImageSpec spec) {
+    protected int getResizeHeight(int width, ImageResolution spec) {
         if (width == 0 || spec == null) {
             return 0;
         }
@@ -80,9 +70,9 @@ public class GradientNetworkImageView extends NetworkImageView {
         return newHeight;
     }
 
-    private InstaImageSpec mSpec;
+    private ImageResolution mSpec;
 
-    public void setImageSpec(InstaImageSpec imageSpec) {
+    public void setImageSpec(ImageResolution imageSpec) {
         if (imageSpec == null) {
             return;
         }
@@ -92,14 +82,8 @@ public class GradientNetworkImageView extends NetworkImageView {
         String imageUrl = imageSpec.getUrl();
         if (!TextUtils.isEmpty(imageUrl)) {
             setImageUrl(imageUrl,
-                    RequestQueueManager.getInstance(getContext()).getImageLoader());
+                    RequestManager.getInstance().getImageLoader(getContext()));
         }
-
-//        if (mWidth > 0) {
-//            setSize(mWidth, mSpec);
-//        }
-//        invalidate();
-//        measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
     }
 
     @Override
@@ -125,7 +109,5 @@ public class GradientNetworkImageView extends NetworkImageView {
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
         mShowingNull = bm != null;
-
-//        invalidate();
     }
 }

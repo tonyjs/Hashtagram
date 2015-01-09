@@ -6,43 +6,31 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import com.tonyjs.hashtagram.config.InstaConfig;
+import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.io.model.HostInfo;
-import com.tonyjs.hashtagram.io.request.retrofit.HostInfoBody;
-import com.tonyjs.hashtagram.io.request.retrofit.HostInfoResponse;
-
 import com.tonyjs.hashtagram.R;
-import com.tonyjs.hashtagram.io.OnFinishedListener;
 import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
-import com.tonyjs.hashtagram.io.model.PageItem;
-import com.tonyjs.hashtagram.io.model.insta.UserInfo;
-import com.tonyjs.hashtagram.io.request.retrofit.RequestInterface;
-import com.tonyjs.hashtagram.io.request.retrofit.RequestTask;
-import com.tonyjs.hashtagram.io.request.volley.RequestFactory;
-import com.tonyjs.hashtagram.ui.widget.SlipLayout;
+import com.tonyjs.hashtagram.io.model.NavigationItem;
+import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
+import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.util.PrefUtils;
 import com.tonyjs.hashtagram.util.ToastUtils;
-import org.apache.http.client.utils.URLEncodedUtils;
-import retrofit.Callback;
-import retrofit.ErrorHandler;
-import retrofit.RestAdapter;
-import retrofit.RetrofitError;
-import retrofit.client.Response;
 import retrofit.http.FormUrlEncoded;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity
         implements NavigationFragment.LifecycleCallback, NavigationFragment.NavigationCallback,
-                    RecyclerFragment.LifecycleCallback, SearchFragment.OnSearchListener, OnFinishedListener{
+                    FeedListFragment.LifecycleCallback, SearchFragment.OnSearchListener,
+                    SignInFragment.SignInCallback{
 
     public static final String FRAGMENT_SIGN_IN = "SignInFragment";
     public static final String RECYCLER_FRAGMENT = "RecyclerFragment";
@@ -143,9 +131,9 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFinished(String code) {
+    public void onSignIn(final String code) {
         if (TextUtils.isEmpty(code)) {
-            ToastUtils.toast(this, getString(R.string.authorize_fail));
+            ToastUtils.show(this, getString(R.string.authorize_fail));
             return;
         }
 
@@ -155,54 +143,19 @@ public class MainActivity extends BaseActivity
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
         dialog.setMessage("인증 중입니다...");
-        dialog.show();
-
-        RestAdapter restAdapter = new RestAdapter.Builder()
-                .setLogLevel(RestAdapter.LogLevel.FULL)
-                .setEndpoint(RequestInterface.END_POINT)
-                .build();
-        RequestInterface requestInterface = restAdapter.create(RequestInterface.class);
-        requestInterface.getHostInfo(
-                encodeString(code),
-                encodeString(InstaConfig.INSTA_CLIENT_ID),
-                encodeString(InstaConfig.INSTA_CLIENT_ID),
-                encodeString("authorization_code"),
-                encodeString(InstaConfig.INSTA_REDIRECT_URI),
-                new Callback<HostInfoResponse>() {
+        RequestProvider.getHostInfo(this, code, dialog,
+                new Callback<HostInfo>() {
                     @Override
-                    public void success(HostInfoResponse hostInfoResponse, Response response) {
-                        dialog.dismiss();
-                        ToastUtils.toast(getApplicationContext(), hostInfoResponse.toString());
-                        HostInfo hostInfo = hostInfoResponse.getHostInfo();
-                        handleResponse(hostInfo);
+                    public void onSuccess(HostInfo response) {
+                        handleResponse(response);
                     }
 
                     @Override
-                    public void failure(RetrofitError error) {
-                        dialog.dismiss();
-                        String errorString =
-                                error.getMessage() + "\n" +
-                                        error.getBody() + "\n" +
-                                        error.getKind() + "\n";
-                        Log.e("jsp", errorString);
-                        ToastUtils.toast(getApplicationContext(), errorString);
+                    public void onError(VolleyError e) {
+                        ToastUtils.show(getApplicationContext(),
+                                getString(R.string.authorize_fail));
                     }
                 });
-
-//        RequestFactory.getUser(this, code, dialog,
-//                new ResponseListener<JSONObject>() {
-//                    @Override
-//                    public void onResponse(JSONObject response) {
-//                        UserInfo userInfo = JsonParser.getUserInfo(response);
-//                        handleResponse(userInfo);
-//                    }
-//
-//                    @Override
-//                    public void onError(VolleyError error) {
-//                        Toast.makeText(getApplicationContext(),
-//                                getString(R.string.authorize_fail), Toast.LENGTH_SHORT).show();
-//                    }
-//                });
     }
 
     @FormUrlEncoded
@@ -227,36 +180,15 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void handleResponse(UserInfo userInfo) {
-        if (userInfo == null) {
-            ToastUtils.toast(this, getString(R.string.authorize_fail));
-            return;
-        }
-
-        Log.e("jsp", userInfo.toString());
-
-        ToastUtils.toast(this, getString(R.string.authorize_success));
-
-        PrefUtils.setUserInfo(getApplicationContext(), userInfo);
-
-        supportInvalidateOptionsMenu();
-
-        mDrawer.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED);
-
-        initNavigationUi();
-
-        setNavigation();
-    }
-
     private void handleResponse(HostInfo userInfo) {
         if (userInfo == null) {
-            ToastUtils.toast(this, getString(R.string.authorize_fail));
+            ToastUtils.show(this, getString(R.string.authorize_fail));
             return;
         }
 
         Log.e("jsp", userInfo.toString());
 
-        ToastUtils.toast(this, getString(R.string.authorize_success));
+        ToastUtils.show(this, getString(R.string.authorize_success));
 
         PrefUtils.setHostInfo(getApplicationContext(), userInfo);
 
@@ -276,7 +208,7 @@ public class MainActivity extends BaseActivity
     private void showEditHashtagFragment() {
         ArrayList<String> items = HashtagramDatabase.getInstance(this).getAllHashTag();
         if (items == null || items.size() < 2) {
-            ToastUtils.toast(this, getString(R.string.no_hashtag));
+            ToastUtils.show(this, getString(R.string.no_hashtag));
             return;
         }
         addFragment(android.R.id.content, new EditHashtagFragment(), EDIT_HASHTAG_FRAGMENT, null,
@@ -308,14 +240,14 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onFragmentCreated(RecyclerFragment fragment) {
-        SlipLayout slipLayout = fragment.getSlipLayout();
-        slipLayout.setTargetView(getTargetView());
-        slipLayout.showTargetViewForcibly();
+    public void onViewCreated(RecyclerView recyclerView) {
+        getSlipController().setRecyclerView(recyclerView);
+        getSlipController().setTargetView(getTargetView());
+        getSlipController().showTargetView();
     }
 
     @Override
-    public void onResume(RecyclerFragment fragment) {
+    public void onResume(FeedListFragment fragment) {
         mToolBar.setTitle(fragment.getHashTag());
     }
 
@@ -343,7 +275,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onItemSelected(PageItem item) {
+    public void onItemSelected(NavigationItem item) {
         Fragment fragment = item.getFragment();
         replaceFragment(fragment, RECYCLER_FRAGMENT);
         mDrawer.closeDrawer(Gravity.START);

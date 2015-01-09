@@ -1,16 +1,23 @@
 package com.tonyjs.hashtagram.ui;
 
 import android.graphics.Color;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
 import com.tonyjs.hashtagram.R;
+import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
 
 /**
  * Created by orcpark on 14. 11. 13..
  */
 public abstract class BaseActivity extends ActionBarActivity {
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mSlipController = new SlipLayoutController();
+    }
 
     protected Toolbar mToolBar;
     protected Toolbar getToolBar() {
@@ -19,6 +26,11 @@ public abstract class BaseActivity extends ActionBarActivity {
             mToolBar.setTitleTextColor(Color.WHITE);
         }
         return mToolBar;
+    }
+
+    private SlipLayoutController mSlipController;
+    public SlipLayoutController getSlipController(){
+        return mSlipController;
     }
 
     public abstract int getContainerResId();

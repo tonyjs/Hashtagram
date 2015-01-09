@@ -15,8 +15,9 @@ public class Feed extends BaseObject {
     @SerializedName("created_time") private String createdTime;
     @SerializedName("link") private String link;
     @SerializedName("likes") private Likes likes;
+    @SerializedName("images") private Images images;
     @SerializedName("caption") private Caption caption;
-    @SerializedName("user_has_liked") private boolean hasLiked;
+    @SerializedName("user_has_liked") private boolean userLiked;
     @SerializedName("id") private String id;
     @SerializedName("user") private User user;
 
@@ -84,12 +85,12 @@ public class Feed extends BaseObject {
         this.caption = caption;
     }
 
-    public boolean isHasLiked() {
-        return hasLiked;
+    public boolean isUserLiked() {
+        return userLiked;
     }
 
-    public void setHasLiked(boolean hasLiked) {
-        this.hasLiked = hasLiked;
+    public void setUserLiked(boolean userLiked) {
+        this.userLiked = userLiked;
     }
 
     public String getId() {
@@ -108,6 +109,14 @@ public class Feed extends BaseObject {
         this.user = user;
     }
 
+    public Images getImages() {
+        return images;
+    }
+
+    public void setImages(Images images) {
+        this.images = images;
+    }
+
     @Override
     public String toString() {
         return "Feed{" +
@@ -118,8 +127,9 @@ public class Feed extends BaseObject {
                 ", createdTime='" + createdTime + '\'' +
                 ", link='" + link + '\'' +
                 ", likes=" + likes +
+                ", images=" + images +
                 ", caption=" + caption +
-                ", hasLiked=" + hasLiked +
+                ", userLiked=" + userLiked +
                 ", id='" + id + '\'' +
                 ", user=" + user +
                 '}';

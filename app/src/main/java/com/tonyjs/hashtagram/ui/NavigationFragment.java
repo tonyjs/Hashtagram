@@ -14,11 +14,10 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
-import com.tonyjs.hashtagram.io.model.PageItem;
-import com.tonyjs.hashtagram.io.model.PageRecyclerItem;
-import com.tonyjs.hashtagram.io.model.insta.InstaUser;
-import com.tonyjs.hashtagram.ui.adapter.BasicRecyclerAdapter;
-import com.tonyjs.hashtagram.ui.adapter.BasicViewHolder;
+import com.tonyjs.hashtagram.io.model.NavigationItem;
+import com.tonyjs.hashtagram.io.model.User;
+import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
+import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
 import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.PrefUtils;
@@ -32,7 +31,7 @@ public class NavigationFragment extends Fragment
                 implements BasicRecyclerView.OnItemClickListener{
 
     public interface NavigationCallback {
-        public void onItemSelected(PageItem item);
+        public void onItemSelected(NavigationItem item);
     }
 
     public interface LifecycleCallback {
@@ -67,7 +66,7 @@ public class NavigationFragment extends Fragment
     }
 
     public void updateUi() {
-        InstaUser user = PrefUtils.getUser(getActivity());
+        User user = PrefUtils.getUser(getActivity());
         if (user == null) {
             return;
         }
@@ -78,7 +77,7 @@ public class NavigationFragment extends Fragment
             profile = user.getFullName();
         }
         mTvProfile.setText(profile);
-        ImageLoader.loadCircleDrawable(getActivity(), user.getProfilePictureUrl(), mIvUser);
+        ImageLoader.loadCircleDrawable(getActivity(), user.getProfileImageUrl(), mIvUser);
 
         updateNavigationItems();
 
@@ -92,10 +91,10 @@ public class NavigationFragment extends Fragment
             return;
         }
 
-        ArrayList<PageItem> pageItems = new ArrayList<>();
+        ArrayList<NavigationItem> pageItems = new ArrayList<>();
         int i = 0;
         for (String hashTag : items) {
-            pageItems.add(new PageRecyclerItem(i, hashTag));
+            pageItems.add(new NavigationItem(i, hashTag));
             i++;
         }
 
@@ -116,7 +115,7 @@ public class NavigationFragment extends Fragment
     private void revertItems() {
         int max = mAdapter.getItemCount();
         for (int i = 0; i < max; i++) {
-            PageItem item = mAdapter.getItem(i);
+            NavigationItem item = mAdapter.getItem(i);
             item.setSelected(false);
         }
         mAdapter.notifyDataSetChanged();
@@ -140,7 +139,7 @@ public class NavigationFragment extends Fragment
 
         revertItems();
 
-        PageItem item = mAdapter.getItem(position);
+        NavigationItem item = mAdapter.getItem(position);
         item.setSelected(true);
         mAdapter.notifyItemChanged(position);
 
@@ -153,7 +152,7 @@ public class NavigationFragment extends Fragment
         super.onDestroyView();
     }
 
-    class NavigationAdapter extends BasicRecyclerAdapter<PageItem> {
+    class NavigationAdapter extends BasicRecyclerAdapter<NavigationItem> {
 
         public NavigationAdapter(Context context) {
             super(context);
@@ -161,7 +160,8 @@ public class NavigationFragment extends Fragment
 
         @Override
         public BasicViewHolder getViewHolder(ViewGroup parent, int viewType) {
-            View itemView = getLayoutInflater().inflate(R.layout.recycler_item_navigation, parent, false);
+            View itemView =
+                    getLayoutInflater().inflate(R.layout.recycler_item_navigation, parent, false);
             return new NavigationHolder(getContext(), itemView);
         }
 
@@ -170,7 +170,7 @@ public class NavigationFragment extends Fragment
             viewHolder.onBindView(getItem(position));
         }
 
-        class NavigationHolder extends BasicViewHolder<PageItem> {
+        class NavigationHolder extends BasicViewHolder<NavigationItem> {
 
             private TextView mTvTitle;
 
@@ -180,7 +180,7 @@ public class NavigationFragment extends Fragment
             }
 
             @Override
-            public void onBindView(PageItem item) {
+            public void onBindView(NavigationItem item) {
                 mTvTitle.setText(item.getHashTag());
                 itemView.setSelected(item.isSelected());
             }

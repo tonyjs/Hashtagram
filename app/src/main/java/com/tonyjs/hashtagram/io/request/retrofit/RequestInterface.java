@@ -1,5 +1,10 @@
 package com.tonyjs.hashtagram.io.request.retrofit;
 
+import com.tonyjs.hashtagram.io.model.HostInfo;
+import com.tonyjs.hashtagram.io.response.NewsFeedResponse;
+
+import java.util.Map;
+
 import retrofit.Callback;
 import retrofit.http.*;
 
@@ -16,14 +21,12 @@ public interface RequestInterface {
     @GET("/v1//users/self/feed")
     public NewsFeedResponse getNewsFeed(@Query("access_token") String accessToken);
 
+    @FormUrlEncoded
     @POST("/oauth/access_token")
-    public void getHostInfo(@Field("code") String code,
-                            @Field("client_id") String clientId,
-                            @Field("client_secret") String clientSecret,
-                            @Field("grant_type") String grantType,
-                            @Field("redirect_uri") String redirectUri,
-                            Callback<HostInfoResponse> callback);
+    public HostInfo getHostInfo(@FieldMap Map<String, String> fieldMap);
+
+    @FormUrlEncoded
     @POST("/oauth/access_token")
-    public void getHostInfo(@Body HostInfoBody hostInfoBody,
-                            Callback<HostInfoResponse> callback);
+    public void getHostInfo(@FieldMap Map<String, String> fieldMap,
+                            Callback<HostInfo> callback);
 }

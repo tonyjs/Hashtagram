@@ -5,6 +5,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
 import com.tonyjs.hashtagram.R;
+import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
+import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 
 import java.util.ArrayList;
 

@@ -8,6 +8,9 @@ import android.view.View;
 
 import com.tonyjs.hashtagram.util.PrefUtils;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import retrofit.ErrorHandler;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
@@ -16,13 +19,13 @@ import retrofit.RetrofitError;
  * Created by tonyjs on 15. 1. 8..
  */
 public class RequestTask
-        extends AsyncTask<RequestTask.Type, Void, Response> implements ErrorHandler{
+        extends AsyncTask<RequestTask.Type, Void, Object> implements ErrorHandler{
 
     public enum Type {
         GET_NEWS_FEED, GET_HOST_INFO
     }
 
-    public interface Callback<T extends Response>{
+    public interface Callback<T>{
         public void callback(T response);
     }
 
@@ -45,8 +48,13 @@ public class RequestTask
         return this;
     }
 
-    private View mProgress;
+    private Map<String, String> mParam;
+    public RequestTask setParameter(Map<String, String> parameter) {
+        mParam = parameter;
+        return this;
+    }
 
+    private View mProgress;
     public RequestTask setProgressView(View progressView) {
         mProgress = progressView;
         return this;
@@ -83,9 +91,9 @@ public class RequestTask
 
     private String mErrorMessage;
     @Override
-    protected Response doInBackground(Type... types) {
+    protected Object doInBackground(Type... types) {
         if (mContext == null || isCancelled()) {
-            mErrorMessage = "isCancelled";
+            mErrorMessage = "Request has cancelled";
             if (mContext == null) {
                 mErrorMessage = "Context is null";
             }
@@ -106,14 +114,22 @@ public class RequestTask
                     return null;
                 }
                 return mRequester.getNewsFeed(accessToken);
+
+            case GET_HOST_INFO:
+                Map<String, String> param = getParameter();
+                if (param == null || param.size() <= 0) {
+                    mErrorMessage = "Parameter has not set";
+                    return null;
+                }
+                return mRequester.getHostInfo(param);
             default:
-                mErrorMessage = "known";
+                mErrorMessage = "Unknown";
                 return null;
         }
     }
 
     @Override
-    protected void onPostExecute(Response t) {
+    protected void onPostExecute(Object t) {
         if (mCallback != null) {
             mCallback.callback(t);
         }
@@ -125,6 +141,14 @@ public class RequestTask
         if (mProgress != null) {
             mProgress.setVisibility(View.GONE);
         }
+    }
+
+    public Map<String, String> getParameter() {
+        return mParam;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     public String getErrorMessage() {
