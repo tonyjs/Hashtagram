@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.view.MenuItem;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.model.Feed;
+import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
 import com.tonyjs.hashtagram.ui.widget.SlipScrollView;
 
 /**
@@ -68,6 +69,7 @@ public class FeedDetailActivity extends BaseActivity
 
     @Override
     public void onControllerCreated(SlipScrollView slipScrollView) {
+        getSlipController().setDirection(SlipLayoutController.DIRECTION_TO_UP);
         getSlipController().setTargetView(findViewById(R.id.toolbar));
         getSlipController().setScrollView(slipScrollView);
     }

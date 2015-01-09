@@ -127,7 +127,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
             long createdTime = Long.valueOf(item.getCreatedTime());
             tvCreatedTime.setText(TimeUtils.getRelativeTime(createdTime));
 
-            String summary = item.getCaption() != null ? item.getCaption().getTitle() : "";
+            String summary = item.getCaption() != null ? item.getCaption().getText() : "";
             tvSummary.setText(summary);
 
             Images info = item.getImages();

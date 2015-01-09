@@ -20,6 +20,7 @@ import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
 import com.tonyjs.hashtagram.io.model.NavigationItem;
 import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
 import com.tonyjs.hashtagram.io.request.volley.response.Callback;
+import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
 import com.tonyjs.hashtagram.util.PrefUtils;
 import com.tonyjs.hashtagram.util.ToastUtils;
 import retrofit.http.FormUrlEncoded;
@@ -241,6 +242,7 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onViewCreated(RecyclerView recyclerView) {
+        getSlipController().setDirection(SlipLayoutController.DIRECTION_TO_UP);
         getSlipController().setRecyclerView(recyclerView);
         getSlipController().setTargetView(getTargetView());
         getSlipController().showTargetView();

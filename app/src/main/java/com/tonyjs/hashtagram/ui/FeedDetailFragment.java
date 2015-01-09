@@ -116,7 +116,7 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         ImageResolution spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
         ImageLoader.load(mActivity, thumbUrl, mIvThumb, true);
-        String summary = item.getCaption() != null ? item.getCaption().getTitle() : null;
+        String summary = item.getCaption() != null ? item.getCaption().getText() : null;
         mTvSummary.setText(summary);
 
         mScrollView.post(mSetSlipLayoutRunnable);
@@ -150,7 +150,6 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         });
     }
 
-    private Toast mToast;
     private void handleFeedback(Feed item, boolean userHasLiked) {
         String messageFormat = null;
         if (userHasLiked) {
