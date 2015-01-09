@@ -7,6 +7,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -60,14 +61,14 @@ public class FeedListFragment extends BaseFragment
 
     private String mHashTag;
     private int mPosition;
-    private boolean mIsHashtag = false;
+    private boolean mHashtag = false;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         mHashTag = args != null ? args.getString(KEY_HASH_TAG) : DEFAULT_HASH_TAG;
         mPosition = args != null ? args.getInt(KEY_POSITION) : 0;
-        mIsHashtag = !HashtagConfig.NEWSFEED.equals(mHashTag);
+        mHashtag = !HashtagConfig.NEWSFEED.equals(mHashTag);
     }
 
     public String getHashTag() {
@@ -85,7 +86,8 @@ public class FeedListFragment extends BaseFragment
     private TimeLineRecyclerAdapter mAdapter;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_feed_list, container, false);
         ButterKnife.inject(this, rootView);
         mSwipeLayout.setColorSchemeResources(
@@ -166,12 +168,13 @@ public class FeedListFragment extends BaseFragment
 
         mInAsync = true;
 
+        Log.e("jsp", "" + nextUrl);
         if (!TextUtils.isEmpty(nextUrl)) {
             RequestProvider.getNewsFeed(getActivity(), nextUrl, null, mNeedMoreFeedCallback);
             return;
         }
 
-        if (!mIsHashtag) {
+        if (!mHashtag) {
             RequestProvider.getNewsFeed(getActivity(), mProgressBar, this);
         } else {
             RequestProvider.getHashTaggedFeed(getActivity(), mHashTag, mProgressBar, this);
@@ -184,8 +187,8 @@ public class FeedListFragment extends BaseFragment
         if(validateAndHandleRefresh(response)){
             ArrayList<Feed> items = response.getData();
             Pagination pagination = response.getPagination();
-            mNextUrl = pagination != null ?
-                    pagination.getNextUrl() : null;
+//            Log.e("jsp", pagination.toString());
+            mNextUrl = pagination != null ? pagination.getNextUrl() : null;
             mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
             mAdapter.setItems(items);
             if (!mCanRequestMore) {

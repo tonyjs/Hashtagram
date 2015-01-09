@@ -64,10 +64,8 @@ public class RequestProvider {
 
         int method = Request.Method.GET;
 
-        HashMap<String, String> params = ParamFactory.getAccessTokenParams(accessToken);
-
         BasicRequest request = getGsonRequest(method, nextUrl, NewsFeedResponse.class,
-                                                params, progressBar, null, callback);
+                                                null, progressBar, null, callback);
 
         RequestManager.getInstance().getRequestQueue(context).add(request);
     }
