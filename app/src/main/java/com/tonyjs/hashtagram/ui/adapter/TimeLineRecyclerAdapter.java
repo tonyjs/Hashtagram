@@ -164,7 +164,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
                     handleFeedback(item, userHasLiked);
                     item.setUserLiked(!userHasLiked);
                     likes.setCount(likes.getCount() + (userHasLiked ? -1 : + 1));
-                    notifyItemChanged(getPosition());
+                    setBtnLike(item);
                 }
             });
         }

@@ -140,16 +140,16 @@ public class FeedListFragment extends BaseFragment
 
     @Override
     public void onRefresh() {
-        getInstagram(null);
+        getNewsFeed(null);
     }
 
     @Override
     public void onNeedMore() {
-        getInstagram(mNextUrl);
+        getNewsFeed(mNextUrl);
     }
 
     private boolean mInAsync = false;
-    private void getInstagram(String nextUrl) {
+    private void getNewsFeed(String nextUrl) {
         if (isFinishing()) {
             return;
         }
@@ -214,7 +214,7 @@ public class FeedListFragment extends BaseFragment
     }
 
     private boolean mCanRequestMore = true;
-    Callback<NewsFeedResponse> mNeedMoreFeedCallback =
+    private Callback<NewsFeedResponse> mNeedMoreFeedCallback =
             new Callback<NewsFeedResponse>() {
                 @Override
                 public void onSuccess(NewsFeedResponse response) {

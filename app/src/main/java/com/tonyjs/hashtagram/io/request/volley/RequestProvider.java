@@ -80,7 +80,7 @@ public class RequestProvider {
             return;
         }
 
-        String url = String.format(ApiInterface.HASH_TAG, getEncodeString(hashTag));
+        String url = String.format(ApiInterface.END_POINT + ApiInterface.HASH_TAG, getEncodeString(hashTag));
 
         int method = Request.Method.GET;
 
@@ -114,7 +114,7 @@ public class RequestProvider {
             return;
         }
 
-        String url = String.format(ApiInterface.LIKES, mediaId);
+        String url = String.format(ApiInterface.END_POINT + ApiInterface.LIKES, mediaId);
 
         int method = Request.Method.POST;
 
@@ -133,7 +133,7 @@ public class RequestProvider {
             return;
         }
 
-        String url = String.format(ApiInterface.LIKES, mediaId);
+        String url = String.format(ApiInterface.END_POINT + ApiInterface.LIKES, mediaId);
 
         int method = Request.Method.DELETE;
 

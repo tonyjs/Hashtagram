@@ -45,7 +45,8 @@ public class NavigationFragment extends Fragment
     private LinearLayoutManager mLayoutManager;
     private NavigationAdapter mAdapter;
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater,
+                             ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_navigation, container, false);
         ButterKnife.inject(this, rootView);
         mLayoutManager = new LinearLayoutManager(getActivity());

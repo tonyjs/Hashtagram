@@ -6,6 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.GlideBuilder;
+import com.bumptech.glide.load.DecodeFormat;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
 
@@ -16,6 +19,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        if (!Glide.isSetup()) {
+            Glide.setup(new GlideBuilder(this)
+                    .setDecodeFormat(DecodeFormat.ALWAYS_ARGB_8888));
+        }
         mSlipController = new SlipLayoutController();
     }
 

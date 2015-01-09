@@ -159,20 +159,6 @@ public class MainActivity extends BaseActivity
                 });
     }
 
-    @FormUrlEncoded
-    private String encodeString(String target) {
-        return target;
-    }
-
-    private String getEncodedString(String target) {
-        try {
-            target = URLEncoder.encode(target, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        return target;
-    }
-
     private void detachSignInFragment() {
         FragmentManager fm = getSupportFragmentManager();
         Fragment fragment = fm.findFragmentByTag(FRAGMENT_SIGN_IN);
