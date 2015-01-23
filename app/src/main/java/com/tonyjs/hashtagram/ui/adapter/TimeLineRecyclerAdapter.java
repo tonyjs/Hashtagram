@@ -1,6 +1,7 @@
 package com.tonyjs.hashtagram.ui.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
+import com.tonyjs.hashtagram.util.ImageLoadManager;
 import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
@@ -44,8 +46,10 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
         FOOTER, ITEM
     }
 
-    public TimeLineRecyclerAdapter(Context context) {
+    private ImageLoader mImageLoader;
+    public TimeLineRecyclerAdapter(Context context, ImageLoader imageLoader) {
         super(context);
+        mImageLoader = imageLoader;
     }
 
     @Override
@@ -136,7 +140,13 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
             User user = item.getUser();
             if (user != null) {
                 String authorUrl = user.getProfileImageUrl();
-                ImageLoader.loadCircleDrawable(getContext(), authorUrl, ivAuthor);
+
+                if (mImageLoader != null && !TextUtils.isEmpty(authorUrl)) {
+                    mImageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+                } else {
+                    ivThumb.setImageDrawable(null);
+                }
+//                ImageLoadManager.loadCircleDrawable(getContext(), authorUrl, ivAuthor);
                 tvAuthor.setText(user.getName());
             }
 
@@ -150,7 +160,11 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
                     Integer.toString(likes.getCount()) : Integer.toString(0);
             tvLikesCount.setText(likesCount);
 
-            ImageLoader.load(getContext(), thumbUrl, ivThumb, true);
+            if (mImageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
+                mImageLoader.load(ivThumb, thumbUrl, true);
+            } else {
+                ivThumb.setImageDrawable(null);
+            }
             setBtnLike(item);
         }
 

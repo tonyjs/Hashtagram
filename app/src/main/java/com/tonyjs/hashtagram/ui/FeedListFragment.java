@@ -99,7 +99,7 @@ public class FeedListFragment extends BaseFragment
 
         mLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext());
+        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext(), getImageLoader());
         mRecyclerView.setOnItemClickListener(this);
         mAdapter.setNeedMoreCallback(this);
 

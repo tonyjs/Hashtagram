@@ -11,6 +11,7 @@ import com.bumptech.glide.GlideBuilder;
 import com.bumptech.glide.load.DecodeFormat;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
+import com.tonyjs.hashtagram.util.ImageLoader;
 
 /**
  * Created by orcpark on 14. 11. 13..

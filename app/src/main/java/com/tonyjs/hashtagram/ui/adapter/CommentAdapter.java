@@ -10,7 +10,7 @@ import com.tonyjs.hashtagram.io.model.Comment;
 import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
-import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoadManager;
 
 /**
  * Created by orcpark on 14. 11. 16..
@@ -35,7 +35,7 @@ public class CommentAdapter extends BasicAdapter<Comment> {
 
         User user = item.getFrom();
         String profileUrl = user != null ? user.getProfileImageUrl() : null;
-        ImageLoader.loadCircleDrawable(mContext, profileUrl, ivProfile);
+        ImageLoadManager.loadCircleDrawable(mContext, profileUrl, ivProfile);
 
         String name = user != null ? user.getFullName() : null;
         tvName.setText(name);

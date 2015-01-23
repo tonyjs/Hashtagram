@@ -24,7 +24,7 @@ import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
 import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.ui.adapter.CommentAdapter;
 import com.tonyjs.hashtagram.ui.widget.*;
-import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoadManager;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
 
@@ -100,7 +100,7 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            ImageLoader.loadCircleDrawable(mActivity, authorUrl, mIvAuthor);
+            ImageLoadManager.loadCircleDrawable(mActivity, authorUrl, mIvAuthor);
             mTvAuthor.setText(user.getName());
         }
 
@@ -116,7 +116,7 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         Images info = item.getImages();
         ImageResolution spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
-        ImageLoader.load(mActivity, thumbUrl, mIvThumb, true);
+        ImageLoadManager.load(mActivity, thumbUrl, mIvThumb, true);
         String summary = item.getCaption() != null ? item.getCaption().getText() : null;
         mTvSummary.setText(summary);
 
