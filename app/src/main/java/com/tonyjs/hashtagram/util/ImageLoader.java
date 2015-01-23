@@ -1,5 +1,7 @@
 package com.tonyjs.hashtagram.util;
 
+import android.animation.Animator;
+import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;
@@ -7,8 +9,13 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.graphics.drawable.BitmapDrawable;
+import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewPropertyAnimator;
+import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.bumptech.glide.BitmapTypeRequest;
@@ -22,9 +29,10 @@ import com.bumptech.glide.load.model.ModelCache;
 import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.animation.*;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
+import com.tonyjs.hashtagram.R;
 
 /**
  * Created by tonyjs on 15. 1. 23..
@@ -97,14 +105,16 @@ public class ImageLoader {
 
         BitmapTypeRequest<String> request = mGlideRequest.load(url).asBitmap();
 
-        if (!animate) {
-            request.dontAnimate();
-        }
-
         if (transformation != null) {
             request.transform(transformation);
         } else {
             request.dontTransform();
+        }
+
+        if (!animate) {
+            request.dontAnimate();
+        } else {
+            request.animate(R.anim.fade_in);
         }
 
         if (waitingImageResId != NONE_RESOURCE_ID) {

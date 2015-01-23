@@ -1,6 +1,7 @@
 package com.tonyjs.hashtagram.ui;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.ui.adapter.CommentAdapter;
 import com.tonyjs.hashtagram.ui.widget.*;
 import com.tonyjs.hashtagram.util.ImageLoadManager;
+import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
 
@@ -94,13 +96,21 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         if (item == null) {
             return;
         }
+
+        ImageLoader imageLoader = getImageLoader();
         long createdTime = Long.valueOf(item.getCreatedTime());
         mTvCreatedTime.setText(TimeUtils.getRelativeTime(createdTime));
 
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            ImageLoadManager.loadCircleDrawable(mActivity, authorUrl, mIvAuthor);
+//            ImageLoadManager.loadCircleDrawable(mActivity, authorUrl, mIvAuthor);
+
+            if (imageLoader != null && !TextUtils.isEmpty(authorUrl)) {
+                imageLoader.load(mIvAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+            } else {
+                mIvAuthor.setImageDrawable(null);
+            }
             mTvAuthor.setText(user.getName());
         }
 
@@ -116,7 +126,12 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         Images info = item.getImages();
         ImageResolution spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
-        ImageLoadManager.load(mActivity, thumbUrl, mIvThumb, true);
+//        ImageLoadManager.load(mActivity, thumbUrl, mIvThumb, true);
+        if (imageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
+            imageLoader.load(mIvThumb, thumbUrl, true);
+        } else {
+            mIvThumb.setImageDrawable(null);
+        }
         String summary = item.getCaption() != null ? item.getCaption().getText() : null;
         mTvSummary.setText(summary);
 

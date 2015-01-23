@@ -20,10 +20,10 @@ public abstract class BaseActivity extends ActionBarActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (!Glide.isSetup()) {
-            Glide.setup(new GlideBuilder(this)
-                    .setDecodeFormat(DecodeFormat.ALWAYS_ARGB_8888));
-        }
+//        if (!Glide.isSetup()) {
+//            Glide.setup(new GlideBuilder(this)
+//                    .setDecodeFormat(DecodeFormat.ALWAYS_ARGB_8888));
+//        }
         mSlipController = new SlipLayoutController();
     }
 
