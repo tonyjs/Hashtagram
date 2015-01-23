@@ -81,8 +81,16 @@ public class ImageLoader {
         load(imageView, url, true, transformation, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
     }
 
+    public void load(ImageView imageView, String url, int waitingImageResId) {
+        load(imageView, url, true, null, waitingImageResId, NONE_RESOURCE_ID);
+    }
+
     public void load(ImageView imageView, String url, boolean animate) {
         load(imageView, url, animate, null, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
+    }
+
+    public void load(ImageView imageView, String url, boolean animate, int waitingImageResId) {
+        load(imageView, url, animate, null, waitingImageResId, NONE_RESOURCE_ID);
     }
 
     public void load(ImageView imageView, String url,
