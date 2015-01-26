@@ -19,10 +19,10 @@
         <com.tonyjs.hashtagram.ui.widget.BasicRecyclerView
                 android:id="@+id/recycler_view"
                 android:scrollbarStyle="outsideOverlay"
-                android:paddingTop="64dp"
-                android:paddingLeft="8dp"
-                android:paddingRight="8dp"
-                android:paddingBottom="8dp"
+                android:paddingTop="60dp"
+                android:paddingLeft="4dp"
+                android:paddingRight="4dp"
+                android:paddingBottom="4dp"
                 android:clipToPadding="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>

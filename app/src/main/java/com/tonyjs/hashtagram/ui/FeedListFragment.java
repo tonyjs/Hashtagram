@@ -97,7 +97,7 @@ public class FeedListFragment extends BaseFragment
         mSwipeLayout.setProgressViewOffset(false, paddingTop, paddingTop * 2);
         mSwipeLayout.setOnRefreshListener(this);
 
-        mLayoutManager = new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new LinearLayoutManager(mActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext(), getImageLoader());
         mRecyclerView.setOnItemClickListener(this);

@@ -50,6 +50,7 @@ public class ImageLoader {
     private final DefaultBitmapTransformation mDefaultTransformation;
     private final RoundedCornerTransformation mRoundedCornerTransformation;
     private final CircleTransformation mCircleTransformation;
+    private final DefaultAnimator mDefaultAnimator;
     public ImageLoader(Context context) {
         DefaultImageLoader loader = new DefaultImageLoader(context);
         mGlideRequest = Glide.with(context).using(loader);
@@ -57,6 +58,7 @@ public class ImageLoader {
         mDefaultTransformation = new DefaultBitmapTransformation(context);
         mRoundedCornerTransformation = new RoundedCornerTransformation(context);
         mCircleTransformation = new CircleTransformation(context);
+        mDefaultAnimator = new DefaultAnimator();
     }
 
     public void load(ImageView imageView, String url) {
@@ -122,7 +124,7 @@ public class ImageLoader {
         if (!animate) {
             request.dontAnimate();
         } else {
-            request.animate(R.anim.fade_in);
+            request.animate(mDefaultAnimator);
         }
 
         if (waitingImageResId != NONE_RESOURCE_ID) {
@@ -305,6 +307,17 @@ public class ImageLoader {
         @Override
         protected String getUrl(String model, int width, int height) {
             return model;
+        }
+    }
+
+    public static final class DefaultAnimator implements ViewPropertyAnimation.Animator {
+
+        @Override
+        public void animate(View view) {
+            view.setAlpha(0.0f);
+            view.animate()
+                    .alpha(1.0f)
+                    .setDuration(200);
         }
     }
 }

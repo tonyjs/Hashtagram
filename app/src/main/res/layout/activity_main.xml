@@ -9,9 +9,10 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+            <!--android:background="#c0c0c0"-->
         <FrameLayout
             android:id="@+id/fragment_container"
-            android:background="#c0c0c0"
+            android:background="#dedede"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
 
