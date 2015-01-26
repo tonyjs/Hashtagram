@@ -4,15 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
-import butterknife.ButterKnife;
-import butterknife.InjectView;
 import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.config.HashtagConfig;
@@ -21,33 +19,37 @@ import com.tonyjs.hashtagram.io.model.Pagination;
 import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
 import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.io.response.NewsFeedResponse;
-import com.tonyjs.hashtagram.ui.adapter.TimeLineListAdapter;
+import com.tonyjs.hashtagram.ui.adapter.TimeLineRecyclerAdapter;
+import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
 import com.tonyjs.hashtagram.util.UiUtils;
 
 import java.util.ArrayList;
 
+import butterknife.ButterKnife;
+import butterknife.InjectView;
+
 /**
  * Created by orcpark on 2014. 9. 7..
  */
-public class FeedListFragment extends BaseFragment
+public class FeedRecyclerFragment extends BaseFragment
         implements Callback<NewsFeedResponse>,
                     SwipeRefreshLayout.OnRefreshListener,
-                    TimeLineListAdapter.NeedMoreCallback,
-                    ListView.OnItemClickListener{
+                    TimeLineRecyclerAdapter.NeedMoreCallback,
+                    BasicRecyclerView.OnItemClickListener{
 
     public static final int REQUEST_CODE_MANAGE_ITEM = 1;
 
     public interface LifecycleCallback {
-        public void onViewCreated(ListView listView);
+        public void onViewCreated(RecyclerView fragment);
 
-        public void onResume(FeedListFragment fragment);
+        public void onResume(FeedRecyclerFragment fragment);
     }
 
     public static final String KEY_HASH_TAG = "hash_tag";
     public static final String KEY_POSITION = "position";
 
-    public static FeedListFragment newInstance(int position, String tag) {
-        FeedListFragment fragment = new FeedListFragment();
+    public static FeedRecyclerFragment newInstance(int position, String tag) {
+        FeedRecyclerFragment fragment = new FeedRecyclerFragment();
         Bundle args = new Bundle();
         args.putString(KEY_HASH_TAG, tag);
         args.putInt(KEY_POSITION, position);
@@ -79,13 +81,14 @@ public class FeedListFragment extends BaseFragment
 
     @InjectView(R.id.progress_bar) View mProgressBar;
     @InjectView(R.id.swipe_layout) SwipeRefreshLayout mSwipeLayout;
-    @InjectView(R.id.list_view) ListView mListView;
-    private TimeLineListAdapter mAdapter;
-    private View mFooterView;
+    @InjectView(R.id.recycler_view) BasicRecyclerView mRecyclerView;
+    private RecyclerView.LayoutManager mLayoutManager;
+    private TimeLineRecyclerAdapter mAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_feed_list, container, false);
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_feed_recycler, container, false);
         ButterKnife.inject(this, rootView);
         mSwipeLayout.setColorSchemeResources(
                 R.color.swipe_color_1, R.color.swipe_color_2,
@@ -94,13 +97,13 @@ public class FeedListFragment extends BaseFragment
         mSwipeLayout.setProgressViewOffset(false, paddingTop, paddingTop * 2);
         mSwipeLayout.setOnRefreshListener(this);
 
-        mFooterView = inflater.inflate(R.layout.layout_footer, mListView, false);
-        mFooterView.setVisibility(View.GONE);
-        mListView.addFooterView(mFooterView, null, false);
-        mAdapter = new TimeLineListAdapter(mActivity.getBaseContext(), getImageLoader());
-        mListView.setOnItemClickListener(this);
+        mLayoutManager = new LinearLayoutManager(mActivity);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext(), getImageLoader());
+        mRecyclerView.setOnItemClickListener(this);
         mAdapter.setNeedMoreCallback(this);
-        mListView.setAdapter(mAdapter);
+
+        mRecyclerView.setAdapter(mAdapter);
 
         return rootView;
     }
@@ -131,7 +134,7 @@ public class FeedListFragment extends BaseFragment
         }
 
         if (mActivity instanceof LifecycleCallback) {
-            ((LifecycleCallback) mActivity).onViewCreated(mListView);
+            ((LifecycleCallback) mActivity).onViewCreated(mRecyclerView);
         }
 
         onRefresh();
@@ -189,9 +192,7 @@ public class FeedListFragment extends BaseFragment
             mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
             mAdapter.setItems(items);
             if (!mCanRequestMore) {
-                mListView.removeFooterView(mFooterView);
-            } else {
-                mFooterView.setVisibility(View.VISIBLE);
+                mAdapter.removeProgress();
             }
         }
     }
@@ -201,7 +202,7 @@ public class FeedListFragment extends BaseFragment
         mSwipeLayout.setRefreshing(false);
         mCanRequestMore = false;
         mInAsync = false;
-        mListView.removeFooterView(mFooterView);
+        mAdapter.removeProgress();
     }
 
     private boolean validateAndHandleRefresh(NewsFeedResponse response) {
@@ -228,7 +229,7 @@ public class FeedListFragment extends BaseFragment
                     mSwipeLayout.setRefreshing(false);
                     mCanRequestMore = false;
                     mInAsync = false;
-                    mListView.removeFooterView(mFooterView);
+                    mAdapter.removeProgress();
                 }
             };
 
@@ -243,14 +244,12 @@ public class FeedListFragment extends BaseFragment
         mAdapter.addItems(items);
         mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
         if (!mCanRequestMore) {
-            mListView.removeFooterView(mFooterView);
-        } else {
-            mFooterView.setVisibility(View.VISIBLE);
+            mAdapter.removeProgress();
         }
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+    public void onItemClick(BasicRecyclerView parent, View child, int position, long id) {
         Feed item = mAdapter.getItem(position);
         Intent intent = new Intent(mActivity, FeedDetailActivity.class);
         intent.putExtra("item", item);
@@ -280,7 +279,7 @@ public class FeedListFragment extends BaseFragment
                 t.setUserLiked(item.isUserLiked());
                 t.setLikes(item.getLikes());
                 t.setComments(item.getComments());
-                mAdapter.notifyDataSetChanged();
+                mAdapter.notifyItemChanged(i);
                 break;
             }
         }

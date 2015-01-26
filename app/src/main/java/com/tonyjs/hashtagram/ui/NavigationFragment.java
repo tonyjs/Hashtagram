@@ -19,7 +19,7 @@ import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
-import com.tonyjs.hashtagram.util.ImageLoadManager;
+import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.PrefUtils;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.ArrayList;
 /**
  * Created by tony.park on 15. 1. 3..
  */
-public class NavigationFragment extends Fragment
+public class NavigationFragment extends BaseFragment
                 implements BasicRecyclerView.OnItemClickListener{
 
     public interface NavigationCallback {
@@ -78,8 +78,13 @@ public class NavigationFragment extends Fragment
             profile = user.getFullName();
         }
         mTvProfile.setText(profile);
-        ImageLoadManager.loadCircleDrawable(getActivity(), user.getProfileImageUrl(), mIvUser);
-
+        String profileImageUrl = user.getProfileImageUrl();
+        ImageLoader imageLoader = getImageLoader();
+        if (imageLoader != null && !TextUtils.isEmpty(profileImageUrl)) {
+            imageLoader.load(mIvUser, profileImageUrl, ImageLoader.TransformationType.CIRCLE);
+        } else {
+            mIvUser.setImageDrawable(null);
+        }
         updateNavigationItems();
 
         checkNavigation(0);
@@ -153,7 +158,7 @@ public class NavigationFragment extends Fragment
         super.onDestroyView();
     }
 
-    class NavigationAdapter extends BasicRecyclerAdapter<NavigationItem> {
+    private class NavigationAdapter extends BasicRecyclerAdapter<NavigationItem> {
 
         public NavigationAdapter(Context context) {
             super(context);

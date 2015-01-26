@@ -11,6 +11,7 @@ import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.*;
+import android.widget.ListView;
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 import com.android.volley.VolleyError;
@@ -23,9 +24,7 @@ import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
 import com.tonyjs.hashtagram.util.PrefUtils;
 import com.tonyjs.hashtagram.util.ToastUtils;
-import retrofit.http.FormUrlEncoded;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+
 import java.util.ArrayList;
 
 public class MainActivity extends BaseActivity
@@ -227,9 +226,9 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onViewCreated(RecyclerView recyclerView) {
+    public void onViewCreated(ListView listView) {
         getSlipController().setDirection(SlipLayoutController.DIRECTION_TO_UP);
-        getSlipController().setRecyclerView(recyclerView);
+        getSlipController().setListView(listView);
         getSlipController().setTargetView(getTargetView());
         getSlipController().showTargetView();
     }

@@ -1,6 +1,7 @@
 package com.tonyjs.hashtagram.ui.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -10,14 +11,16 @@ import com.tonyjs.hashtagram.io.model.Comment;
 import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
-import com.tonyjs.hashtagram.util.ImageLoadManager;
+import com.tonyjs.hashtagram.util.ImageLoader;
 
 /**
  * Created by orcpark on 14. 11. 16..
  */
 public class CommentAdapter extends BasicAdapter<Comment> {
-    public CommentAdapter(Context context) {
+    private ImageLoader mImageLoader;
+    public CommentAdapter(Context context, ImageLoader imageLoader) {
         super(context);
+        mImageLoader = imageLoader;
     }
 
     @Override
@@ -35,8 +38,11 @@ public class CommentAdapter extends BasicAdapter<Comment> {
 
         User user = item.getFrom();
         String profileUrl = user != null ? user.getProfileImageUrl() : null;
-        ImageLoadManager.loadCircleDrawable(mContext, profileUrl, ivProfile);
-
+        if (mImageLoader != null && !TextUtils.isEmpty(profileUrl)) {
+            mImageLoader.load(ivProfile, profileUrl, ImageLoader.TransformationType.CIRCLE);
+        } else {
+            ivProfile.setImageDrawable(null);
+        }
         String name = user != null ? user.getFullName() : null;
         tvName.setText(name);
 

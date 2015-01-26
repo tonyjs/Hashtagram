@@ -23,7 +23,6 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
-import com.tonyjs.hashtagram.util.ImageLoadManager;
 import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
@@ -146,7 +145,6 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
                 } else {
                     ivThumb.setImageDrawable(null);
                 }
-//                ImageLoadManager.loadCircleDrawable(getContext(), authorUrl, ivAuthor);
                 tvAuthor.setText(user.getName());
             }
 

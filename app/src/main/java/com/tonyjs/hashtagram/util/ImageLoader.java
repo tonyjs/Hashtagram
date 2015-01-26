@@ -108,7 +108,6 @@ public class ImageLoader {
         }
 
         if (isGif(url)) {
-            Log.d("jsp", "is gif");
             loadGif(imageView, url, animate, transformation, waitingImageResId, errorImageResId);
             return;
         }
