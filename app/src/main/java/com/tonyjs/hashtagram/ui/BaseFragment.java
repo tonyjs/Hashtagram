@@ -19,7 +19,6 @@ public abstract class BaseFragment extends Fragment {
         mActivity = activity;
     }
 
-
     private ImageLoader mImageLoader;
     public ImageLoader getImageLoader() {
         return mImageLoader;

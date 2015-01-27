@@ -59,7 +59,7 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
                     getContext(), inflater.inflate(R.layout.layout_footer, parent, false));
         } else {
             return new FeedViewHolder(
-                    getContext(), inflater.inflate(R.layout.recycler_item_insta, parent, false));
+                    getContext(), inflater.inflate(R.layout.list_insta, parent, false));
         }
     }
 

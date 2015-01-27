@@ -22,7 +22,7 @@ public class EditHashtagAdapter extends BasicAdapter<EditHashtagAdapter.CheckHas
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_edit_hashtag, parent, false);
+            convertView = mInflater.inflate(R.layout.list_edit_hashtag, parent, false);
         }
 
         final CheckHashtag item = getItem(position);

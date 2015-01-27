@@ -8,8 +8,8 @@ android {
         applicationId "com.tonyjs.hashtagram"
         minSdkVersion 14
         targetSdkVersion 21
-        versionCode 3
-        versionName "1.0.1"
+        versionCode 4
+        versionName "1.0.2"
     }
 
     signingConfigs{
@@ -61,8 +61,8 @@ android {
 
         releases {
             applicationId "com.tonyjs.hashtagram"
-            versionCode 3
-            versionName "1.0.1"
+            versionCode 4
+            versionName "1.0.2"
         }
     }
 }

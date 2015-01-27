@@ -8,7 +8,7 @@
         android:hardwareAccelerated="true"
         android:allowBackup="true"
         android:largeHeap="true"
-        android:icon="@drawable/icon"
+        android:icon="@drawable/ic_launcher"
         android:theme="@style/AppTheme" >
         <activity
             android:name="com.tonyjs.hashtagram.ui.MainActivity"

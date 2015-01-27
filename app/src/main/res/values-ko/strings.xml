@@ -10,4 +10,7 @@
     <string name="authorize_fail">인증에 실패하였습니다.</string>
     <string name="apply">적용</string>
     <string name="no_hashtag">편집할 해쉬태그가 없습니다</string>
+    <string name="likes">%s 님의 게시물을 좋아합니다.</string>
+    <string name="unlikes">%s 님의 게시물의 좋아요를 취소합니다.</string>
+    <string name="signing">인증 중입니다...</string>
 </resources>

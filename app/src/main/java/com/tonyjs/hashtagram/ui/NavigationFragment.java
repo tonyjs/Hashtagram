@@ -2,7 +2,6 @@ package com.tonyjs.hashtagram.ui;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -167,7 +166,7 @@ public class NavigationFragment extends BaseFragment
         @Override
         public BasicViewHolder getViewHolder(ViewGroup parent, int viewType) {
             View itemView =
-                    getLayoutInflater().inflate(R.layout.recycler_item_navigation, parent, false);
+                    getLayoutInflater().inflate(R.layout.list_navigation, parent, false);
             return new NavigationHolder(getContext(), itemView);
         }
 

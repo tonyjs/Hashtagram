@@ -10,4 +10,7 @@
     <string name="authorize_fail">Authorize fail...</string>
     <string name="apply">Apply</string>
     <string name="no_hashtag">No Hashtags</string>
+    <string name="likes">Likes %s\'s posts.</string>
+    <string name="unlikes">UnLikes %s\'s posts.</string>
+    <string name="signing">Signing...</string>
 </resources>

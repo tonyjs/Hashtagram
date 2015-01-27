@@ -26,7 +26,7 @@ public class CommentAdapter extends BasicAdapter<Comment> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
-            convertView = mInflater.inflate(R.layout.list_item_comment, parent, false);
+            convertView = mInflater.inflate(R.layout.list_comment, parent, false);
         }
 
         ImageView ivProfile = SparseViewHolder.get(convertView, R.id.iv_thumb);

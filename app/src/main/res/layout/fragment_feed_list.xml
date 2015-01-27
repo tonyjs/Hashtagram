@@ -20,6 +20,7 @@
         <ListView
             android:id="@+id/list_view"
             android:divider="@null"
+            android:listSelector="@android:color/transparent"
             android:scrollbarStyle="outsideOverlay"
             android:paddingTop="60dp"
             android:paddingLeft="4dp"

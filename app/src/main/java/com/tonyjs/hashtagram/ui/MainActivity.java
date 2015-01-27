@@ -139,10 +139,9 @@ public class MainActivity extends BaseActivity
 
         detachSignInFragment();
 
-        Log.d("jsp", "code = " + code);
         final ProgressDialog dialog = new ProgressDialog(this);
         dialog.setCancelable(false);
-        dialog.setMessage("인증 중입니다...");
+        dialog.setMessage(getResources().getString(R.string.signing));
         RequestProvider.getHostInfo(this, code, dialog,
                 new Callback<HostInfo>() {
                     @Override

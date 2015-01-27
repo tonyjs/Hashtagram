@@ -48,6 +48,15 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         return fragment;
     }
 
+    private String LIKES;
+    private String UNLIKES;
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        LIKES = mActivity.getResources().getString(R.string.likes);
+        UNLIKES = mActivity.getResources().getString(R.string.unlikes);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -167,10 +176,10 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
     private void handleFeedback(Feed item, boolean userHasLiked) {
         String messageFormat = null;
         if (userHasLiked) {
-            messageFormat  = "%s 님의 게시물의 좋아요를 취소합니다.";
+            messageFormat  = UNLIKES;
             RequestProvider.postUnLikes(mActivity, item.getId(), null, mFeedbackCallback);
         } else {
-            messageFormat  = "%s 님의 게시물을 좋아합니다.";
+            messageFormat  = LIKES;
             RequestProvider.postLikes(mActivity, item.getId(), null, mFeedbackCallback);
         }
 
