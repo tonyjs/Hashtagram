@@ -5,6 +5,8 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,11 +26,19 @@ import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
+import retrofit.http.Body;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by orcpark on 14. 11. 9..
  */
 public class TimeLineListAdapter extends BasicAdapter<Feed> {
+    private final int[] sColors = new int[]{
+
+    };
+
     public interface NeedMoreCallback {
         public void onNeedMore();
     }
@@ -47,6 +57,12 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         mImageLoader = imageLoader;
         LIKES = context.getResources().getString(R.string.likes);
         UNLIKES = context.getResources().getString(R.string.unlikes);
+    }
+
+    @Override
+    public void setItems(ArrayList<Feed> items) {
+        super.setItems(items);
+        mCheckMap.clear();
     }
 
     @Override
@@ -78,7 +94,6 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-
             if (mImageLoader != null && !TextUtils.isEmpty(authorUrl)) {
                 mImageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
             } else {
@@ -107,6 +122,7 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
         loadMoreItems(position);
 
+        animate(convertView, position);
         return convertView;
     }
 
@@ -154,10 +170,38 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
     public void loadMoreItems(int position){
         int max = getItems().size();
-        if (max > 4 && position == max - 1) {
+        if (max > 4 && position == max - 2) {
             if (mNeedMoreCallback != null) {
                 mNeedMoreCallback.onNeedMore();
             }
         }
+    }
+
+    HashMap<Integer, Boolean> mCheckMap = new HashMap<>();
+
+    boolean hasAnimate(int position) {
+        if (!mCheckMap.containsKey(position)) {
+            mCheckMap.put(position, true);
+            return false;
+        }
+        return mCheckMap.get(position);
+    }
+
+    private void animate(View view, int position) {
+        if (hasAnimate(position)) {
+//            view.setTranslationY(0);
+            return;
+        }
+        int delay = position == 0 ? 0 : 200;
+        int translateY = view.getHeight();
+        if (translateY <= 0) {
+            translateY = mContext.getResources().getDisplayMetrics().heightPixels;
+        }
+        view.setTranslationY(translateY / 2);
+        view.animate()
+                .setInterpolator(new DecelerateInterpolator())
+                .setStartDelay(delay)
+                .setDuration(375)
+                .translationY(0);
     }
 }
