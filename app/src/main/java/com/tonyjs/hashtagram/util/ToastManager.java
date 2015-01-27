@@ -33,10 +33,10 @@ public class ToastManager {
 
     private Toast mToast;
     public void show(Context context, String message, int duration) {
-        if (mToast == null) {
-            mToast = Toast.makeText(context, "", duration);
+        if (mToast != null) {
+            mToast.cancel();
         }
-        mToast.setText(message);
+        mToast = Toast.makeText(context, message, duration);
         mToast.show();
     }
 
