@@ -39,12 +39,10 @@ public class GradientNetworkImageView extends NetworkImageView {
     }
 
     private void setSize(int width, ImageResolution spec) {
-//        Log.d("jsp", "spec Height = " + spec.getHeight());
         int height = getResizeHeight(width, spec);
         if (height > mMaxHeight) {
             height = mMaxHeight;
         }
-//        Log.e("jsp", "height = " + height);
         setMeasuredDimension(width, height);
     }
 
@@ -70,27 +68,25 @@ public class GradientNetworkImageView extends NetworkImageView {
         return newHeight;
     }
 
-    private ImageResolution mSpec;
-
     public void setImageSpec(ImageResolution imageSpec) {
         if (imageSpec == null) {
+            setImageBitmap(null);
             return;
         }
-
-        mSpec = imageSpec;
 
         String imageUrl = imageSpec.getUrl();
         if (!TextUtils.isEmpty(imageUrl)) {
             setImageUrl(imageUrl,
                     RequestManager.getInstance().getImageLoader(getContext()));
+        } else {
+            setImageBitmap(null);
         }
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-//        Log.i("jsp", "onDraw - " + mShowingNull);
-        if (getDrawable() != null) {
+        if (!mShowingNull) {
             Shader shader = new LinearGradient(0, 0, 0, getHeight(),
                     Color.TRANSPARENT, Color.parseColor(GRADIENT_COLOR),
                     Shader.TileMode.CLAMP);
@@ -104,10 +100,10 @@ public class GradientNetworkImageView extends NetworkImageView {
         }
     }
 
-    private boolean mShowingNull = false;
+    private boolean mShowingNull = true;
     @Override
     public void setImageBitmap(Bitmap bm) {
         super.setImageBitmap(bm);
-        mShowingNull = bm != null;
+        mShowingNull = bm == null;
     }
 }

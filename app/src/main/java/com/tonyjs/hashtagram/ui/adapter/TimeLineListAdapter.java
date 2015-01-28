@@ -43,20 +43,24 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         public void onNeedMore();
     }
 
-    private NeedMoreCallback mNeedMoreCallback;
+    protected NeedMoreCallback mNeedMoreCallback;
 
     public void setNeedMoreCallback(NeedMoreCallback needMoreCallback) {
         mNeedMoreCallback = needMoreCallback;
     }
 
-    private final String LIKES;
-    private final String UNLIKES;
+    protected final String LIKES;
+    protected final String UNLIKES;
     private ImageLoader mImageLoader;
     public TimeLineListAdapter(Context context, ImageLoader imageLoader) {
         super(context);
         mImageLoader = imageLoader;
         LIKES = context.getResources().getString(R.string.likes);
         UNLIKES = context.getResources().getString(R.string.unlikes);
+    }
+
+    public ImageLoader getImageLoader() {
+        return mImageLoader;
     }
 
     @Override
@@ -82,22 +86,21 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
         Feed item = getItem(position);
 
+        ImageLoader imageLoader = getImageLoader();
+
         long createdTime = Long.valueOf(item.getCreatedTime());
         tvCreatedTime.setText(TimeUtils.getRelativeTime(createdTime));
 
         String summary = item.getCaption() != null ? item.getCaption().getText() : "";
         tvSummary.setText(summary);
 
-        Images info = item.getImages();
-        ImageResolution spec = info != null ? info.getStandard() : null;
-        final String thumbUrl = spec != null ? spec.getUrl() : null;
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            if (mImageLoader != null && !TextUtils.isEmpty(authorUrl)) {
-                mImageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+            if (imageLoader != null && !TextUtils.isEmpty(authorUrl)) {
+                imageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
             } else {
-                ivThumb.setImageDrawable(null);
+                ivAuthor.setImageDrawable(null);
             }
             tvAuthor.setText(user.getName());
         }
@@ -112,8 +115,12 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
                 Integer.toString(likes.getCount()) : Integer.toString(0);
         tvLikesCount.setText(likesCount);
 
-        if (mImageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
-            mImageLoader.load(ivThumb, thumbUrl, true);
+        Images info = item.getImages();
+        ImageResolution spec = info != null ? info.getStandard() : null;
+        final String thumbUrl = spec != null ? spec.getUrl() : null;
+        if (imageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
+//            mImageLoader.load(ivThumb, thumbUrl, ImageLoader.TransformationType.DEFAULT);
+            imageLoader.load(ivThumb, thumbUrl, true);
         } else {
             ivThumb.setImageDrawable(null);
         }
@@ -122,11 +129,11 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
         loadMoreItems(position);
 
-        animate(convertView, position);
+//        animate(convertView, position);
         return convertView;
     }
 
-    private void setBtnLike(final Feed item, final View btnLike) {
+    void setBtnLike(final Feed item, final View btnLike) {
         final boolean userHasLiked = item.isUserLiked();
         btnLike.setSelected(userHasLiked);
         final Likes likes = item.getLikes();
@@ -187,7 +194,7 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         return mCheckMap.get(position);
     }
 
-    private void animate(View view, int position) {
+    void animate(View view, int position) {
         if (hasAnimate(position)) {
 //            view.setTranslationY(0);
             return;

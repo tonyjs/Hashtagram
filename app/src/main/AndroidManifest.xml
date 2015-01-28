@@ -27,4 +27,7 @@
             android:screenOrientation="portrait"/>
     </application>
 
+    <meta-data
+        android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+        android:value="GlideModule" />
 </manifest>

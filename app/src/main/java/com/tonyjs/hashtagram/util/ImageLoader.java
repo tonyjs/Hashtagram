@@ -39,7 +39,7 @@ import com.tonyjs.hashtagram.R;
  */
 public class ImageLoader {
     public enum TransformationType {
-        CENTER_CROP, ROUNDED_CORNER, CIRCLE
+        DEFAULT, CENTER_CROP, ROUNDED_CORNER, CIRCLE
     }
 
     public static final int NONE_RESOURCE_ID = -1;
@@ -129,6 +129,7 @@ public class ImageLoader {
         if (waitingImageResId != NONE_RESOURCE_ID) {
             request.placeholder(waitingImageResId);
         }
+
         if (errorImageResId != NONE_RESOURCE_ID) {
             request.error(errorImageResId);
         }
@@ -214,8 +215,14 @@ public class ImageLoader {
         @Override
         protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
                                    int outWidth, int outHeight) {
-            Bitmap resizeBitmap = Bitmap.createScaledBitmap(toTransform, outWidth, outHeight, true);
-            toTransform.recycle();
+            int bitmapWidth = toTransform.getWidth();
+            int bitmapHeight = toTransform.getHeight();
+
+            int resizeWidth = Math.min(outWidth, bitmapWidth);
+            int resizeHeight = Math.min(outHeight, bitmapHeight);
+
+            Bitmap resizeBitmap = Bitmap.createScaledBitmap(
+                    toTransform, resizeWidth, resizeHeight, true);
             return resizeBitmap;
         }
 
@@ -313,7 +320,7 @@ public class ImageLoader {
 
         @Override
         public void animate(View view) {
-            view.setAlpha(0.0f);
+            view.setAlpha(0.5f);
             view.animate()
                     .alpha(1.0f)
                     .setDuration(200);

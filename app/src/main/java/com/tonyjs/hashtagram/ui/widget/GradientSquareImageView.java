@@ -3,6 +3,7 @@ package com.tonyjs.hashtagram.ui.widget;
 import android.content.Context;
 import android.graphics.*;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by orcpark on 14. 11. 9..
@@ -28,6 +29,8 @@ public class GradientSquareImageView extends SquareImageView {
         super.onDraw(canvas);
 //        Log.i("jsp", "onDraw - " + mShowingNull);
         if (getDrawable() != null) {
+            Log.d("jsp", "ImageView.Drawable.width = " + getDrawable().getIntrinsicWidth());
+            Log.d("jsp", "ImageView.Drawable.height = " + getDrawable().getIntrinsicHeight());
             Shader shader = new LinearGradient(0, 0, 0, getHeight(),
                     Color.TRANSPARENT, Color.parseColor(GRADIENT_COLOR),
                     Shader.TileMode.CLAMP);

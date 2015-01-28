@@ -4,9 +4,9 @@ package com.tonyjs.hashtagram.config;
  * Created by junseon on 2014-03-31.
  */
 public interface InstaConfig {
-    String INSTA_CLIENT_ID = "YOUR INSTAGRAM CLIENT ID";
+    String INSTA_CLIENT_ID = "28019466f9ec4299840c765a7b3335f2";
 
-    String INSTA_CLIENT_SECRET = "YOUR INSTAGRAM CLIENT SECRET";
+    String INSTA_CLIENT_SECRET = "d54f30ccb8324fabbbe1deabacd9c039";
 
     String INSTA_REDIRECT_URI = "http://hashtagram.com";
 

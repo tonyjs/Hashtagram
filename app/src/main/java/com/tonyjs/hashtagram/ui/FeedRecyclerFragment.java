@@ -21,6 +21,7 @@ import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.io.response.NewsFeedResponse;
 import com.tonyjs.hashtagram.ui.adapter.TimeLineRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
+import com.tonyjs.hashtagram.util.ToastUtils;
 import com.tonyjs.hashtagram.util.UiUtils;
 
 import java.util.ArrayList;
@@ -90,6 +91,7 @@ public class FeedRecyclerFragment extends BaseFragment
                              ViewGroup container, Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.fragment_feed_recycler, container, false);
         ButterKnife.inject(this, rootView);
+        ToastUtils.show(mActivity, "I am RecyclerView");
         mSwipeLayout.setColorSchemeResources(
                 R.color.swipe_color_1, R.color.swipe_color_2,
                 R.color.swipe_color_3, R.color.swipe_color_4);

@@ -22,6 +22,7 @@ import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
 import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.io.response.NewsFeedResponse;
 import com.tonyjs.hashtagram.ui.adapter.TimeLineListAdapter;
+import com.tonyjs.hashtagram.ui.adapter.TimeLineListAdapterWithVolley;
 import com.tonyjs.hashtagram.util.UiUtils;
 
 import java.util.ArrayList;
@@ -98,6 +99,7 @@ public class FeedListFragment extends BaseFragment
         mFooterView.setVisibility(View.GONE);
         mListView.addFooterView(mFooterView, null, false);
         mAdapter = new TimeLineListAdapter(mActivity.getBaseContext(), getImageLoader());
+//        mAdapter = new TimeLineListAdapterWithVolley(mActivity.getBaseContext(), getImageLoader());
         mListView.setOnItemClickListener(this);
         mAdapter.setNeedMoreCallback(this);
         mListView.setAdapter(mAdapter);
@@ -165,7 +167,6 @@ public class FeedListFragment extends BaseFragment
 
         mInAsync = true;
 
-        Log.e("jsp", "" + nextUrl);
         if (!TextUtils.isEmpty(nextUrl)) {
             RequestProvider.getNewsFeed(getActivity(), nextUrl, null, mNeedMoreFeedCallback);
             return;
@@ -184,7 +185,6 @@ public class FeedListFragment extends BaseFragment
         if(validateAndHandleRefresh(response)){
             ArrayList<Feed> items = response.getData();
             Pagination pagination = response.getPagination();
-//            Log.e("jsp", pagination.toString());
             mNextUrl = pagination != null ? pagination.getNextUrl() : null;
             mCanRequestMore = !TextUtils.isEmpty(mNextUrl);
             mAdapter.setItems(items);
