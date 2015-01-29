@@ -12,15 +12,14 @@ import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 
 /**
  * Created by orcpark on 14. 11. 16..
  */
 public class CommentAdapter extends BasicAdapter<Comment> {
-    private ImageLoader mImageLoader;
-    public CommentAdapter(Context context, ImageLoader imageLoader) {
+    public CommentAdapter(Context context) {
         super(context);
-        mImageLoader = imageLoader;
     }
 
     @Override
@@ -38,8 +37,8 @@ public class CommentAdapter extends BasicAdapter<Comment> {
 
         User user = item.getFrom();
         String profileUrl = user != null ? user.getProfileImageUrl() : null;
-        if (mImageLoader != null && !TextUtils.isEmpty(profileUrl)) {
-            mImageLoader.load(ivProfile, profileUrl, ImageLoader.TransformationType.CIRCLE);
+        if (!TextUtils.isEmpty(profileUrl)) {
+            ImageLoader.load(mContext, ivProfile, profileUrl, ImageLoader.TransformationType.CIRCLE);
         } else {
             ivProfile.setImageDrawable(null);
         }

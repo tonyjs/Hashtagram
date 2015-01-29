@@ -5,7 +5,6 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -24,9 +23,9 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
-import retrofit.http.Body;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -51,16 +50,10 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
     protected final String LIKES;
     protected final String UNLIKES;
-    private ImageLoader mImageLoader;
-    public TimeLineListAdapter(Context context, ImageLoader imageLoader) {
+    public TimeLineListAdapter(Context context) {
         super(context);
-        mImageLoader = imageLoader;
         LIKES = context.getResources().getString(R.string.likes);
         UNLIKES = context.getResources().getString(R.string.unlikes);
-    }
-
-    public ImageLoader getImageLoader() {
-        return mImageLoader;
     }
 
     @Override
@@ -86,8 +79,6 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
 
         Feed item = getItem(position);
 
-        ImageLoader imageLoader = getImageLoader();
-
         long createdTime = Long.valueOf(item.getCreatedTime());
         tvCreatedTime.setText(TimeUtils.getRelativeTime(createdTime));
 
@@ -97,8 +88,9 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            if (imageLoader != null && !TextUtils.isEmpty(authorUrl)) {
-                imageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+            if (!TextUtils.isEmpty(authorUrl)) {
+                ImageLoader.load(
+                        mContext, ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
             } else {
                 ivAuthor.setImageDrawable(null);
             }
@@ -118,9 +110,8 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         Images info = item.getImages();
         ImageResolution spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
-        if (imageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
-//            mImageLoader.load(ivThumb, thumbUrl, ImageLoader.TransformationType.DEFAULT);
-            imageLoader.load(ivThumb, thumbUrl, true);
+        if (!TextUtils.isEmpty(thumbUrl)) {
+            ImageLoader.load(mContext, ivThumb, thumbUrl, true);
         } else {
             ivThumb.setImageDrawable(null);
         }

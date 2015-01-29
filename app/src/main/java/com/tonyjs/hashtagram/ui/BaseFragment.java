@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
-import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 
 /**
  * Created by tony.park on 2014. 9. 26..
@@ -19,16 +19,6 @@ public abstract class BaseFragment extends Fragment {
         mActivity = activity;
     }
 
-    private ImageLoader mImageLoader;
-    public ImageLoader getImageLoader() {
-        return mImageLoader;
-    }
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        mImageLoader = new ImageLoader(getActivity());
-    }
-
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -37,7 +27,6 @@ public abstract class BaseFragment extends Fragment {
 
     @Override
     public void onDetach() {
-        mImageLoader = null;
         mActivity = null;
         super.onDetach();
     }

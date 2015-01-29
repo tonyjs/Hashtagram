@@ -26,6 +26,7 @@ import com.tonyjs.hashtagram.io.request.volley.response.Callback;
 import com.tonyjs.hashtagram.ui.adapter.CommentAdapter;
 import com.tonyjs.hashtagram.ui.widget.*;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
 
@@ -97,9 +98,8 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
     private void initLayout() {
         mDragLayout.setMetaphor(mMetaphor);
         mPullCatchListView.setOnPullListener(this);
-        ImageLoader imageLoader = getImageLoader();
 
-        mCommentAdapter = new CommentAdapter(mActivity, imageLoader);
+        mCommentAdapter = new CommentAdapter(mActivity);
         mPullCatchListView.setAdapter(mCommentAdapter);
 
         Feed item = getItem();
@@ -113,8 +113,9 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            if (imageLoader != null && !TextUtils.isEmpty(authorUrl)) {
-                imageLoader.load(mIvAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+            if (!TextUtils.isEmpty(authorUrl)) {
+                ImageLoader.load(
+                        mActivity, mIvAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
             } else {
                 mIvAuthor.setImageDrawable(null);
             }
@@ -122,7 +123,8 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         }
 
         Comments comment = item.getComments();
-        String commentCount = comment != null ? Integer.toString(comment.getCount()) : Integer.toString(0);
+        String commentCount = comment != null ?
+                Integer.toString(comment.getCount()) : Integer.toString(0);
         mTvCommentCount.setText(commentCount);
 
         setLikeViews(item);
@@ -133,9 +135,8 @@ public class FeedDetailFragment extends BaseFragment implements PullCatchListVie
         Images info = item.getImages();
         ImageResolution spec = info != null ? info.getStandard() : null;
         final String thumbUrl = spec != null ? spec.getUrl() : null;
-//        ImageLoadManager.load(mActivity, thumbUrl, mIvThumb, true);
-        if (imageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
-            imageLoader.load(mIvThumb, thumbUrl, true);
+        if (!TextUtils.isEmpty(thumbUrl)) {
+            ImageLoader.load(mActivity, mIvThumb, thumbUrl, true);
         } else {
             mIvThumb.setImageDrawable(null);
         }

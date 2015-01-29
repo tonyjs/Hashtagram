@@ -1,118 +1,125 @@
 package com.tonyjs.hashtagram.util;
 
-import android.animation.Animator;
-import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.graphics.BitmapShader;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.view.ViewPropertyAnimatorCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewPropertyAnimator;
-import android.view.animation.AlphaAnimation;
 import android.widget.ImageView;
 
 import com.bumptech.glide.BitmapTypeRequest;
 import com.bumptech.glide.DrawableTypeRequest;
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.RequestManager;
 import com.bumptech.glide.load.Transformation;
-import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
-import com.bumptech.glide.load.model.GlideUrl;
-import com.bumptech.glide.load.model.ModelCache;
-import com.bumptech.glide.load.model.stream.BaseGlideUrlLoader;
-import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
-import com.bumptech.glide.load.resource.bitmap.CenterCrop;
-import com.bumptech.glide.request.animation.*;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.animation.ViewPropertyAnimation;
 import com.bumptech.glide.request.target.BaseTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
-import com.tonyjs.hashtagram.R;
+
+import java.io.File;
 
 /**
  * Created by tonyjs on 15. 1. 23..
  */
 public class ImageLoader {
     public enum TransformationType {
-        DEFAULT, CENTER_CROP, ROUNDED_CORNER, CIRCLE
+        CENTER_CROP, ROUNDED_CORNER, CIRCLE
     }
 
     public static final int NONE_RESOURCE_ID = -1;
 
-    private final RequestManager.ImageModelRequest<String> mGlideRequest;
+    public void loadFile(Context context, File file, ImageView imageView) {
+        if (context == null) {
+            return;
+        }
 
-    private final CenterCrop mCenterCrop;
-    private final DefaultBitmapTransformation mDefaultTransformation;
-    private final RoundedCornerTransformation mRoundedCornerTransformation;
-    private final CircleTransformation mCircleTransformation;
-    private final DefaultAnimator mDefaultAnimator;
-    public ImageLoader(Context context) {
-        DefaultImageLoader loader = new DefaultImageLoader(context);
-        mGlideRequest = Glide.with(context).using(loader);
-        mCenterCrop = new CenterCrop(context);
-        mDefaultTransformation = new DefaultBitmapTransformation(context);
-        mRoundedCornerTransformation = new RoundedCornerTransformation(context);
-        mCircleTransformation = new CircleTransformation(context);
-        mDefaultAnimator = new DefaultAnimator();
+        if (file == null || !file.exists()) {
+            return;
+        }
+
+        DrawableTypeRequest<File> request = Glide.with(context).load(file);
+        String fileName = file.getName();
+        if (!isGif(fileName)) {
+            request.asBitmap();
+        }
+        request.into(imageView);
     }
 
-    public void load(ImageView imageView, String url) {
-        load(imageView, url, true, null, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
+    public void loadFile(Context context, File file, BaseTarget baseTarget) {
+        if (context == null) {
+            return;
+        }
+
+        if (file == null || !file.exists()) {
+            return;
+        }
+
+        DrawableTypeRequest<File> request = Glide.with(context).load(file);
+        String fileName = file.getName();
+        if (!isGif(fileName)) {
+            request.asBitmap();
+        }
+        request.into(baseTarget);
     }
 
-    public void load(ImageView imageView, String url, TransformationType type) {
-        Transformation transformation = mDefaultTransformation;
+    public static void load(Context context, ImageView imageView, String url) {
+        load(context, imageView, url, true, null, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
+    }
 
+    public static void load(Context context, ImageView imageView, String url, TransformationType type) {
+        Transformation transformation = null;
+
+        TransformationManager transformationManager = TransformationManager.getInstance();
         switch (type) {
             case CENTER_CROP:
-                transformation = mCenterCrop;
+                transformation = transformationManager.getCenterCrop(context);
                 break;
             case ROUNDED_CORNER:
-                transformation = mRoundedCornerTransformation;
+                transformation = transformationManager.getRoundedCornerTransformation(context);
                 break;
             case CIRCLE:
-                transformation = mCircleTransformation;
+                transformation = transformationManager.getCircleTransformation(context);
                 break;
         }
 
-        load(imageView, url, true, transformation, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
+        load(context, imageView, url, true, transformation, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
     }
 
-    public void load(ImageView imageView, String url, int waitingImageResId) {
-        load(imageView, url, true, null, waitingImageResId, NONE_RESOURCE_ID);
+    public static void load(Context context, ImageView imageView, String url, int waitingImageResId) {
+        load(context, imageView, url, true, null, waitingImageResId, NONE_RESOURCE_ID);
     }
 
-    public void load(ImageView imageView, String url, boolean animate) {
-        load(imageView, url, animate, null, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
+    public static void load(Context context, ImageView imageView, String url, boolean animate) {
+        load(context, imageView, url, animate, null, NONE_RESOURCE_ID, NONE_RESOURCE_ID);
     }
 
-    public void load(ImageView imageView, String url, boolean animate, int waitingImageResId) {
-        load(imageView, url, animate, null, waitingImageResId, NONE_RESOURCE_ID);
+    public static void load(Context context, ImageView imageView, String url, boolean animate, int waitingImageResId) {
+        load(context, imageView, url, animate, null, waitingImageResId, NONE_RESOURCE_ID);
     }
 
-    public void load(ImageView imageView, String url,
+    public static void load(Context context, ImageView imageView, String url,
                      int waitingImageResId, int errorImageResId) {
-        load(imageView, url, true, null, waitingImageResId, errorImageResId);
+        load(context, imageView, url, true, null, waitingImageResId, errorImageResId);
     }
 
-    public void load(ImageView imageView, String url,
+    public static void load(Context context, ImageView imageView, String url,
                      boolean animate,  Transformation transformation,
                      int waitingImageResId, int errorImageResId) {
+        if (context == null) {
+            return;
+        }
+
         if (TextUtils.isEmpty(url)) {
             return;
         }
 
         if (isGif(url)) {
-            loadGif(imageView, url, animate, transformation, waitingImageResId, errorImageResId);
+            loadGif(context, imageView, url, animate,
+                    transformation, waitingImageResId, errorImageResId);
             return;
         }
 
-        BitmapTypeRequest<String> request = mGlideRequest.load(url).asBitmap();
+        BitmapTypeRequest<String> request = Glide.with(context).load(url).asBitmap();
 
         if (transformation != null) {
             request.transform(transformation);
@@ -123,13 +130,12 @@ public class ImageLoader {
         if (!animate) {
             request.dontAnimate();
         } else {
-            request.animate(mDefaultAnimator);
+            request.animate(sAnimator);
         }
 
         if (waitingImageResId != NONE_RESOURCE_ID) {
             request.placeholder(waitingImageResId);
         }
-
         if (errorImageResId != NONE_RESOURCE_ID) {
             request.error(errorImageResId);
         }
@@ -137,7 +143,8 @@ public class ImageLoader {
         request.into(imageView);
     }
 
-    public void loadResizeBitmap(final ImageView imageView, String url, int width, int height) {
+    public static void loadResizeBitmap(Context context, final ImageView imageView, String url,
+                                 int width, int height) {
         SimpleTarget<Bitmap> target =
             new SimpleTarget<Bitmap>(width, height){
                 @Override
@@ -149,31 +156,36 @@ public class ImageLoader {
                 }
             };
 
-        load(url, target);
+        load(context, url, target);
     }
 
-    public void load(String url, BaseTarget target) {
+    public static void load(Context context, String url, BaseTarget target) {
+        if (context == null) {
+            return;
+        }
         if (TextUtils.isEmpty(url)) {
             return;
         }
 
-        BitmapTypeRequest<String> request = mGlideRequest.load(url).asBitmap();
-        request.transform(mDefaultTransformation);
+        BitmapTypeRequest<String> request = Glide.with(context).load(url).asBitmap();
+        request.transform(TransformationManager.getInstance().getResizeTransformation(context));
         request.dontAnimate();
         request.into(target);
     }
 
-    public void loadGif(ImageView imageView, String url,
+    public static void loadGif(Context context, ImageView imageView, String url,
                      boolean animate, Transformation transformation,
                      int waitingImageResId, int errorImageResId) {
         if (TextUtils.isEmpty(url)) {
             return;
         }
 
-        DrawableTypeRequest<String> request = mGlideRequest.load(url);
+        DrawableTypeRequest<String> request = Glide.with(context).load(url);
 
         if (!animate) {
             request.dontAnimate();
+        } else {
+            request.animate(sAnimator);
         }
 
         if (transformation != null) {
@@ -203,124 +215,15 @@ public class ImageLoader {
             return false;
         }
         String format = split[max - 1];
-        return format.contains("gif");
+        return format.toLowerCase().contains("gif");
     }
 
-    public static class DefaultBitmapTransformation extends BitmapTransformation {
-
-        public DefaultBitmapTransformation(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform,
-                                   int outWidth, int outHeight) {
-            int bitmapWidth = toTransform.getWidth();
-            int bitmapHeight = toTransform.getHeight();
-
-            int resizeWidth = Math.min(outWidth, bitmapWidth);
-            int resizeHeight = Math.min(outHeight, bitmapHeight);
-
-            Bitmap resizeBitmap = Bitmap.createScaledBitmap(
-                    toTransform, resizeWidth, resizeHeight, true);
-            return resizeBitmap;
-        }
-
-        @Override
-        public String getId() {
-            return "com.tonyjs.DefaultBitmapTransformation";
-        }
-    }
-
-    public static class RoundedCornerTransformation extends BitmapTransformation {
-
-        private Context mContext;
-        public RoundedCornerTransformation(Context context) {
-            super(context);
-            mContext = context;
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            int width = toTransform.getWidth();
-            int height = toTransform.getHeight();
-            Bitmap result = pool.get(width, height, Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            }
-            int radius = (int) (5 * mContext.getResources().getDisplayMetrics().density);
-            Canvas canvas = new Canvas(result);
-
-            RectF rectF = new RectF(0, 0, width, height);
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setDither(true);
-            BitmapShader shader = new BitmapShader(
-                    toTransform, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-            paint.setShader(shader);
-            canvas.drawRoundRect(rectF, radius, radius, paint);
-            return result;
-        }
-
-        @Override
-        public String getId() {
-            return "com.tonyjs.RoundedCornerTransformation";
-        }
-    }
-
-    public static class CircleTransformation extends BitmapTransformation {
-
-        public CircleTransformation(Context context) {
-            super(context);
-        }
-
-        @Override
-        protected Bitmap transform(BitmapPool pool, Bitmap toTransform, int outWidth, int outHeight) {
-            int width = toTransform.getWidth();
-            int height = toTransform.getHeight();
-            Bitmap result = pool.get(width, height, Bitmap.Config.ARGB_8888);
-            if (result == null) {
-                result = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            }
-
-            Canvas canvas = new Canvas(result);
-
-            RectF rectF = new RectF(0, 0, width, height);
-            Paint paint = new Paint();
-            paint.setAntiAlias(true);
-            paint.setDither(true);
-            BitmapShader shader = new BitmapShader(
-                    toTransform, Shader.TileMode.CLAMP, Shader.TileMode.CLAMP);
-            paint.setShader(shader);
-
-            canvas.drawOval(rectF, paint);
-            return result;
-        }
-
-        @Override
-        public String getId() {
-            return "com.tonyjs.CircleTransformation";
-        }
-    }
-
-    private static final ModelCache<String, GlideUrl> sUrlCache = new ModelCache<>(150);
-    private static class DefaultImageLoader extends BaseGlideUrlLoader<String> {
-
-        public DefaultImageLoader(Context context) {
-            super(context, sUrlCache);
-        }
-
-        @Override
-        protected String getUrl(String model, int width, int height) {
-            return model;
-        }
-    }
-
+    private static final DefaultAnimator sAnimator = new DefaultAnimator();
     public static final class DefaultAnimator implements ViewPropertyAnimation.Animator {
 
         @Override
         public void animate(View view) {
-            view.setAlpha(0.5f);
+            view.setAlpha(0.0f);
             view.animate()
                     .alpha(1.0f)
                     .setDuration(200);

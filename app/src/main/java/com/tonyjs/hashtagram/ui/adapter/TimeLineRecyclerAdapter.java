@@ -24,6 +24,7 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
 
@@ -45,10 +46,8 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
         FOOTER, ITEM
     }
 
-    private ImageLoader mImageLoader;
-    public TimeLineRecyclerAdapter(Context context, ImageLoader imageLoader) {
+    public TimeLineRecyclerAdapter(Context context) {
         super(context);
-        mImageLoader = imageLoader;
     }
 
     @Override
@@ -133,15 +132,12 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
             String summary = item.getCaption() != null ? item.getCaption().getText() : "";
             tvSummary.setText(summary);
 
-            Images info = item.getImages();
-            ImageResolution spec = info != null ? info.getStandard() : null;
-            final String thumbUrl = spec != null ? spec.getUrl() : null;
             User user = item.getUser();
             if (user != null) {
                 String authorUrl = user.getProfileImageUrl();
-
-                if (mImageLoader != null && !TextUtils.isEmpty(authorUrl)) {
-                    mImageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+                if (!TextUtils.isEmpty(authorUrl)) {
+                    ImageLoader.load(
+                            getContext(), ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
                 } else {
                     ivThumb.setImageDrawable(null);
                 }
@@ -158,8 +154,11 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
                     Integer.toString(likes.getCount()) : Integer.toString(0);
             tvLikesCount.setText(likesCount);
 
-            if (mImageLoader != null && !TextUtils.isEmpty(thumbUrl)) {
-                mImageLoader.load(ivThumb, thumbUrl, true);
+            Images info = item.getImages();
+            ImageResolution spec = info != null ? info.getStandard() : null;
+            final String thumbUrl = spec != null ? spec.getUrl() : null;
+            if (!TextUtils.isEmpty(thumbUrl)) {
+                ImageLoader.load(getContext(), ivThumb, thumbUrl, true);
             } else {
                 ivThumb.setImageDrawable(null);
             }

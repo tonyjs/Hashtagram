@@ -12,13 +12,13 @@ import android.widget.TextView;
 
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.db.HashtagramDatabase;
-import com.tonyjs.hashtagram.io.model.NavigationItem;
 import com.tonyjs.hashtagram.io.model.NavigationItem_;
 import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.PrefUtils;
 
 import java.util.ArrayList;
@@ -81,9 +81,9 @@ public class NavigationFragment_ extends BaseFragment
         }
         mTvProfile.setText(profile);
         String profileImageUrl = user.getProfileImageUrl();
-        ImageLoader imageLoader = getImageLoader();
-        if (imageLoader != null && !TextUtils.isEmpty(profileImageUrl)) {
-            imageLoader.load(mIvUser, profileImageUrl, ImageLoader.TransformationType.CIRCLE);
+        if (!TextUtils.isEmpty(profileImageUrl)) {
+            ImageLoader.load(
+                    mActivity, mIvUser, profileImageUrl, ImageLoader.TransformationType.CIRCLE);
         } else {
             mIvUser.setImageDrawable(null);
         }

@@ -28,6 +28,6 @@
     </application>
 
     <meta-data
-        android:name="com.bumptech.glide.integration.volley.VolleyGlideModule"
+        android:name="com.tonyjs.hashtagram.util.DefaultModule"
         android:value="GlideModule" />
 </manifest>

@@ -6,12 +6,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.widget.Toolbar;
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.GlideBuilder;
-import com.bumptech.glide.load.DecodeFormat;
+
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.ui.widget.SlipLayoutController;
-import com.tonyjs.hashtagram.util.ImageLoader;
 
 /**
  * Created by orcpark on 14. 11. 13..

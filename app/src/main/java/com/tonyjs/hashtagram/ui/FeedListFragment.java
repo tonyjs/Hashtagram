@@ -98,7 +98,7 @@ public class FeedListFragment extends BaseFragment
         mFooterView = inflater.inflate(R.layout.layout_footer, mListView, false);
         mFooterView.setVisibility(View.GONE);
         mListView.addFooterView(mFooterView, null, false);
-        mAdapter = new TimeLineListAdapter(mActivity.getBaseContext(), getImageLoader());
+        mAdapter = new TimeLineListAdapter(mActivity);
 //        mAdapter = new TimeLineListAdapterWithVolley(mActivity.getBaseContext(), getImageLoader());
         mListView.setOnItemClickListener(this);
         mAdapter.setNeedMoreCallback(this);

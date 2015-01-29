@@ -19,6 +19,7 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicRecyclerAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.BasicViewHolder;
 import com.tonyjs.hashtagram.ui.widget.BasicRecyclerView;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.PrefUtils;
 
 import java.util.ArrayList;
@@ -78,9 +79,9 @@ public class NavigationFragment extends BaseFragment
         }
         mTvProfile.setText(profile);
         String profileImageUrl = user.getProfileImageUrl();
-        ImageLoader imageLoader = getImageLoader();
-        if (imageLoader != null && !TextUtils.isEmpty(profileImageUrl)) {
-            imageLoader.load(mIvUser, profileImageUrl, ImageLoader.TransformationType.CIRCLE);
+        if (!TextUtils.isEmpty(profileImageUrl)) {
+            ImageLoader.load(
+                    mActivity, mIvUser, profileImageUrl, ImageLoader.TransformationType.CIRCLE);
         } else {
             mIvUser.setImageDrawable(null);
         }

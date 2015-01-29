@@ -101,7 +101,7 @@ public class FeedRecyclerFragment extends BaseFragment
 
         mLayoutManager = new LinearLayoutManager(mActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext(), getImageLoader());
+        mAdapter = new TimeLineRecyclerAdapter(mActivity.getBaseContext());
         mRecyclerView.setOnItemClickListener(this);
         mAdapter.setNeedMoreCallback(this);
 

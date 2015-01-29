@@ -2,14 +2,11 @@ package com.tonyjs.hashtagram.ui.adapter;
 
 import android.content.Context;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.android.volley.VolleyError;
 import com.tonyjs.hashtagram.R;
 import com.tonyjs.hashtagram.io.model.Comments;
 import com.tonyjs.hashtagram.io.model.Feed;
@@ -17,25 +14,18 @@ import com.tonyjs.hashtagram.io.model.ImageResolution;
 import com.tonyjs.hashtagram.io.model.Images;
 import com.tonyjs.hashtagram.io.model.Likes;
 import com.tonyjs.hashtagram.io.model.User;
-import com.tonyjs.hashtagram.io.request.volley.RequestProvider;
-import com.tonyjs.hashtagram.io.request.volley.response.Callback;
-import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientNetworkImageView;
-import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
+import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
-import com.tonyjs.hashtagram.util.ToastManager;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by orcpark on 14. 11. 9..
  */
 public class TimeLineListAdapterWithVolley extends TimeLineListAdapter {
-    public TimeLineListAdapterWithVolley(Context context, ImageLoader imageLoader) {
-        super(context, imageLoader);
+    public TimeLineListAdapterWithVolley(Context context) {
+        super(context);
     }
 
     @Override
@@ -55,8 +45,6 @@ public class TimeLineListAdapterWithVolley extends TimeLineListAdapter {
 
         Feed item = getItem(position);
 
-        ImageLoader imageLoader = getImageLoader();
-
         long createdTime = Long.valueOf(item.getCreatedTime());
         tvCreatedTime.setText(TimeUtils.getRelativeTime(createdTime));
 
@@ -66,8 +54,9 @@ public class TimeLineListAdapterWithVolley extends TimeLineListAdapter {
         User user = item.getUser();
         if (user != null) {
             String authorUrl = user.getProfileImageUrl();
-            if (imageLoader != null && !TextUtils.isEmpty(authorUrl)) {
-                imageLoader.load(ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
+            if (!TextUtils.isEmpty(authorUrl)) {
+                ImageLoader.load(
+                        mContext, ivAuthor, authorUrl, ImageLoader.TransformationType.CIRCLE);
             } else {
                 ivAuthor.setImageDrawable(null);
             }
