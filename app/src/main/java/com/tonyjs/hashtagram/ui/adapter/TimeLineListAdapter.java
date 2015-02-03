@@ -23,7 +23,6 @@ import com.tonyjs.hashtagram.ui.adapter.base.BasicAdapter;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientSquareImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
-import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
 import com.tonyjs.hashtagram.util.ToastManager;
 
@@ -116,7 +115,7 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
             ivThumb.setImageDrawable(null);
         }
 
-        setBtnLike(item, btnLike);
+        handleLikes(item, btnLike, tvLikesCount);
 
         loadMoreItems(position);
 
@@ -124,17 +123,20 @@ public class TimeLineListAdapter extends BasicAdapter<Feed> {
         return convertView;
     }
 
-    void setBtnLike(final Feed item, final View btnLike) {
+    void handleLikes(final Feed item, final View btnLike, final TextView tvLikesCount) {
         final boolean userHasLiked = item.isUserLiked();
         btnLike.setSelected(userHasLiked);
         final Likes likes = item.getLikes();
+        String likesCount = likes != null ?
+                Integer.toString(likes.getCount()) : Integer.toString(0);
+        tvLikesCount.setText(likesCount);
         btnLike.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 handleFeedback(item, userHasLiked);
                 item.setUserLiked(!userHasLiked);
                 likes.setCount(likes.getCount() + (userHasLiked ? -1 : + 1));
-                setBtnLike(item, btnLike);
+                handleLikes(item, btnLike, tvLikesCount);
             }
         });
     }

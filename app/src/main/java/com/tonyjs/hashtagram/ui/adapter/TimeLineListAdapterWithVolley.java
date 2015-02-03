@@ -17,7 +17,6 @@ import com.tonyjs.hashtagram.io.model.User;
 import com.tonyjs.hashtagram.ui.adapter.base.SparseViewHolder;
 import com.tonyjs.hashtagram.ui.widget.GradientNetworkImageView;
 import com.tonyjs.hashtagram.util.ImageLoader;
-import com.tonyjs.hashtagram.util.ImageLoaderOld;
 import com.tonyjs.hashtagram.util.TimeUtils;
 
 /**
@@ -77,7 +76,7 @@ public class TimeLineListAdapterWithVolley extends TimeLineListAdapter {
         ImageResolution spec = info != null ? info.getStandard() : null;
         ivThumb.setImageSpec(spec);
 
-        setBtnLike(item, btnLike);
+        handleLikes(item, btnLike, tvLikesCount);
 
         loadMoreItems(position);
 
