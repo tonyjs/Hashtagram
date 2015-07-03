@@ -68,7 +68,7 @@ public abstract class BasicRecyclerAdapter<T> extends RecyclerView.Adapter<Basic
 
     @Override
     public int getItemCount() {
-        return mItems != null ? mItems.size() : 0;
+        return mItems.size();
     }
 
     public T getItem(int position) {
