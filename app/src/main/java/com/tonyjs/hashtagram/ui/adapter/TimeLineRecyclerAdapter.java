@@ -214,5 +214,4 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
             super(context, itemView);
         }
     }
-
 }
