@@ -213,6 +213,11 @@ public class TimeLineRecyclerAdapter extends BasicRecyclerAdapter<Feed> {
         public FooterViewHolder(Context context, View itemView) {
             super(context, itemView);
         }
+
+        @Override
+        public void onBindView(Object item) {
+
+        }
     }
 
 }
