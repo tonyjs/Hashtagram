@@ -94,7 +94,6 @@ public abstract class MultiRecyclerAdapter extends RecyclerView.Adapter<BasicVie
         return mRows.get(position).getItemViewType();
     }
 
-
     public Context getContext() {
         return mContext;
     }
